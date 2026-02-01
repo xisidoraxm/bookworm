@@ -1,95 +1,103 @@
+'use client'
+
+import {useRouter} from "next/navigation";
 import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
+import React, {useEffect} from "react";
+import "react-toastify/dist/ReactToastify.css";
+import {toast, ToastContainer} from "react-toastify";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+export default function Login() {
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    const router = useRouter()
+
+    const initialUsers = [
+        { username: "isidora", password: "Pass123!", name: "Isidora", lastName: "Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
+        { username: "jelica", password: "Pass123!", name: "Jelica", lastName: "Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
+        { username: "drazen", password: "Pass123!", name: "Drazen", lastName: "Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
+    ]
+
+    useEffect(() => {
+        if (!localStorage.getItem("users")) {
+            localStorage.setItem("users", JSON.stringify(initialUsers));
+        }
+    }, [])
+
+    function login(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const username = (formData.get("username")?.toString() ?? "").trim();
+        const password = (formData.get("password")?.toString() ?? "").trim();
+
+        if (!username || !password) {
+            toast.error("Please fill in both username and password", {
+                position: "top-right",
+                autoClose: 5000,
+            });
+            return;
+        }
+
+        const usersStr = localStorage.getItem("users");
+        if (!usersStr) {
+            toast.error("There are no users", {
+                position: "top-right",
+                autoClose: 5000,
+            });
+            return;
+        }
+
+        const users = JSON.parse(usersStr);
+        const found = users.find((u: any) => u.username?.toLowerCase() === username.toLowerCase() && u.password === password);
+
+        if (found) {
+            localStorage.setItem("loggedUser", JSON.stringify(found));
+            toast.success("Login successful — redirecting...", { position: "top-right", autoClose: 800 });
+            setTimeout(() => router.push("/events"), 900);
+        } else {
+            toast.error("User does not exist or wrong credentials", {
+                position: "top-right",
+                autoClose: 5000,
+            });
+        }
+    }
+
+    return (
+        <div className="container">
+            <div className="row">
+                <div className="col-3"></div>
+                <div className="col-6 justify-content-center">
+                    <br/>
+                    <form onSubmit={login} role="form" noValidate>
+                        <div className="text-center align-items-center">
+                            <br/>
+                            <Image alt="" src="/login.png" width={100} height={100}></Image>
+                            <br/>
+                            <br/>
+                            <div className="input-group">
+                                <div className="form-floating mb-3">
+                                    <input type="text" className="form-control" id="floatingUsername"
+                                           name="username" placeholder="Username" aria-label="Username" autoFocus/>
+                                    <label htmlFor="floatingUsername">Username</label>
+                                </div>
+                            </div>
+                            <br/>
+                            <div className="input-group">
+                                <div className="form-floating mb-3">
+                                    <input type="password" className="form-control" id="floatingPassword"
+                                           name="password" placeholder="Password" aria-label="Password"/>
+                                    <label htmlFor="floatingPassword">Password</label>
+                                </div>
+                            </div>
+                            <br/>
+                            <button className="btn btn-success" type="submit">Login</button>
+                            <hr/>
+                            You don't have an account, <Link href="/register">create new</Link>.
+                        </div>
+                    </form>
+                    <ToastContainer position="top-right" />
+                </div>
+                <div className="col-3"></div>
+            </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    )
 }
