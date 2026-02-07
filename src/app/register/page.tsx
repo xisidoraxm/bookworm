@@ -3,11 +3,15 @@
 import {useRouter} from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import {toast, ToastContainer} from "react-toastify";
-import React from "react";
+import React, { useState } from "react";
+import styles from "../page.module.css";
+import EyeOpen from "../../components/icons/EyeOpen";
+import EyeClosed from "../../components/icons/EyeClosed";
 
 export default function Register() {
 
     const router = useRouter();
+    const [showPassword, setShowPassword] = useState(false);
 
     function register(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -63,9 +67,24 @@ export default function Register() {
                                 </div>
                             </div>
                             <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="password" className="form-control" id="floatingPassword"
-                                           placeholder="Enter password" name="password"/>
+                                <div className={`form-floating mb-3 ${styles.passwordWrapper}`}>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        className={`form-control ${styles.passwordInput}`}
+                                        id="floatingPassword"
+                                        placeholder="Enter password"
+                                        name="password"
+                                        aria-label="Password"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        aria-pressed={showPassword}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        className={styles.passwordToggle}
+                                    >
+                                        {showPassword ? <EyeOpen width={20} height={20} aria-hidden="true" /> : <EyeClosed width={20} height={20} aria-hidden="true" />}
+                                    </button>
                                     <label htmlFor="floatingPassword">Password</label>
                                     <small id="passwordHelp" className="form-text text-muted">Password must be ≥8 chars, include an uppercase letter, a number, and a special character.</small>
                                 </div>

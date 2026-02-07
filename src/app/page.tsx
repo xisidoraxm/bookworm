@@ -3,13 +3,17 @@
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import "react-toastify/dist/ReactToastify.css";
 import {toast, ToastContainer} from "react-toastify";
+import styles from "./page.module.css";
+import EyeOpen from "../components/icons/EyeOpen";
+import EyeClosed from "../components/icons/EyeClosed";
 
 export default function Login() {
 
     const router = useRouter()
+    const [showPassword, setShowPassword] = useState(false);
 
     const initialUsers = [
         { username: "isidora", password: "Pass123!", name: "Isidora", lastName: "Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
@@ -82,9 +86,24 @@ export default function Login() {
                             </div>
                             <br/>
                             <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="password" className="form-control" id="floatingPassword"
-                                           name="password" placeholder="Password" aria-label="Password"/>
+                                <div className={`form-floating mb-3 ${styles.passwordWrapper}`}>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        className={`form-control ${styles.passwordInput}`}
+                                        id="floatingPassword"
+                                        name="password"
+                                        placeholder="Password"
+                                        aria-label="Password"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        aria-pressed={showPassword}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        className={styles.passwordToggle}
+                                    >
+                                        {showPassword ? <EyeOpen width={20} height={20} aria-hidden="true" /> : <EyeClosed width={20} height={20} aria-hidden="true" />}
+                                    </button>
                                     <label htmlFor="floatingPassword">Password</label>
                                 </div>
                             </div>

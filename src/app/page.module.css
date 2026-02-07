@@ -1,0 +1,33 @@
+/* Styles for the password input with toggle button */
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordInput {
+  padding-right: 2.5rem;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  padding: 2px 4px;
+  margin: 0;
+  line-height: 1;
+  cursor: pointer;
+  color: #6c757d; /* muted gray */
+}
+
+.passwordToggle:hover,
+.passwordToggle:focus {
+  color: #495057;
+  outline: none;
+}
+
+.passwordToggle:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-radius: 2px;
+}
