@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 
 type User = {
     username?: string;
@@ -39,36 +39,36 @@ export default function Profile() {
     }, [router]);
 
     return (
-        <div className="container">
+        <div className={`container ${styles.profileContainer}`}>
             <div className="row">
-                <div className="col-12">
-                    <h1 className="text-center mt-5">Profile</h1>
+                <div className={`col-12 ${styles.profileTitle}`}>
+                    <h1 className={`text-center mt-5 ${styles.profileTitle}`}>Profile</h1>
                 </div>
                 <div className="col-md-6 offset-md-3">
-                    <div className="card my-4">
-                        <div className="card-body">
+                    <div className={`card my-4 ${styles.profileCard}`}>
+                        <div className={`card-body ${styles.profileCardBody}`}>
                             {Object.keys(user).length === 0 ? (
-                                <div className="text-center text-muted">No user logged in.</div>
+                                <div className={`text-center text-muted ${styles.profileEmpty}`}>No user logged in.</div>
                             ) : (
                                 <>
-                                    {message && <div className="alert alert-success">{message}</div>}
-                                    {error && <div className="alert alert-danger">{error}</div>}
+                                    {message && <div className={`alert alert-success ${styles.profileAlert}`}>{message}</div>}
+                                    {error && <div className={`alert alert-danger ${styles.profileAlert}`}>{error}</div>}
 
                                     {!editMode ? (
                                         <>
-                                            <div className="mb-3"><strong>Username:</strong> {user.username ?? "-"}</div>
-                                            <div className="mb-3"><strong>Name:</strong> {user.name ?? "-"}</div>
-                                            <div className="mb-3"><strong>Surname:</strong> {user.surname ?? "-"}</div>
-                                            <div className="mb-3"><strong>Phone:</strong> {user.phone ?? "-"}</div>
-                                            <div className="mb-3"><strong>Email:</strong> {user.email ?? "-"}</div>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}><strong>Username:</strong> {user.username ?? "-"}</div>
+                                            <div className={`mb-3 ${styles.profileField}`}><strong>Name:</strong> {user.name ?? "-"}</div>
+                                            <div className={`mb-3 ${styles.profileField}`}><strong>Surname:</strong> {user.surname ?? "-"}</div>
+                                            <div className={`mb-3 ${styles.profileField}`}><strong>Phone:</strong> {user.phone ?? "-"}</div>
+                                            <div className={`mb-3 ${styles.profileField}`}><strong>Email:</strong> {user.email ?? "-"}</div>
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <strong>Password:</strong>{' '}
                                                 <span>{showPassword ? (user.password ?? "-") : '•'.repeat(8)}</span>
                                             </div>
-                                            <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => setShowPassword(s => !s)}>
+                                            <button className={`btn btn-sm btn-outline-secondary me-2 ${styles.profileBtn}`} onClick={() => setShowPassword(s => !s)}>
                                                 {showPassword ? 'Hide' : 'Show'} Password
                                             </button>
-                                            <button className="btn btn-primary btn-sm" onClick={() => { setEditMode(true); setMessage(null); setError(null); setForm({...user, confirmPassword: user.password}); }}>
+                                            <button className={`btn btn-primary btn-sm ${styles.profileBtn}`} onClick={() => { setEditMode(true); setMessage(null); setError(null); setForm({...user, confirmPassword: user.password}); }}>
                                                 Edit Profile
                                             </button>
                                         </>
@@ -127,37 +127,37 @@ export default function Profile() {
                                                 setError("Failed to save profile.");
                                             }
                                         }}>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Username</label>
                                                 <input className="form-control" value={form.username ?? ""} onChange={e => setForm(f => ({...f, username: e.target.value}))} />
                                             </div>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Name</label>
                                                 <input className="form-control" value={form.name ?? ""} onChange={e => setForm(f => ({...f, name: e.target.value}))} />
                                             </div>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Surname</label>
                                                 <input className="form-control" value={form.surname ?? ""} onChange={e => setForm(f => ({...f, surname: e.target.value}))} />
                                             </div>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Phone</label>
                                                 <input className="form-control" value={form.phone ?? ""} onChange={e => setForm(f => ({...f, phone: e.target.value}))} />
                                             </div>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Email</label>
                                                 <input type="email" className="form-control" value={form.email ?? ""} onChange={e => setForm(f => ({...f, email: e.target.value}))} />
                                             </div>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Password</label>
                                                 <input type="password" className="form-control" value={form.password ?? ""} onChange={e => setForm(f => ({...f, password: e.target.value}))} />
                                             </div>
-                                            <div className="mb-3">
+                                            <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Confirm Password</label>
                                                 <input type="password" className="form-control" value={form.confirmPassword ?? ""} onChange={e => setForm(f => ({...f, confirmPassword: e.target.value}))} />
                                             </div>
-                                            <div className="d-flex">
-                                                <button type="submit" className="btn btn-success me-2">Save</button>
-                                                <button type="button" className="btn btn-secondary" onClick={() => { setEditMode(false); setForm({...user, confirmPassword: user.password}); setError(null); setMessage(null); }}>Cancel</button>
+                                            <div className={`d-flex ${styles.profileActions}`}>
+                                                <button type="submit" className={`btn btn-success me-2 ${styles.profileBtn}`}>Save</button>
+                                                <button type="button" className={`btn btn-secondary ${styles.profileBtn}`} onClick={() => { setEditMode(false); setForm({...user, confirmPassword: user.password}); setError(null); setMessage(null); }}>Cancel</button>
                                             </div>
                                         </form>
                                     )}

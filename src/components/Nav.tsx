@@ -1,8 +1,23 @@
 "use client"
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function Nav() {
+    const router = useRouter();
+
+    function handleLogout(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        if (
+            window.confirm(
+                "Are you sure you want to log out? Your session will end."
+            )
+        ) {
+            localStorage.removeItem("loggedUser");
+            router.push("/");
+        }
+    }
+
     return (
         <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div className="container-fluid">
@@ -15,7 +30,7 @@ export default function Nav() {
                 <div className="collapse navbar-collapse" id="navbarColor01">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <a className="nav-link active" href="#">Home
+                            <a className="nav-link active" href="/events">Home
                                 <span className="visually-hidden">(current)</span>
                             </a>
                         </li>
@@ -44,7 +59,14 @@ export default function Nav() {
                     </ul>
                     <form className="d-flex">
                         <input className="form-control me-sm-2" type="search" placeholder="Search" />
-                        <button className="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                        <button className="btn btn-secondary my-2 my-sm-0 me-2" type="submit">Search</button>
+                        <button
+                            className="btn btn-danger my-2 my-sm-0"
+                            type="button"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
                     </form>
                 </div>
             </div>

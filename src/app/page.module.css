@@ -43,3 +43,80 @@
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 2px;
 }
+
+/* Styles for the profile page */
+.profileContainer {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.profileTitle {
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #2c3e50;
+}
+
+.profileCard {
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+  border: none;
+}
+
+.profileCardBody {
+  padding: 2rem 2.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.profileField {
+  font-size: 1.05rem;
+}
+
+.profileBtn {
+  min-width: 110px;
+  font-weight: 600;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.07);
+  transition: background 0.15s, color 0.15s, border 0.15s;
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.btn-outline-secondary.profileBtn {
+  color: #fff;
+  background: #6c63ff;
+  border: 2px solid #6c63ff;
+}
+.btn-outline-secondary.profileBtn:hover,
+.btn-outline-secondary.profileBtn:focus {
+  background: #5548c8;
+  border-color: #5548c8;
+  color: #fff;
+}
+
+.btn-primary.profileBtn {
+  background: #ff9800;
+  border: 2px solid #ff9800;
+  color: #fff;
+}
+.btn-primary.profileBtn:hover,
+.btn-primary.profileBtn:focus {
+  background: #e68900;
+  border-color: #e68900;
+  color: #fff;
+}
+
+.profileActions {
+  gap: 0.5rem;
+}
+
+.profileAlert {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.profileEmpty {
+  font-size: 1.1rem;
+  padding: 2rem 0;
+  color: #adb5bd;
+}
