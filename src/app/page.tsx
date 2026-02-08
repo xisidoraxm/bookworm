@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {useRouter} from "next/navigation";
 import Image from "next/image";
@@ -110,7 +110,9 @@ export default function Login() {
                             <br/>
                             <button className="btn btn-success" type="submit">Login</button>
                             <hr/>
-                            You don't have an account, <Link href="/register">create new</Link>.
+                            <p className={styles.registerPrompt}>
+                                You don't have an account? <Link href="/register">Create new</Link>.
+                            </p>
                         </div>
                     </form>
                     <ToastContainer position="top-right" />

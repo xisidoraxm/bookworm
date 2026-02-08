@@ -31,3 +31,13 @@
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
   border-radius: 2px;
 }
+
+.registerPrompt {
+  display: inline-block;
+  background: #f8f9fa; /* bootstrap light */
+  color: #212529; /* bootstrap dark */
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  margin-top: 1rem;
+  text-align: center;
+}
