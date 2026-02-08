@@ -1,5 +1,5 @@
 "use client"
-import Link from "next/link";
+
 import React from "react";
 import { useRouter } from "next/navigation";
 
@@ -19,18 +19,18 @@ export default function Nav() {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <nav className="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
             <div className="container-fluid">
                 <a className="navbar-brand" href="#">Navbar</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarColor01" aria-controls="#navbarColor01" aria-expanded="false"
+                    data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarColor01">
+                <div className="collapse navbar-collapse" id="navbarColor02">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <a className="nav-link active" href="/events">Home
+                            <a className="nav-link active" href="/bicycles">Home
                                 <span className="visually-hidden">(current)</span>
                             </a>
                         </li>
