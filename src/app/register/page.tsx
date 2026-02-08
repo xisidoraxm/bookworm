@@ -19,11 +19,11 @@ export default function Register() {
         const username = (formData.get("username")?.toString() ?? "").trim();
         const password = (formData.get("password")?.toString() ?? "").trim();
         const name = (formData.get("name")?.toString() ?? "").trim();
-        const lastName = (formData.get("lastName")?.toString() ?? "").trim();
+        const surname = (formData.get("surname")?.toString() ?? "").trim();
         const phone = (formData.get("phone")?.toString() ?? "").trim();
         const email = (formData.get("email")?.toString() ?? "").trim();
 
-        if (!username || !password || !phone || !email || !name || !lastName) {
+        if (!username || !password || !phone || !email || !name || !surname) {
             toast.error("All fields are required", { position: "top-right", autoClose: 5000 });
             return;
         }
@@ -41,7 +41,7 @@ export default function Register() {
             return;
         }
 
-        users.push({ username, password, name, lastName, phone, email });
+        users.push({ username, password, name, surname, phone, email });
         localStorage.setItem("users", JSON.stringify(users));
         toast.success("Registered successfully", { position: "top-right", autoClose: 2000 });
         router.push("/");
@@ -98,9 +98,9 @@ export default function Register() {
                             </div>
                             <div className="input-group">
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingLastName"
-                                           placeholder="Enter last name" name="lastName"/>
-                                    <label htmlFor="floatingLastName">Last Name</label>
+                                    <input type="text" className="form-control" id="floatingSurname"
+                                           placeholder="Enter surname" name="surname"/>
+                                    <label htmlFor="floatingSurname">Surname</label>
                                 </div>
                             </div>
                             <div className="input-group">

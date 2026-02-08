@@ -16,9 +16,9 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
 
     const initialUsers = [
-        { username: "isidora", password: "Pass123!", name: "Isidora", lastName: "Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
-        { username: "jelica", password: "Pass123!", name: "Jelica", lastName: "Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
-        { username: "drazen", password: "Pass123!", name: "Drazen", lastName: "Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
+        { username: "isidora", password: "Pass123!", name: "Isidora", surname: "Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
+        { username: "jelica", password: "Pass123!", name: "Jelica", surname: "Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
+        { username: "drazen", password: "Pass123!", name: "Drazen", surname: "Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
     ]
 
     useEffect(() => {
