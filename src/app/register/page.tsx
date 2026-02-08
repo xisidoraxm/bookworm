@@ -1,8 +1,9 @@
-'use client'
+"use client"
 
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import "react-toastify/dist/ReactToastify.css";
-import {toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import React, { useState } from "react";
 import styles from "../page.module.css";
 import EyeOpen from "../../components/icons/EyeOpen";
@@ -52,17 +53,17 @@ export default function Register() {
             <div className="row">
                 <div className="col-3"></div>
                 <div className="col-6 justify-content-center">
-                    <br/>
+                    <br />
                     <form onSubmit={register}>
                         <div className="text-center align-items-center">
-                            <br/>
+                            <br />
                             <h2>REGISTER</h2>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             <div className="input-group">
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" id="floatingUsername"
-                                           placeholder="Enter username" name="username"/>
+                                        placeholder="Enter username" name="username" />
                                     <label htmlFor="floatingUsername">Username</label>
                                 </div>
                             </div>
@@ -92,35 +93,38 @@ export default function Register() {
                             <div className="input-group">
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" id="floatingName"
-                                           placeholder="Enter name" name="name"/>
+                                        placeholder="Enter name" name="name" />
                                     <label htmlFor="floatingName">Name</label>
                                 </div>
                             </div>
                             <div className="input-group">
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" id="floatingSurname"
-                                           placeholder="Enter surname" name="surname"/>
+                                        placeholder="Enter surname" name="surname" />
                                     <label htmlFor="floatingSurname">Surname</label>
                                 </div>
                             </div>
                             <div className="input-group">
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" id="floatingPhone"
-                                           placeholder="Enter phone number" name="phone"/>
+                                        placeholder="Enter phone number" name="phone" />
                                     <label htmlFor="floatingPhone">Phone number</label>
                                 </div>
                             </div>
                             <div className="input-group">
                                 <div className="form-floating mb-3">
                                     <input type="email" className="form-control" id="floatingEmail"
-                                           placeholder="Enter email" name="email"/>
+                                        placeholder="Enter email" name="email" />
                                     <label htmlFor="floatingEmail">Email</label>
                                 </div>
                             </div>
                             <button className="btn btn-success" type="submit">Register</button>
                         </div>
                     </form>
-                     <ToastContainer/>
+                    <p className={styles.registerPrompt}>
+                        Already have an account? <Link href="/">Login</Link>.
+                    </p>
+                    <ToastContainer />
                 </div>
                 <div className="col-3"></div>
             </div>
