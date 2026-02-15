@@ -29,7 +29,6 @@ export default function Register() {
             return;
         }
 
-        // password must be at least 8 chars, contain an uppercase letter, a number and a special character
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
         if (!passwordRegex.test(password)) {
             toast.error("Password must be at least 8 characters and include an uppercase letter, a number, and a special character", { position: "top-right", autoClose: 6000 });

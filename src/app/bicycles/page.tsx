@@ -1,25 +1,12 @@
 "use client";
 
 import styles from "./page.module.css";
-import Map from "./Map";
-import { useEffect, useMemo } from "react";
+import Map from "../../components/Map";
+import { useEffect, useMemo, useState } from "react";
 import type { MarkerData } from "./PinContent";
-
-// Haversinova formula za racunanje rastojanja izmedju dve tacke na globusu
-function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    const R = 6371e3; // Zemljin poluprecnik u metrima
-    const fi1 = lat1 * Math.PI / 180;
-    const fi2 = lat2 * Math.PI / 180;
-    const deltaFi = (lat2 - lat1) * Math.PI / 180;
-    const deltaLambda = (lng2 - lng1) * Math.PI / 180;
-
-    const a = Math.sin(deltaFi / 2) * Math.sin(deltaFi / 2) +
-        Math.cos(fi1) * Math.cos(fi2) *
-        Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return Math.round(R * c);
-}
+import { calculateDistance } from "../utils";
+import type { MarkerType } from "./PinContent";
+import { generateInfoWindowContent } from "./PinContent";
 
 export default function Bicycles() {
     const parkingPlaces = [
@@ -91,11 +78,79 @@ export default function Bicycles() {
         return [...bicyclesWithParking, ...parkingPlaces];
     }, []);
 
+    const [markers, setMarkers] = useState<MarkerData[]>([]);
+
     useEffect(() => {
         if (!localStorage.getItem("initialMarkers")) {
             localStorage.setItem("initialMarkers", JSON.stringify(initialMarkers));
+            setMarkers(initialMarkers);
+        } else {
+            const stored = localStorage.getItem("initialMarkers");
+            if (stored) {
+                setMarkers(JSON.parse(stored));
+            }
         }
     }, [initialMarkers]);
+
+    const handleMapReady = async (mapInstance: any, infoWindow: any) => {
+        if (!markers || markers.length === 0) return;
+
+        const getMarkerIcon = (type: MarkerType = 'bicycle') => {
+            const icons: Record<MarkerType, string> = {
+                bicycle: 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png',
+                parking: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+            };
+            return icons[type];
+        };
+
+        const hasMapId = !!process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
+
+        if (hasMapId) {
+            const markerLib = await (window as any).google.maps.importLibrary('marker');
+            const { AdvancedMarkerElement, PinElement } = markerLib;
+
+            markers.forEach((data) => {
+                const pinColor = {
+                    bicycle: '#e97f38',
+                    parking: '#2f53c9',
+                }[data.type || 'bicycle'];
+
+                const pin = new PinElement({
+                    background: pinColor,
+                    borderColor: '#FFFFFF',
+                    glyphColor: '#FFFFFF',
+                });
+
+                const marker = new AdvancedMarkerElement({
+                    position: data.position,
+                    map: mapInstance,
+                    title: data.title,
+                    content: pin.element,
+                });
+
+                marker.addListener('click', () => {
+                    infoWindow.setContent(generateInfoWindowContent(data));
+                    infoWindow.open(mapInstance, marker);
+                });
+            });
+        } else {
+            const MarkerClass = (window as any).google.maps.Marker;
+
+            markers.forEach((data) => {
+                const marker = new MarkerClass({
+                    position: data.position,
+                    map: mapInstance,
+                    title: data.title,
+                    icon: getMarkerIcon(data.type)
+                });
+
+                marker.addListener('click', () => {
+                    infoWindow.setContent(generateInfoWindowContent(data));
+                    infoWindow.open(mapInstance, marker);
+                });
+            });
+        }
+    };
 
     return (
         <div>
@@ -107,19 +162,27 @@ export default function Bicycles() {
 
             <div className="row">
                 <div className="col-12">
-                    <Map className={styles.mapContainer} markers={initialMarkers} />
+                    <Map className={styles.mapContainer} onMapReady={handleMapReady} key={markers.length} />
                 </div>
             </div>
 
             <div className="row mt-4">
                 <div className="col-12">
-                    <div className="alert alert-info">
-                        <h5>Map Legend:</h5>
-                        <ul className="mb-0">
-                            <li><span style={{ color: '#e97f38' }}>●</span> Orange - Bicycle Available</li>
-                            <li><span style={{ color: '#2f53c9' }}>●</span> Blue - Parking</li>
-                        </ul>
-                        <small className="text-muted">Click on any marker to see more details</small>
+                    <div className="card shadow-sm">
+                        <div className="card-body">
+                            <h5 className="card-title">Map Legend</h5>
+                            <ul className="list-unstyled mb-2">
+                                <li className={styles.legendItem}>
+                                    <span className={styles.legendDot} style={{ backgroundColor: '#e97f38' }}></span>
+                                    Bicycle Available
+                                </li>
+                                <li className={styles.legendItem}>
+                                    <span className={styles.legendDot} style={{ backgroundColor: '#2f53c9' }}></span>
+                                    Parking
+                                </li>
+                            </ul>
+                            <small className="text-muted">Click on any marker to see more details</small>
+                        </div>
                     </div>
                 </div>
             </div>
