@@ -35,18 +35,15 @@ export default function Nav() {
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Features</a>
+                            <a className="nav-link" href="/locations">Locations</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Pricing</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">About</a>
+                            <a className="nav-link" href="/renting">Renting</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" href="/profile">Profile</a>
                         </li>
-                        <li className="nav-item dropdown">
+                        {/* <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                                 aria-haspopup="true" aria-expanded="false">Dropdown</a>
                             <div className="dropdown-menu">
@@ -55,7 +52,7 @@ export default function Nav() {
                                 <div className="dropdown-divider"></div>
                                 <a className="dropdown-item" href="#">Separated link</a>
                             </div>
-                        </li>
+                        </li> */}
                     </ul>
                     <form className="d-flex">
                         <input className="form-control me-sm-2" type="search" placeholder="Search" />
