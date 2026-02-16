@@ -2,6 +2,7 @@
 
 export type MarkerType = 'bicycle' | 'parking';
 type BicycleType = 'electric' | 'road' | 'hybrid';
+type BicycleStatus = 'available' | 'in_use' | 'maintenance';
 
 export type MarkerData = {
   position: { lat: number; lng: number };
@@ -10,6 +11,7 @@ export type MarkerData = {
   animated?: boolean;
   bicycleType?: BicycleType;
   pricePerHour?: number;
+  bicycleStatus?: BicycleStatus;
   closestParkingPlaces?: { name: string; distance: number }[];
 };
 
@@ -27,6 +29,12 @@ function generateBicycleContent(data: MarkerData): string {
         <div class="infoWindowSection">
           <strong class="infoWindowLabel">Bicycle Type:</strong>
           <span class="infoWindowValue"> ${data.bicycleType}</span>
+        </div>
+      ` : ''}
+      ${data.bicycleStatus ? `
+        <div class="infoWindowSection">
+          <strong class="infoWindowLabel">Bicycle Status:</strong>
+          <span class="infoWindowValue"> ${data.bicycleStatus}</span>
         </div>
       ` : ''}
       ${data.pricePerHour !== undefined ? `

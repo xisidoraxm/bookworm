@@ -29,6 +29,7 @@ export default function Bicycles() {
             type: 'bicycle' as const,
             bicycleType: 'electric' as const,
             pricePerHour: 2.5,
+            bicycleStatus: 'available' as const
         },
         {
             position: { lat: 44.800584826050496, lng: 20.500504907469015 },
@@ -36,6 +37,7 @@ export default function Bicycles() {
             type: 'bicycle' as const,
             bicycleType: 'road' as const,
             pricePerHour: 2.0,
+            bicycleStatus: 'in_use' as const
         },
         {
             position: { lat: 44.795916081609484, lng: 20.46717487034892 },
@@ -43,6 +45,7 @@ export default function Bicycles() {
             type: 'bicycle' as const,
             bicycleType: 'hybrid' as const,
             pricePerHour: 2.2,
+            bicycleStatus: 'maintenance' as const
         },
         {
             position: { lat: 44.8087148418751, lng: 20.463538120802955 },
@@ -50,6 +53,7 @@ export default function Bicycles() {
             type: 'bicycle' as const,
             bicycleType: 'hybrid' as const,
             pricePerHour: 2.2,
+            bicycleStatus: 'available' as const
         }
     ];
 

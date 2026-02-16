@@ -24,28 +24,41 @@ export default function Map({ center = DEFAULT_CENTER_BGD, zoom = 12, className,
     let mounted = true;
 
     async function init() {
-      if (!ref.current) return;
-      if (!(window as any).google || !(window as any).google.maps || !(window as any).google.maps.importLibrary) {
-        await new Promise<void>((resolve) => {
-          const check = () => {
-            if ((window as any).google && (window as any).google.maps && (window as any).google.maps.importLibrary) resolve();
-            else setTimeout(check, 50);
-          };
-          check();
-        });
-      }
-      if (!mounted) return;
+      // Wait for both the ref to be available and Google Maps API to load
+      await new Promise<void>((resolve) => {
+        const checkReady = () => {
+          if (ref.current && 
+              (window as any).google && 
+              (window as any).google.maps && 
+              (window as any).google.maps.importLibrary) {
+            resolve();
+          } else {
+            setTimeout(checkReady, 50);
+          }
+        };
+        checkReady();
+      });
+
+      // Double-check that we're still mounted and have a valid ref
+      if (!mounted || !ref.current) return;
 
       try {
         const mapsLib = await (window as any).google.maps.importLibrary('maps');
         const { Map: GMap, InfoWindow } = mapsLib;
+        
+        if (!ref.current) {
+          console.error('Map container element became null during initialization');
+          return;
+        }
+
         const mapOptions: any = { center, zoom };
         if (mapId) mapOptions.mapId = mapId;
         else if (process.env.NEXT_PUBLIC_GOOGLE_MAP_ID) mapOptions.mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
+        
         const mapInstance = new GMap(ref.current, mapOptions);
         const infoWindow = new InfoWindow();
 
-        if (onMapReady) {
+        if (onMapReady && mounted) {
           onMapReady(mapInstance, infoWindow);
         }
 
@@ -54,9 +67,13 @@ export default function Map({ center = DEFAULT_CENTER_BGD, zoom = 12, className,
       }
     }
 
-    init();
+    // Add a small delay to ensure DOM is ready
+    const timer = setTimeout(init, 100);
 
-    return () => { mounted = false; };
+    return () => { 
+      mounted = false; 
+      clearTimeout(timer);
+    };
   }, [center, zoom, mapId, onMapReady]);
 
   return <div ref={ref} className={className} style={style} />;

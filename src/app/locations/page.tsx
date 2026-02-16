@@ -17,8 +17,9 @@ export default function Locations() {
         type: "bicycle",
         bicycleType: "electric",
         pricePerHour: 2.0,
+        bicycleStatus: "available",
     });
-    
+
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<any>(null);
     const markerRef = useRef<any>(null);
@@ -40,6 +41,7 @@ export default function Locations() {
             position: { ...marker.position },
             bicycleType: marker.bicycleType,
             pricePerHour: marker.pricePerHour,
+            bicycleStatus: marker.bicycleStatus,
         });
     };
 
@@ -100,7 +102,7 @@ export default function Locations() {
                 [coord]: newValue
             }
         }));
-        
+
         if (markerRef.current) {
             const newPos = {
                 ...editData.position!,
@@ -126,6 +128,7 @@ export default function Locations() {
             type: "bicycle",
             bicycleType: "electric",
             pricePerHour: 2.0,
+            bicycleStatus: "available",
         });
         mapInstanceRef.current = null;
         markerRef.current = null;
@@ -144,7 +147,7 @@ export default function Locations() {
                 [coord]: newValue
             }
         }));
-        
+
         if (markerRef.current) {
             const newPos = {
                 ...newBicycle.position!,
@@ -161,6 +164,7 @@ export default function Locations() {
     const handleSaveNew = () => {
         const allMarkers = JSON.parse(localStorage.getItem("initialMarkers") || "[]");
         const parkingPlaces = allMarkers.filter((m: MarkerData) => m.type === "parking");
+        const bicycleStatus = 'available' as const;
         const distances = parkingPlaces.map((parking: MarkerData) => ({
             name: parking.title,
             distance: calculateDistance(
@@ -177,6 +181,7 @@ export default function Locations() {
 
         const newMarker: MarkerData = {
             ...newBicycle as MarkerData,
+            bicycleStatus,
             closestParkingPlaces,
         };
 
@@ -206,6 +211,7 @@ export default function Locations() {
                                     <th>Location</th>
                                     <th>Bicycle Type</th>
                                     <th>Price/Hour</th>
+                                    <th>Bicycle Status</th>
                                     <th>Closest Parking</th>
                                     <th>Actions</th>
                                 </tr>
@@ -281,6 +287,23 @@ export default function Locations() {
                                                     />
                                                 ) : (
                                                     <strong className="text-success">€{marker.pricePerHour}</strong>
+                                                )}
+                                            </td>
+                                            <td>
+                                                {editingIndex === index ? (
+                                                    <select
+                                                        className="form-select form-select-sm"
+                                                        value={editData.bicycleStatus || ""}
+                                                        onChange={(e) => updateEditData("bicycleStatus", e.target.value)}
+                                                    >
+                                                        <option value="available">Available</option>
+                                                        <option value="in_use">In Use</option>
+                                                        <option value="maintenance">Maintenance</option>
+                                                    </select>
+                                                ) : (
+                                                    <span className="badge bg-info text-capitalize">
+                                                        {marker.bicycleStatus}
+                                                    </span>
                                                 )}
                                             </td>
                                             <td>
