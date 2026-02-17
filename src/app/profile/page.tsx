@@ -40,8 +40,8 @@ export default function Profile() {
     return (
         <div className={`container ${styles.profileContainer}`}>
             <div className="row">
-                <div className={`col-12 ${styles.profileTitle}`}>
-                    <h1 className={`text-center mt-5 ${styles.profileTitle}`}>Profile</h1>
+                <div className="col-12">
+                    <h1 className="text-center mt-5 mb-4">Profile</h1>
                 </div>
                 <div className="col-md-6 offset-md-3">
                     <div className={`card my-4 ${styles.profileCard}`}>
