@@ -21,7 +21,9 @@ export default function Nav() {
     return (
         <nav className="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
             <div className="container-fluid">
-                <a className="navbar-brand" href="#">Navbar</a>
+                <a className="navbar-brand" href="/bicycles">
+                    <img src="/road-bicycle.svg" alt="Pedal Point" height="45" />
+                </a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -43,8 +45,6 @@ export default function Nav() {
                         </li>
                     </ul>
                     <form className="d-flex">
-                        <input className="form-control me-sm-2" type="search" placeholder="Search" />
-                        <button className="btn btn-secondary my-2 my-sm-0 me-2" type="submit">Search</button>
                         <button
                             className="btn btn-danger my-2 my-sm-0"
                             type="button"

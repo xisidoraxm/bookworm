@@ -1,0 +1,103 @@
+.tableContainer {
+    overflow-x: auto;
+    border-radius: 0;
+}
+
+.tableHeader {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.tableHeader th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+    white-space: nowrap;
+    padding: 1rem 0.75rem;
+}
+
+.username {
+    color: #495057;
+    font-size: 0.95rem;
+    min-width: 120px;
+}
+
+.timeInfo {
+    min-width: 100px;
+}
+
+.timeInfo div {
+    font-weight: 500;
+    color: #495057;
+}
+
+.timeInfo small {
+    font-size: 0.75rem;
+}
+
+.price {
+    color: #28a745;
+    font-weight: 500;
+    text-align: right;
+    min-width: 80px;
+}
+
+.finalPrice {
+    color: #28a745;
+    text-align: right;
+    min-width: 100px;
+}
+
+.finalPrice strong {
+    font-size: 1.1rem;
+}
+
+.finalPrice small {
+    font-size: 0.7rem;
+    font-style: italic;
+}
+
+.inProgress {
+    color: #17a2b8;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tableContainer {
+        font-size: 0.85rem;
+    }
+    
+    .tableHeader th {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .username {
+        min-width: 100px;
+    }
+    
+    .timeInfo {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .tableContainer {
+        font-size: 0.8rem;
+    }
+    
+    .finalPrice strong {
+        font-size: 1rem;
+    }
+}

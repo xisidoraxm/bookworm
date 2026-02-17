@@ -11,11 +11,13 @@ import { generateInfoWindowContent } from "./PinContent";
 export default function Bicycles() {
     const parkingPlaces = [
         {
+            id: 'parking-1',
             position: { lat: 44.81487956672314, lng: 20.422241859809755 },
             title: "Parking Arena",
             type: 'parking' as const
         },
         {
+            id: 'parking-2',
             position: { lat: 44.80298919683514, lng: 20.446677362784012 },
             title: "Central Parking",
             type: 'parking' as const
@@ -24,32 +26,36 @@ export default function Bicycles() {
 
     const bicycleStations: Omit<MarkerData, 'closestParkingPlaces'>[] = [
         {
+            id: 'bicycle-1',
             position: { lat: 44.84856995676583, lng: 20.40967915853299 },
-            title: "Bicycle Station 1",
+            title: "Bicycle 1",
             type: 'bicycle' as const,
             bicycleType: 'electric' as const,
             pricePerHour: 2.5,
             bicycleStatus: 'available' as const
         },
         {
+            id: 'bicycle-2',
             position: { lat: 44.800584826050496, lng: 20.500504907469015 },
-            title: "Bicycle Station 2",
+            title: "Bicycle 2",
             type: 'bicycle' as const,
             bicycleType: 'road' as const,
             pricePerHour: 2.0,
             bicycleStatus: 'in_use' as const
         },
         {
+            id: 'bicycle-3',
             position: { lat: 44.795916081609484, lng: 20.46717487034892 },
-            title: "Bicycle Station 3",
+            title: "Bicycle 3",
             type: 'bicycle' as const,
             bicycleType: 'hybrid' as const,
             pricePerHour: 2.2,
             bicycleStatus: 'maintenance' as const
         },
         {
+            id: 'bicycle-4',
             position: { lat: 44.8087148418751, lng: 20.463538120802955 },
-            title: "Bicycle Station 4",
+            title: "Bicycle 4",
             type: 'bicycle' as const,
             bicycleType: 'hybrid' as const,
             pricePerHour: 2.2,

@@ -5,12 +5,14 @@ import type { MarkerData } from "../bicycles/PinContent";
 import { DEFAULT_CENTER_BGD } from "../../components/Map";
 import { calculateDistance } from "../utils";
 import NewBicycleModal from "./NewBicycleModal";
+import EditBicycleModal from "./EditBicycleModal";
 
 export default function Locations() {
     const [storedMarkers, setStoredMarkers] = useState<MarkerData[]>([]);
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editData, setEditData] = useState<Partial<MarkerData>>({});
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [newBicycle, setNewBicycle] = useState<Partial<MarkerData>>({
         title: "",
         position: { lat: DEFAULT_CENTER_BGD.lat, lng: DEFAULT_CENTER_BGD.lng },
@@ -43,6 +45,7 @@ export default function Locations() {
             pricePerHour: marker.pricePerHour,
             bicycleStatus: marker.bicycleStatus,
         });
+        setShowEditModal(true);
     };
 
     const handleSave = (index: number) => {
@@ -82,11 +85,13 @@ export default function Locations() {
 
         setEditingIndex(null);
         setEditData({});
+        setShowEditModal(false);
     };
 
     const handleCancel = () => {
         setEditingIndex(null);
         setEditData({});
+        setShowEditModal(false);
     };
 
     const updateEditData = (field: string, value: any) => {
@@ -192,12 +197,10 @@ export default function Locations() {
     };
 
     return (
-        <div>
+        <div className="container-fluid">
             <div className="row">
-                <div className="col-10 offset-1">
-                    <div className="d-flex justify-content-between align-items-center mt-5">
-                        <h1 className="text-center flex-grow-1">Bicycle Locations</h1>
-                    </div>
+                <div className="col-12">
+                    <h1 className="text-center mt-5 mb-4">Bicycle Locations</h1>
                 </div>
             </div>
 
@@ -220,91 +223,25 @@ export default function Locations() {
                                 {bicycleMarkers.length > 0 ? (
                                     bicycleMarkers.map((marker, index) => (
                                         <tr key={index}>
+                                            <td>{marker.title}</td>
                                             <td>
-                                                {editingIndex === index ? (
-                                                    <input
-                                                        type="text"
-                                                        className="form-control form-control-sm"
-                                                        value={editData.title || ""}
-                                                        onChange={(e) => updateEditData("title", e.target.value)}
-                                                    />
-                                                ) : (
-                                                    marker.title
-                                                )}
+                                                <small>
+                                                    Lat: {marker.position.lat.toFixed(4)}<br />
+                                                    Lng: {marker.position.lng.toFixed(4)}
+                                                </small>
                                             </td>
                                             <td>
-                                                {editingIndex === index ? (
-                                                    <div>
-                                                        <input
-                                                            type="number"
-                                                            step="0.0001"
-                                                            className="form-control form-control-sm mb-1"
-                                                            placeholder="Latitude"
-                                                            value={editData.position?.lat || ""}
-                                                            onChange={(e) => updatePosition("lat", e.target.value)}
-                                                        />
-                                                        <input
-                                                            type="number"
-                                                            step="0.0001"
-                                                            className="form-control form-control-sm"
-                                                            placeholder="Longitude"
-                                                            value={editData.position?.lng || ""}
-                                                            onChange={(e) => updatePosition("lng", e.target.value)}
-                                                        />
-                                                    </div>
-                                                ) : (
-                                                    <small>
-                                                        Lat: {marker.position.lat.toFixed(4)}<br />
-                                                        Lng: {marker.position.lng.toFixed(4)}
-                                                    </small>
-                                                )}
+                                                <span className="badge bg-info text-capitalize">
+                                                    {marker.bicycleType}
+                                                </span>
                                             </td>
                                             <td>
-                                                {editingIndex === index ? (
-                                                    <select
-                                                        className="form-select form-select-sm"
-                                                        value={editData.bicycleType || ""}
-                                                        onChange={(e) => updateEditData("bicycleType", e.target.value)}
-                                                    >
-                                                        <option value="electric">Electric</option>
-                                                        <option value="road">Road</option>
-                                                        <option value="hybrid">Hybrid</option>
-                                                    </select>
-                                                ) : (
-                                                    <span className="badge bg-info text-capitalize">
-                                                        {marker.bicycleType}
-                                                    </span>
-                                                )}
+                                                <strong className="text-success">€{marker.pricePerHour}</strong>
                                             </td>
                                             <td>
-                                                {editingIndex === index ? (
-                                                    <input
-                                                        type="number"
-                                                        step="0.1"
-                                                        className="form-control form-control-sm"
-                                                        value={editData.pricePerHour || ""}
-                                                        onChange={(e) => updateEditData("pricePerHour", parseFloat(e.target.value))}
-                                                    />
-                                                ) : (
-                                                    <strong className="text-success">€{marker.pricePerHour}</strong>
-                                                )}
-                                            </td>
-                                            <td>
-                                                {editingIndex === index ? (
-                                                    <select
-                                                        className="form-select form-select-sm"
-                                                        value={editData.bicycleStatus || ""}
-                                                        onChange={(e) => updateEditData("bicycleStatus", e.target.value)}
-                                                    >
-                                                        <option value="available">Available</option>
-                                                        <option value="in_use">In Use</option>
-                                                        <option value="maintenance">Maintenance</option>
-                                                    </select>
-                                                ) : (
-                                                    <span className="badge bg-info text-capitalize">
-                                                        {marker.bicycleStatus}
-                                                    </span>
-                                                )}
+                                                <span className="badge bg-info text-capitalize">
+                                                    {marker.bicycleStatus}
+                                                </span>
                                             </td>
                                             <td>
                                                 {marker.closestParkingPlaces && marker.closestParkingPlaces.length > 0 ? (
@@ -320,29 +257,12 @@ export default function Locations() {
                                                 )}
                                             </td>
                                             <td>
-                                                {editingIndex === index ? (
-                                                    <div className="btn-group btn-group-sm">
-                                                        <button
-                                                            className="btn btn-success"
-                                                            onClick={() => handleSave(index)}
-                                                        >
-                                                            Save
-                                                        </button>
-                                                        <button
-                                                            className="btn btn-secondary"
-                                                            onClick={handleCancel}
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        className="btn btn-sm btn-primary"
-                                                        onClick={() => handleEdit(index)}
-                                                    >
-                                                        <i className="bi bi-pencil"></i> Edit
-                                                    </button>
-                                                )}
+                                                <button
+                                                    className="btn btn-sm btn-primary"
+                                                    onClick={() => handleEdit(index)}
+                                                >
+                                                    <i className="bi bi-pencil"></i> Edit
+                                                </button>
                                             </td>
                                         </tr>
                                     ))
@@ -370,110 +290,14 @@ export default function Locations() {
                     </div>
                 </div>
             </div>
-            {showAddModal && (
-                <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                    <div className="modal-dialog modal-dialog-centered modal-lg">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Add New Bicycle Station</h5>
-                                <button
-                                    type="button"
-                                    className="btn-close"
-                                    onClick={handleCloseModal}
-                                ></button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <div className="mb-3">
-                                            <label className="form-label">Station Name</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                value={newBicycle.title || ""}
-                                                onChange={(e) => updateNewBicycle("title", e.target.value)}
-                                                placeholder="e.g., Bicycle Station 5"
-                                            />
-                                        </div>
-                                        <div className="mb-3">
-                                            <label className="form-label">Latitude</label>
-                                            <input
-                                                type="number"
-                                                step="0.0001"
-                                                className="form-control"
-                                                value={newBicycle.position?.lat || ""}
-                                                onChange={(e) => updateNewPosition("lat", e.target.value)}
-                                            />
-                                        </div>
-                                        <div className="mb-3">
-                                            <label className="form-label">Longitude</label>
-                                            <input
-                                                type="number"
-                                                step="0.0001"
-                                                className="form-control"
-                                                value={newBicycle.position?.lng || ""}
-                                                onChange={(e) => updateNewPosition("lng", e.target.value)}
-                                            />
-                                        </div>
-                                        <div className="mb-3">
-                                            <label className="form-label">Bicycle Type</label>
-                                            <select
-                                                className="form-select"
-                                                value={newBicycle.bicycleType || "electric"}
-                                                onChange={(e) => updateNewBicycle("bicycleType", e.target.value)}
-                                            >
-                                                <option value="electric">Electric</option>
-                                                <option value="road">Road</option>
-                                                <option value="hybrid">Hybrid</option>
-                                            </select>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label className="form-label">Price per Hour (€)</label>
-                                            <input
-                                                type="number"
-                                                step="0.1"
-                                                className="form-control"
-                                                value={newBicycle.pricePerHour || ""}
-                                                onChange={(e) => updateNewBicycle("pricePerHour", parseFloat(e.target.value))}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <label className="form-label">Location (Click on map to set)</label>
-                                        <div
-                                            ref={mapRef}
-                                            style={{
-                                                height: '400px',
-                                                width: '100%',
-                                                borderRadius: '8px',
-                                                border: '1px solid #dee2e6'
-                                            }}
-                                        ></div>
-                                        <small className="text-muted">Click on the map to set the bicycle location</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={handleCloseModal}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-success"
-                                    onClick={handleSaveNew}
-                                    disabled={!newBicycle.title}
-                                >
-                                    Add Bicycle
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <EditBicycleModal
+                show={showEditModal}
+                editData={editData}
+                onClose={handleCancel}
+                onSave={() => handleSave(editingIndex!)}
+                onUpdateField={updateEditData}
+                onUpdatePosition={updatePosition}
+            />
             <NewBicycleModal
                 show={showAddModal}
                 newBicycle={newBicycle}

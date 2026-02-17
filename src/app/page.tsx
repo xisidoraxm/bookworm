@@ -1,11 +1,11 @@
 "use client"
 
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import {toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import styles from "./page.module.css";
 import EyeOpen from "../components/icons/EyeOpen";
 import EyeClosed from "../components/icons/EyeClosed";
@@ -19,6 +19,8 @@ export default function Login() {
         { username: "isidora", password: "Pass123!", name: "Isidora", surname: "Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
         { username: "jelica", password: "Pass123!", name: "Jelica", surname: "Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
         { username: "drazen", password: "Pass123!", name: "Drazen", surname: "Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
+        { username: "milica", password: "Pass123!", name: "Milica", surname: "Milosevic", phone: "0612345681", email: "milica@gmail.com" },
+        { username: "vojin", password: "Pass123!", name: "Vojin", surname: "Vojnovic", phone: "0612345682", email: "vojin@gmail.com" }
     ]
 
     useEffect(() => {
@@ -70,21 +72,21 @@ export default function Login() {
             <div className="row">
                 <div className="col-3"></div>
                 <div className="col-6 justify-content-center">
-                    <br/>
+                    <br />
                     <form onSubmit={login} role="form" noValidate>
                         <div className="text-center align-items-center">
-                            <br/>
+                            <br />
                             <Image alt="" src="/login.png" width={100} height={100}></Image>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             <div className="input-group">
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" id="floatingUsername"
-                                           name="username" placeholder="Username" aria-label="Username" autoFocus/>
+                                        name="username" placeholder="Username" aria-label="Username" autoFocus />
                                     <label htmlFor="floatingUsername">Username</label>
                                 </div>
                             </div>
-                            <br/>
+                            <br />
                             <div className="input-group">
                                 <div className={`form-floating mb-3 ${styles.passwordWrapper}`}>
                                     <input
@@ -107,9 +109,9 @@ export default function Login() {
                                     <label htmlFor="floatingPassword">Password</label>
                                 </div>
                             </div>
-                            <br/>
+                            <br />
                             <button className="btn btn-success" type="submit">Login</button>
-                            <hr/>
+                            <hr />
                             <p className={styles.registerPrompt}>
                                 You don't have an account? <Link href="/register">Create new</Link>.
                             </p>

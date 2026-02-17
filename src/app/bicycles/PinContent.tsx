@@ -5,6 +5,7 @@ type BicycleType = 'electric' | 'road' | 'hybrid';
 type BicycleStatus = 'available' | 'in_use' | 'maintenance';
 
 export type MarkerData = {
+  id: string | number;
   position: { lat: number; lng: number };
   title: string;
   type?: MarkerType;
