@@ -13,13 +13,13 @@ type Props = {
     onUpdatePosition: (coord: 'lat' | 'lng', value: string) => void;
 };
 
-export default function EditBicycleModal({ 
-    show, 
-    editData, 
-    onClose, 
-    onSave, 
-    onUpdateField, 
-    onUpdatePosition 
+export default function EditBicycleModal({
+    show,
+    editData,
+    onClose,
+    onSave,
+    onUpdateField,
+    onUpdatePosition
 }: Props) {
     const markerRef = useRef<any>(null);
 

@@ -210,7 +210,7 @@ export default function Locations() {
                         <table className="table table-striped table-hover">
                             <thead className="table-dark">
                                 <tr>
-                                    <th>Station Name</th>
+                                    <th>Bicycle Title</th>
                                     <th>Location</th>
                                     <th>Bicycle Type</th>
                                     <th>Price/Hour</th>

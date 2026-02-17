@@ -1,15 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-type RentalData = {
-    id: number;
-    username: string;
-    startTime: Date;
-    endTime: Date | null;
-    bicycleId: string | number;
-    status: 'active' | 'completed';
-}
+import { useState, useEffect, useRef } from "react";
+import RentDetailsModal, { type RentalData } from "./RentDetailsModal";
+import type { MarkerData } from "../bicycles/PinContent";
+import EditBicycleModal from "../locations/EditBicycleModal";
+import { calculateDistance } from "../utils";
 
 const mockRentals: RentalData[] = [
     {
@@ -18,12 +13,14 @@ const mockRentals: RentalData[] = [
         startTime: new Date('2026-02-16T09:30:00'),
         endTime: new Date('2026-02-16T12:15:00'),
         bicycleId: 'bicycle-1',
-        status: 'completed'
+        status: 'completed',
+        returnPicture: '/bicycles/bicyclePic1.jpg',
+        note: 'Bicycle returned in good condition. Minor scratch on the left handlebar.'
     },
     {
         id: 2,
         username: "drazen",
-        startTime: new Date('2026-02-16T10:45:00'),
+        startTime: new Date('2026-02-17T15:45:00'),
         endTime: null,
         bicycleId: 'bicycle-2',
         status: 'active'
@@ -34,7 +31,9 @@ const mockRentals: RentalData[] = [
         startTime: new Date('2026-02-16T08:00:00'),
         endTime: new Date('2026-02-16T10:30:00'),
         bicycleId: 'bicycle-3',
-        status: 'completed'
+        status: 'completed',
+        returnPicture: '/bicycles/bicyclePic2.jpg',
+        note: 'Perfect condition. Cleaned before return.'
     },
     {
         id: 4,
@@ -48,6 +47,13 @@ const mockRentals: RentalData[] = [
 
 export default function Renting() {
     const [rentals, setRentals] = useState<RentalData[]>([]);
+    const [selectedRental, setSelectedRental] = useState<RentalData | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editData, setEditData] = useState<Partial<MarkerData>>({});
+    const [editingBicycleId, setEditingBicycleId] = useState<string | number | null>(null);
+    const [storedMarkers, setStoredMarkers] = useState<MarkerData[]>([]);
+    const markerRef = useRef<any>(null);
 
     useEffect(() => {
         if (!localStorage.getItem("mockRentals")) {
@@ -63,6 +69,11 @@ export default function Renting() {
                 }));
                 setRentals(parsedRentals);
             }
+        }
+
+        const markers = localStorage.getItem("initialMarkers");
+        if (markers) {
+            setStoredMarkers(JSON.parse(markers));
         }
     }, []);
 
@@ -106,19 +117,105 @@ export default function Renting() {
         return <span className="badge bg-secondary">Completed</span>;
     };
 
-    const getBicycleTypeBadge = (bicycleId: string | number) => {
+    const getBicycleTitle = (bicycleId: string | number) => {
         const bicycles = localStorage.getItem("initialMarkers");
         const bicycle = bicycles ? JSON.parse(bicycles).find((marker: any) => marker.id === bicycleId) : null;
         if (bicycle) {
-            const badgeColors: any = {
-                electric: 'bg-warning',
-                road: 'bg-info', 
-                hybrid: 'bg-primary'
-            };
-            const bgClass = badgeColors[bicycle.bicycleType] || 'bg-info';
-            return <span className={`badge ${bgClass} text-capitalize`}>{bicycle.bicycleType}</span>;
+            return <span className="text-capitalize">{bicycle.title}</span>;
         }
         return <span className="badge bg-secondary">Unknown</span>;
+    };
+
+    const handleViewReturnState = (rental: RentalData) => {
+        setSelectedRental(rental);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedRental(null);
+    };
+
+    const handleEditBicycle = (bicycleId: string | number) => {
+        const bicycle = storedMarkers.find((m: MarkerData) => m.id === bicycleId && m.type === "bicycle");
+        if (bicycle) {
+            setEditingBicycleId(bicycleId);
+            setEditData({
+                title: bicycle.title,
+                position: { ...bicycle.position },
+                bicycleType: bicycle.bicycleType,
+                pricePerHour: bicycle.pricePerHour,
+                bicycleStatus: bicycle.bicycleStatus,
+            });
+            setShowEditModal(true);
+        }
+    };
+
+    const handleSaveBicycle = () => {
+        if (editingBicycleId === null) return;
+
+        const allMarkers = JSON.parse(localStorage.getItem("initialMarkers") || "[]");
+        const actualIndex = allMarkers.findIndex((m: MarkerData) => m.id === editingBicycleId);
+
+        if (actualIndex !== -1) {
+            const parkingPlaces = allMarkers.filter((m: MarkerData) => m.type === "parking");
+            const distances = parkingPlaces.map((parking: MarkerData) => ({
+                name: parking.title,
+                distance: calculateDistance(
+                    editData.position!.lat,
+                    editData.position!.lng,
+                    parking.position.lat,
+                    parking.position.lng
+                )
+            }));
+
+            const closestParkingPlaces = distances
+                .sort((a, b) => a.distance - b.distance)
+                .slice(0, 2);
+
+            allMarkers[actualIndex] = {
+                ...allMarkers[actualIndex],
+                ...editData,
+                closestParkingPlaces,
+            };
+            localStorage.setItem("initialMarkers", JSON.stringify(allMarkers));
+            setStoredMarkers(allMarkers);
+        }
+
+        handleCancelEdit();
+    };
+
+    const handleCancelEdit = () => {
+        setEditingBicycleId(null);
+        setEditData({});
+        setShowEditModal(false);
+    };
+
+    const updateEditData = (field: string, value: any) => {
+        setEditData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const updatePosition = (coord: 'lat' | 'lng', value: string) => {
+        const newValue = parseFloat(value) || 0;
+        setEditData(prev => ({
+            ...prev,
+            position: {
+                ...prev.position!,
+                [coord]: newValue
+            }
+        }));
+
+        if (markerRef.current) {
+            const newPos = {
+                ...editData.position!,
+                [coord]: newValue
+            };
+            if (markerRef.current.position !== undefined) {
+                markerRef.current.position = newPos;
+            } else if (markerRef.current.setPosition) {
+                markerRef.current.setPosition(newPos);
+            }
+        }
     };
 
     return (
@@ -136,12 +233,13 @@ export default function Renting() {
                             <thead className="table-dark">
                                 <tr>
                                     <th scope="col">Username</th>
-                                    <th scope="col">Bicycle Type</th>
+                                    <th scope="col">Bicycle Title</th>
                                     <th scope="col">Start Time</th>
                                     <th scope="col">End Time</th>
                                     <th scope="col">Price/Hour</th>
                                     <th scope="col">Final Price</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Return State</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -151,7 +249,7 @@ export default function Renting() {
                                             <strong>{rental.username}</strong>
                                         </td>
                                         <td>
-                                            {getBicycleTypeBadge(rental.bicycleId)}
+                                            {getBicycleTitle(rental.bicycleId)}
                                         </td>
                                         <td>
                                             <div>
@@ -181,6 +279,18 @@ export default function Renting() {
                                         <td>
                                             {getStatusBadge(rental.status)}
                                         </td>
+                                        <td>
+                                            {rental.status === 'completed' && rental.returnPicture ? (
+                                                <button 
+                                                    className="btn btn-sm btn-info"
+                                                    onClick={() => handleViewReturnState(rental)}
+                                                >
+                                                    <i className="bi bi-image"></i> View Details
+                                                </button>
+                                            ) : (
+                                                <span className="text-muted">N/A</span>
+                                            )}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -188,6 +298,25 @@ export default function Renting() {
                     </div>
                 </div>
             </div>
+
+            <RentDetailsModal
+                show={showModal}
+                rental={selectedRental}
+                onClose={handleCloseModal}
+                formatTime={formatTime}
+                formatDate={formatDate}
+                calculateFinalPrice={calculateFinalPrice}
+                getBicycleTitle={getBicycleTitle}
+                onEditBicycle={handleEditBicycle}
+            />
+            <EditBicycleModal
+                show={showEditModal}
+                editData={editData}
+                onClose={handleCancelEdit}
+                onSave={handleSaveBicycle}
+                onUpdateField={updateEditData}
+                onUpdatePosition={updatePosition}
+            />
         </div>
     );
 }

@@ -2,7 +2,7 @@
 
 export type MarkerType = 'bicycle' | 'parking';
 type BicycleType = 'electric' | 'road' | 'hybrid';
-type BicycleStatus = 'available' | 'in_use' | 'maintenance';
+type BicycleStatus = 'available' | 'in_use' | 'maintenance' | 'temporary_unavailable';
 
 export type MarkerData = {
   id: string | number;
