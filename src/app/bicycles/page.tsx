@@ -14,13 +14,15 @@ export default function Bicycles() {
             id: 'parking-1',
             position: { lat: 44.81487956672314, lng: 20.422241859809755 },
             title: "Parking Arena",
-            type: 'parking' as const
+            type: 'parking' as const,
+            availableBicycles: ["bicycle-7"]
         },
         {
             id: 'parking-2',
             position: { lat: 44.80298919683514, lng: 20.446677362784012 },
             title: "Central Parking",
-            type: 'parking' as const
+            type: 'parking' as const,
+            availableBicycles: ["bicycle-5", "bicycle-6"]
         }
     ];
 
@@ -28,7 +30,7 @@ export default function Bicycles() {
         {
             id: 'bicycle-1',
             position: { lat: 44.84856995676583, lng: 20.40967915853299 },
-            title: "Bicycle 1",
+            title: "E-Bike 1",
             type: 'bicycle' as const,
             bicycleType: 'electric' as const,
             pricePerHour: 2.5,
@@ -37,7 +39,7 @@ export default function Bicycles() {
         {
             id: 'bicycle-2',
             position: { lat: 44.800584826050496, lng: 20.500504907469015 },
-            title: "Bicycle 2",
+            title: "Road Bike 2",
             type: 'bicycle' as const,
             bicycleType: 'road' as const,
             pricePerHour: 2.0,
@@ -46,7 +48,7 @@ export default function Bicycles() {
         {
             id: 'bicycle-3',
             position: { lat: 44.795916081609484, lng: 20.46717487034892 },
-            title: "Bicycle 3",
+            title: "Hybrid Bike 3",
             type: 'bicycle' as const,
             bicycleType: 'hybrid' as const,
             pricePerHour: 2.2,
@@ -55,10 +57,37 @@ export default function Bicycles() {
         {
             id: 'bicycle-4',
             position: { lat: 44.8087148418751, lng: 20.463538120802955 },
-            title: "Bicycle 4",
+            title: "Hybrid Bike 4",
             type: 'bicycle' as const,
             bicycleType: 'hybrid' as const,
             pricePerHour: 2.2,
+            bicycleStatus: 'available' as const
+        },
+        {
+            id: 'bicycle-5',
+            position: { lat: 44.80298919683514, lng: 20.446677362784012 },
+            title: "Central Hybrid 1",
+            type: 'bicycle' as const,
+            bicycleType: 'hybrid' as const,
+            pricePerHour: 2.2,
+            bicycleStatus: 'available' as const
+        },
+        {
+            id: 'bicycle-6',
+            position: { lat: 44.80298919683514, lng: 20.446677362784012 },
+            title: "Central E-Bike 1",
+            type: 'bicycle' as const,
+            bicycleType: 'electric' as const,
+            pricePerHour: 2.5,
+            bicycleStatus: 'available' as const
+        },
+        {
+            id: 'bicycle-7',
+            position: {  lat: 44.81487956672314, lng: 20.422241859809755 },
+            title: "Road Bike 7",
+            type: 'bicycle' as const,
+            bicycleType: 'road' as const,
+            pricePerHour: 2.0,
             bicycleStatus: 'available' as const
         }
     ];
@@ -188,10 +217,10 @@ export default function Bicycles() {
                                 </li>
                                 <li className={styles.legendItem}>
                                     <span className={styles.legendDot} style={{ backgroundColor: '#2f53c9' }}></span>
-                                    Parking
+                                    Parking (with available bicycles)
                                 </li>
                             </ul>
-                            <small className="text-muted">Click on any marker to see more details</small>
+                            <small className="text-muted">Click on any marker to see more details. Parking locations show all available bicycles ready for rent.</small>
                         </div>
                     </div>
                 </div>

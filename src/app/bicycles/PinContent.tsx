@@ -14,6 +14,7 @@ export type MarkerData = {
   pricePerHour?: number;
   bicycleStatus?: BicycleStatus;
   closestParkingPlaces?: { name: string; distance: number }[];
+  availableBicycles?: string[];
 };
 
 function generateBicycleContent(data: MarkerData): string {
@@ -57,6 +58,17 @@ function generateBicycleContent(data: MarkerData): string {
 }
 
 function generateParkingContent(data: MarkerData): string {
+  // Fetch all markers from localStorage to get bicycle details
+  const storedMarkers = localStorage.getItem("initialMarkers");
+  const allMarkers: MarkerData[] = storedMarkers ? JSON.parse(storedMarkers) : [];
+  
+  // Filter to get only bicycles that are in this parking
+  const availableBikes = data.availableBicycles
+    ? data.availableBicycles
+        .map(bikeId => allMarkers.find(m => m.id === bikeId && m.type === 'bicycle'))
+        .filter(bike => bike !== undefined)
+    : [];
+
   return `
     <div class="infoWindow">
       <h4 class="infoWindowTitle">${data.title}</h4>
@@ -66,6 +78,22 @@ function generateParkingContent(data: MarkerData): string {
           Lat: ${data.position.lat.toFixed(4)}, Lng: ${data.position.lng.toFixed(4)}
         </div>
       </div>
+      ${availableBikes.length > 0 ? `
+        <div class="infoWindowSection">
+          <strong class="infoWindowLabel">Available Bicycles:</strong>
+          <ul class="infoWindowList">
+            ${availableBikes.map(bike => `
+              <li class="infoWindowListItem">
+                <strong>${bike!.title}</strong> - ${bike!.bicycleType} (€${bike!.pricePerHour}/hour)
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      ` : `
+        <div class="infoWindowSection">
+          <span class="infoWindowValue">No bicycles available at this parking</span>
+        </div>
+      `}
     </div>
   `;
 }
