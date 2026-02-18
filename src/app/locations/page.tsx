@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { MarkerData } from "../bicycles/PinContent";
 import { DEFAULT_CENTER_BGD } from "../../components/Map";
-import { calculateDistance } from "../utils";
+import { calculateDistance, updateParkingAvailableBicycles } from "../utils";
 import NewBicycleModal from "./NewBicycleModal";
 import EditBicycleModal from "./EditBicycleModal";
 
@@ -79,6 +79,10 @@ export default function Locations() {
                 ...editData,
                 closestParkingPlaces,
             };
+
+            const bicycleId = allMarkers[actualIndex].id;
+            updateParkingAvailableBicycles(allMarkers, bicycleId, editData.position!);
+
             localStorage.setItem("initialMarkers", JSON.stringify(allMarkers));
             setStoredMarkers(allMarkers);
         }
@@ -184,13 +188,23 @@ export default function Locations() {
             .sort((a, b) => a.distance - b.distance)
             .slice(0, 2);
 
+        const maxId = Math.max(
+            ...allMarkers
+                .filter((m: MarkerData) => m.type === 'bicycle' && typeof m.id === 'string' && m.id.startsWith('bicycle-'))
+                .map((m: MarkerData) => parseInt((m.id as string).split('-')[1]) || 0),
+            0
+        );
+        const newId = `bicycle-${maxId + 1}`;
+
         const newMarker: MarkerData = {
             ...newBicycle as MarkerData,
+            id: newId,
             bicycleStatus,
             closestParkingPlaces,
         };
 
         allMarkers.push(newMarker);
+        updateParkingAvailableBicycles(allMarkers, newId, newBicycle.position!);
         localStorage.setItem("initialMarkers", JSON.stringify(allMarkers));
         setStoredMarkers(allMarkers);
         handleCloseModal();

@@ -24,7 +24,6 @@ export default function Map({ center = DEFAULT_CENTER_BGD, zoom = 12, className,
     let mounted = true;
 
     async function init() {
-      // Wait for both the ref to be available and Google Maps API to load
       await new Promise<void>((resolve) => {
         const checkReady = () => {
           if (ref.current && 
@@ -39,7 +38,6 @@ export default function Map({ center = DEFAULT_CENTER_BGD, zoom = 12, className,
         checkReady();
       });
 
-      // Double-check that we're still mounted and have a valid ref
       if (!mounted || !ref.current) return;
 
       try {
@@ -67,7 +65,6 @@ export default function Map({ center = DEFAULT_CENTER_BGD, zoom = 12, className,
       }
     }
 
-    // Add a small delay to ensure DOM is ready
     const timer = setTimeout(init, 100);
 
     return () => { 

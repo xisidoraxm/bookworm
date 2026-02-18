@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import RentDetailsModal, { type RentalData } from "./RentDetailsModal";
 import type { MarkerData } from "../bicycles/PinContent";
 import EditBicycleModal from "../locations/EditBicycleModal";
-import { calculateDistance } from "../utils";
+import { calculateDistance, updateParkingAvailableBicycles } from "../utils";
 
 const mockRentals: RentalData[] = [
     {
@@ -178,6 +178,8 @@ export default function Renting() {
                 ...editData,
                 closestParkingPlaces,
             };
+
+            updateParkingAvailableBicycles(allMarkers, editingBicycleId, editData.position!);
             localStorage.setItem("initialMarkers", JSON.stringify(allMarkers));
             setStoredMarkers(allMarkers);
         }
@@ -281,7 +283,7 @@ export default function Renting() {
                                         </td>
                                         <td>
                                             {rental.status === 'completed' && rental.returnPicture ? (
-                                                <button 
+                                                <button
                                                     className="btn btn-sm btn-info"
                                                     onClick={() => handleViewReturnState(rental)}
                                                 >

@@ -58,11 +58,9 @@ function generateBicycleContent(data: MarkerData): string {
 }
 
 function generateParkingContent(data: MarkerData): string {
-  // Fetch all markers from localStorage to get bicycle details
   const storedMarkers = localStorage.getItem("initialMarkers");
   const allMarkers: MarkerData[] = storedMarkers ? JSON.parse(storedMarkers) : [];
   
-  // Filter to get only bicycles that are in this parking
   const availableBikes = data.availableBicycles
     ? data.availableBicycles
         .map(bikeId => allMarkers.find(m => m.id === bikeId && m.type === 'bicycle'))

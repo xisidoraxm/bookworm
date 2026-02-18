@@ -13,3 +13,33 @@ export function calculateDistance(lat1: number, lng1: number, lat2: number, lng2
 
     return Math.round(R * c);
 }
+
+export function updateParkingAvailableBicycles(allMarkers: any[], bicycleId: string | number, bicyclePosition: { lat: number; lng: number }) {
+    const PARKING_RADIUS = 50;
+    const parkingPlaces = allMarkers.filter((m: any) => m.type === 'parking');
+
+    parkingPlaces.forEach((parking: any) => {
+        if (parking.availableBicycles && Array.isArray(parking.availableBicycles)) {
+            parking.availableBicycles = parking.availableBicycles.filter((id: string | number) => id !== bicycleId);
+        }
+    });
+
+    const matchingParking = parkingPlaces.find((parking: any) => {
+        const distance = calculateDistance(
+            bicyclePosition.lat,
+            bicyclePosition.lng,
+            parking.position.lat,
+            parking.position.lng
+        );
+        return distance <= PARKING_RADIUS;
+    });
+
+    if (matchingParking) {
+        if (!matchingParking.availableBicycles) {
+            matchingParking.availableBicycles = [];
+        }
+        if (!matchingParking.availableBicycles.includes(bicycleId)) {
+            matchingParking.availableBicycles.push(bicycleId);
+        }
+    }
+}
