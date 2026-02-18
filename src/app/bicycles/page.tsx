@@ -134,6 +134,20 @@ export default function Bicycles() {
     const handleMapReady = async (mapInstance: any, infoWindow: any) => {
         if (!markers || markers.length === 0) return;
 
+        const bicyclesInParking = new Set<string | number>();
+        markers.forEach((marker) => {
+            if (marker.type === 'parking' && marker.availableBicycles) {
+                marker.availableBicycles.forEach(bikeId => bicyclesInParking.add(bikeId));
+            }
+        });
+
+        const visibleMarkers = markers.filter((marker) => {
+            if (marker.type === 'bicycle' && bicyclesInParking.has(marker.id)) {
+                return false;
+            }
+            return true;
+        });
+
         const getMarkerIcon = (type: MarkerType = 'bicycle') => {
             const icons: Record<MarkerType, string> = {
                 bicycle: 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png',
@@ -148,7 +162,7 @@ export default function Bicycles() {
             const markerLib = await (window as any).google.maps.importLibrary('marker');
             const { AdvancedMarkerElement, PinElement } = markerLib;
 
-            markers.forEach((data) => {
+            visibleMarkers.forEach((data) => {
                 const pinColor = {
                     bicycle: '#e97f38',
                     parking: '#2f53c9',
@@ -175,7 +189,7 @@ export default function Bicycles() {
         } else {
             const MarkerClass = (window as any).google.maps.Marker;
 
-            markers.forEach((data) => {
+            visibleMarkers.forEach((data) => {
                 const marker = new MarkerClass({
                     position: data.position,
                     map: mapInstance,
@@ -213,14 +227,14 @@ export default function Bicycles() {
                             <ul className="list-unstyled mb-2">
                                 <li className={styles.legendItem}>
                                     <span className={styles.legendDot} style={{ backgroundColor: '#e97f38' }}></span>
-                                    Bicycle Available
+                                    Bicycle (not at parking)
                                 </li>
                                 <li className={styles.legendItem}>
                                     <span className={styles.legendDot} style={{ backgroundColor: '#2f53c9' }}></span>
                                     Parking (with available bicycles)
                                 </li>
                             </ul>
-                            <small className="text-muted">Click on any marker to see more details. Parking locations show all available bicycles ready for rent.</small>
+                            <small className="text-muted">Click on parking markers to see available bicycles. Bicycles at parking locations are shown only as parking pins.</small>
                         </div>
                     </div>
                 </div>
