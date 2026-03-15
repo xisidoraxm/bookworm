@@ -23,9 +23,8 @@ export default function Nav() {
         <nav className={`navbar navbar-expand-lg ${styles.navbar}`}>
             <div className="container-fluid">
                 <a className={styles.navbarBrand} href="/bicycles">
-                    <span className={styles.brandIcon}>📚</span>
                     <span className={styles.brandText}>
-                        <span className={styles.brandName}>BookShop</span>
+                        <span className={styles.brandName}>Bookwarm</span>
                         <span className={styles.brandTagline}>Your Literary Haven</span>
                     </span>
                 </a>
