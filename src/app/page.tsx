@@ -16,12 +16,12 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
 
     const initialUsers = [
-        { username: "admin", password: "Admin123!", name: "Aleksandra", surname: "Milosevic", phone: "0612345678", email: "admin@gmail.com" },
-        { username: "isidora", password: "Pass123!", name: "Isidora", surname: "Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
-        { username: "jelica", password: "Pass123!", name: "Jelica", surname: "Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
-        { username: "drazen", password: "Pass123!", name: "Drazen", surname: "Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
-        { username: "milica", password: "Pass123!", name: "Milica", surname: "Milosevic", phone: "0612345681", email: "milica@gmail.com" },
-        { username: "vojin", password: "Pass123!", name: "Vojin", surname: "Vojnovic", phone: "0612345682", email: "vojin@gmail.com" }
+        { username: "admin", password: "Admin123!", fullName: "Aleksandra Milosevic", phone: "0612345678", email: "admin@gmail.com" },
+        { username: "isidora", password: "Pass123!", fullName: "Isidora Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
+        { username: "jelica", password: "Pass123!", fullName: "Jelica Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
+        { username: "drazen", password: "Pass123!", fullName: "Drazen Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
+        { username: "milica", password: "Pass123!", fullName: "Milica Milosevic", phone: "0612345681", email: "milica@gmail.com" },
+        { username: "vojin", password: "Pass123!", fullName: "Vojin Vojnovic", phone: "0612345682", email: "vojin@gmail.com" }
     ]
 
     useEffect(() => {
@@ -77,59 +77,65 @@ export default function Login() {
     }
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-3"></div>
-                <div className="col-6 justify-content-center">
-                    <br />
-                    <form onSubmit={login} role="form" noValidate>
-                        <div className="text-center align-items-center">
-                            <br />
-                            <Image alt="" src="/login.png" width={100} height={100}></Image>
-                            <br />
-                            <br />
-                            <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingUsername"
-                                        name="username" placeholder="Username" aria-label="Username" autoFocus />
-                                    <label htmlFor="floatingUsername">Username</label>
-                                </div>
-                            </div>
-                            <br />
-                            <div className="input-group">
-                                <div className={`form-floating mb-3 ${styles.passwordWrapper}`}>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        className={`form-control ${styles.passwordInput}`}
-                                        id="floatingPassword"
-                                        name="password"
-                                        placeholder="Password"
-                                        aria-label="Password"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        aria-pressed={showPassword}
-                                        aria-label={showPassword ? "Hide password" : "Show password"}
-                                        className={styles.passwordToggle}
-                                    >
-                                        {showPassword ? <EyeOpen width={20} height={20} aria-hidden="true" /> : <EyeClosed width={20} height={20} aria-hidden="true" />}
-                                    </button>
-                                    <label htmlFor="floatingPassword">Password</label>
-                                </div>
-                            </div>
-                            <br />
-                            <button className="btn btn-success" type="submit">Login</button>
-                            <hr />
-                            <p className={styles.registerPrompt}>
-                                You don't have an account? <Link href="/register">Create new</Link>.
-                            </p>
-                        </div>
-                    </form>
-                    <ToastContainer position="top-right" />
+        <div className={styles.loginPage}>
+            <div className={styles.loginCard}>
+                <div className={styles.loginHeader}>
+                    <h1 className={styles.loginTitle}>Welcome to Bookworm</h1>
+                    <p className={styles.loginSubtitle}>Your next great read awaits</p>
                 </div>
-                <div className="col-3"></div>
+                
+                <form onSubmit={login} role="form" noValidate className={styles.loginForm}>
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="floatingUsername" className={styles.inputLabel}>Username</label>
+                        <input 
+                            type="text" 
+                            className={styles.inputField} 
+                            id="floatingUsername"
+                            name="username" 
+                            placeholder="Enter your username" 
+                            aria-label="Username" 
+                            autoFocus 
+                        />
+                    </div>
+                    
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="floatingPassword" className={styles.inputLabel}>Password</label>
+                        <div className={styles.passwordWrapper}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className={`${styles.inputField} ${styles.passwordInput}`}
+                                id="floatingPassword"
+                                name="password"
+                                placeholder="Enter your password"
+                                aria-label="Password"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-pressed={showPassword}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                className={styles.passwordToggle}
+                            >
+                                {showPassword ? <EyeOpen width={20} height={20} aria-hidden="true" /> : <EyeClosed width={20} height={20} aria-hidden="true" />}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button className={styles.loginButton} type="submit">
+                        <span>Sign In</span>
+                        <span className={styles.buttonIcon}>→</span>
+                    </button>
+                    
+                    <div className={styles.divider}>
+                        <span>or</span>
+                    </div>
+                    
+                    <p className={styles.registerPrompt}>
+                        New to Bookworm? <Link href="/register" className={styles.registerLink}>Create an account</Link>
+                    </p>
+                </form>
             </div>
+            <ToastContainer position="top-right" />
         </div>
     )
 }

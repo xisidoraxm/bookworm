@@ -1,1 +1,237 @@
+.registerPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
 
+.registerCard {
+  background: linear-gradient(145deg, rgba(255, 253, 250, 0.95), rgba(245, 240, 230, 0.95));
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 50px rgba(62, 39, 35, 0.3),
+    0 10px 20px rgba(139, 69, 19, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid rgba(139, 69, 19, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.registerCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #8B4513, #D2691E, #CD853F, #8B4513);
+}
+
+.registerHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.bookIcon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.registerTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3E2723;
+  margin: 0 0 0.5rem 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  letter-spacing: 0.5px;
+}
+
+.registerSubtitle {
+  color: #6D4C41;
+  font-size: 0.9rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.inputLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #5D4037;
+  letter-spacing: 0.3px;
+}
+
+.inputField {
+  padding: 0.75rem 1rem;
+  border: 2px solid #D7CCC8;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+  color: #3E2723;
+}
+
+.inputField::placeholder {
+  color: #A1887F;
+  font-size: 0.9rem;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: #8B4513;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.15);
+}
+
+/* Password field styles */
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordInput {
+  padding-right: 3rem;
+  width: 100%;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  padding: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8B4513;
+  transition: color 0.2s ease;
+}
+
+.passwordToggle:hover,
+.passwordToggle:focus {
+  color: #5D4037;
+  outline: none;
+}
+
+.passwordToggle:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+  border-radius: 4px;
+}
+
+.passwordHint {
+  font-size: 0.75rem;
+  color: #8D6E63;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* Register button */
+.registerButton {
+  background: linear-gradient(135deg, #8B4513 0%, #6D4C41 100%);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+  margin-top: 0.5rem;
+}
+
+.registerButton:hover {
+  background: linear-gradient(135deg, #6D4C41 0%, #5D4037 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+}
+
+.registerButton:active {
+  transform: translateY(0);
+}
+
+.buttonIcon {
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.registerButton:hover .buttonIcon {
+  transform: scale(1.2);
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #A1887F;
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #D7CCC8, transparent);
+}
+
+/* Login prompt */
+.loginPrompt {
+  text-align: center;
+  color: #6D4C41;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.loginLink {
+  color: #8B4513;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.loginLink:hover {
+  color: #5D4037;
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .registerCard {
+    padding: 2rem 1.5rem;
+  }
+}

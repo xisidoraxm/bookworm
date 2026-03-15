@@ -22,7 +22,7 @@ export default function Nav() {
         <nav className="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
             <div className="container-fluid">
                 <a className="navbar-brand" href="/bicycles">
-                    <img src="/road-bicycle.svg" alt="Pedal Point" height="45" />
+                    <img src="/road-bicycle.svg" alt="Book shop" height="45" />
                 </a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"

@@ -1,8 +1,12 @@
 :root {
-  --background-image-url: url("/wallpaper.jpg");
+  --primary-warm: #8B4513;
+  --secondary-cream: #F5F5DC;
 }
 
 body {
-  background: var(--background-image-url) no-repeat center center fixed;
+  background: 
+    linear-gradient(135deg, rgba(62, 39, 35, 0.7) 0%, rgba(93, 64, 55, 0.5) 50%, rgba(141, 110, 99, 0.6) 100%),
+    url("/bookshops/bookshop1.jpg") no-repeat center center fixed;
   background-size: cover;
+  min-height: 100vh;
 }

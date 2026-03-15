@@ -5,7 +5,7 @@ import Link from "next/link";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import React, { useState } from "react";
-import styles from "../page.module.css";
+import styles from "./page.module.css";
 import EyeOpen from "../../components/icons/EyeOpen";
 import EyeClosed from "../../components/icons/EyeClosed";
 
@@ -19,12 +19,11 @@ export default function Register() {
         const formData = new FormData(e.currentTarget);
         const username = (formData.get("username")?.toString() ?? "").trim();
         const password = (formData.get("password")?.toString() ?? "").trim();
-        const name = (formData.get("name")?.toString() ?? "").trim();
-        const surname = (formData.get("surname")?.toString() ?? "").trim();
+        const fullName = (formData.get("fullName")?.toString() ?? "").trim();
         const phone = (formData.get("phone")?.toString() ?? "").trim();
         const email = (formData.get("email")?.toString() ?? "").trim();
 
-        if (!username || !password || !phone || !email || !name || !surname) {
+        if (!username || !password || !phone || !email || !fullName) {
             toast.error("All fields are required", { position: "top-right", autoClose: 5000 });
             return;
         }
@@ -41,92 +40,105 @@ export default function Register() {
             return;
         }
 
-        users.push({ username, password, name, surname, phone, email });
+        users.push({ username, password, fullName, phone, email });
         localStorage.setItem("users", JSON.stringify(users));
         toast.success("Registered successfully", { position: "top-right", autoClose: 2000 });
         router.push("/");
     }
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-3"></div>
-                <div className="col-6 justify-content-center">
-                    <br />
-                    <form onSubmit={register}>
-                        <div className="text-center align-items-center">
-                            <br />
-                            <h2>REGISTER</h2>
-                            <br />
-                            <br />
-                            <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingUsername"
-                                        placeholder="Enter username" name="username" />
-                                    <label htmlFor="floatingUsername">Username</label>
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <div className={`form-floating mb-3 ${styles.passwordWrapper}`}>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        className={`form-control ${styles.passwordInput}`}
-                                        id="floatingPassword"
-                                        placeholder="Enter password"
-                                        name="password"
-                                        aria-label="Password"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        aria-pressed={showPassword}
-                                        aria-label={showPassword ? "Hide password" : "Show password"}
-                                        className={styles.passwordToggle}
-                                    >
-                                        {showPassword ? <EyeOpen width={20} height={20} aria-hidden="true" /> : <EyeClosed width={20} height={20} aria-hidden="true" />}
-                                    </button>
-                                    <label htmlFor="floatingPassword">Password</label>
-                                    <small id="passwordHelp" className="form-text text-muted">Password must be ≥8 chars, include an uppercase letter, a number, and a special character.</small>
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingName"
-                                        placeholder="Enter name" name="name" />
-                                    <label htmlFor="floatingName">Name</label>
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingSurname"
-                                        placeholder="Enter surname" name="surname" />
-                                    <label htmlFor="floatingSurname">Surname</label>
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingPhone"
-                                        placeholder="Enter phone number" name="phone" />
-                                    <label htmlFor="floatingPhone">Phone number</label>
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <div className="form-floating mb-3">
-                                    <input type="email" className="form-control" id="floatingEmail"
-                                        placeholder="Enter email" name="email" />
-                                    <label htmlFor="floatingEmail">Email</label>
-                                </div>
-                            </div>
-                            <button className="btn btn-success" type="submit">Register</button>
-                        </div>
-                    </form>
-                    <p className={styles.registerPrompt}>
-                        Already have an account? <Link href="/">Login</Link>.
-                    </p>
-                    <ToastContainer />
+        <div className={styles.registerPage}>
+            <div className={styles.registerCard}>
+                <div className={styles.registerHeader}>
+                    <h1 className={styles.registerTitle}>Join BookShop</h1>
+                    <p className={styles.registerSubtitle}>Start your reading journey today</p>
                 </div>
-                <div className="col-3"></div>
+
+                <form onSubmit={register} className={styles.registerForm}>
+
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="floatingName" className={styles.inputLabel}>Full Name</label>
+                        <input
+                            type="text"
+                            className={styles.inputField}
+                            id="floatingName"
+                            name="fullName"
+                            placeholder="Enter your full name"
+                        />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="floatingUsername" className={styles.inputLabel}>Username</label>
+                        <input
+                            type="text"
+                            className={styles.inputField}
+                            id="floatingUsername"
+                            name="username"
+                            placeholder="Choose a username"
+                        />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="floatingPassword" className={styles.inputLabel}>Password</label>
+                        <div className={styles.passwordWrapper}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className={`${styles.inputField} ${styles.passwordInput}`}
+                                id="floatingPassword"
+                                name="password"
+                                placeholder="Create a strong password"
+                                aria-label="Password"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-pressed={showPassword}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                className={styles.passwordToggle}
+                            >
+                                {showPassword ? <EyeOpen width={20} height={20} aria-hidden="true" /> : <EyeClosed width={20} height={20} aria-hidden="true" />}
+                            </button>
+                        </div>
+                        <small className={styles.passwordHint}>Min 8 chars with uppercase, number & special character</small>
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="floatingEmail" className={styles.inputLabel}>Email</label>
+                        <input
+                            type="email"
+                            className={styles.inputField}
+                            id="floatingEmail"
+                            name="email"
+                            placeholder="Enter your email address"
+                        />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="floatingPhone" className={styles.inputLabel}>Phone Number</label>
+                        <input
+                            type="text"
+                            className={styles.inputField}
+                            id="floatingPhone"
+                            name="phone"
+                            placeholder="Enter your phone number"
+                        />
+                    </div>
+
+                    <button className={styles.registerButton} type="submit">
+                        <span>Create Account</span>
+                        <span className={styles.buttonIcon}>✨</span>
+                    </button>
+
+                    <div className={styles.divider}>
+                        <span>or</span>
+                    </div>
+
+                    <p className={styles.loginPrompt}>
+                        Already a member? <Link href="/" className={styles.loginLink}>Sign in</Link>
+                    </p>
+                </form>
             </div>
+            <ToastContainer position="top-right" />
         </div>
     );
 }

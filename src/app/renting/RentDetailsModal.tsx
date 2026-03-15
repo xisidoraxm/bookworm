@@ -60,7 +60,7 @@ export default function RentDetailsModal({
                                     <strong>Username:</strong> {rental.username}
                                 </div>
                                 <div className="mb-2">
-                                    <strong>Name:</strong> {getUserInfo(rental.username)?.name + ' ' + getUserInfo(rental.username)?.surname || 'Unknown'}
+                                    <strong>Full Name:</strong> {getUserInfo(rental.username)?.fullName || 'Unknown'}
                                 </div>
                                 <div className="mb-2">
                                     <strong>Email:</strong> {getUserInfo(rental.username)?.email || 'Unknown'}

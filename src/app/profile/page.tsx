@@ -7,8 +7,7 @@ import styles from "../page.module.css";
 type User = {
     username?: string;
     password?: string;
-    name?: string;
-    surname?: string;
+    fullName?: string;
     phone?: string;
     email?: string;
 };
@@ -56,8 +55,7 @@ export default function Profile() {
                                     {!editMode ? (
                                         <>
                                             <div className={`mb-3 ${styles.profileField}`}><strong>Username:</strong> {user.username ?? "-"}</div>
-                                            <div className={`mb-3 ${styles.profileField}`}><strong>Name:</strong> {user.name ?? "-"}</div>
-                                            <div className={`mb-3 ${styles.profileField}`}><strong>Surname:</strong> {user.surname ?? "-"}</div>
+                                            <div className={`mb-3 ${styles.profileField}`}><strong>Full Name:</strong> {user.fullName ?? "-"}</div>
                                             <div className={`mb-3 ${styles.profileField}`}><strong>Phone:</strong> {user.phone ?? "-"}</div>
                                             <div className={`mb-3 ${styles.profileField}`}><strong>Email:</strong> {user.email ?? "-"}</div>
                                             <div className={`mb-3 ${styles.profileField}`}>
@@ -78,8 +76,7 @@ export default function Profile() {
                                             setMessage(null);
                                             const errs: string[] = [];
                                             const username = (form.username ?? "").toString().trim();
-                                            const name = (form.name ?? "").toString().trim();
-                                            const surname = (form.surname ?? "").toString().trim();
+                                            const fullName = (form.fullName ?? "").toString().trim();
                                             const phone = (form.phone ?? "").toString().trim();
                                             const email = (form.email ?? "").toString().trim();
                                             const password = (form.password ?? "").toString();
@@ -87,8 +84,7 @@ export default function Profile() {
 
                                             if (!username) errs.push("Username is required.");
                                             if (username.length < 3) errs.push("Username must be at least 3 characters.");
-                                            if (!name) errs.push("Name is required.");
-                                            if (!surname) errs.push("Surname is required.");
+                                            if (!fullName) errs.push("Full Name is required.");
                                             if (email) {
                                                 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                                                 if (!emailRe.test(email)) errs.push("Email address is invalid.");
@@ -112,8 +108,7 @@ export default function Profile() {
                                             const toSave: User = {
                                                 username: username,
                                                 password: password.length > 0 ? password : user.password,
-                                                name: name,
-                                                surname: surname,
+                                                fullName: fullName,
                                                 phone: phone,
                                                 email: email,
                                             };
@@ -131,12 +126,8 @@ export default function Profile() {
                                                 <input className="form-control" value={form.username ?? ""} onChange={e => setForm(f => ({ ...f, username: e.target.value }))} />
                                             </div>
                                             <div className={`mb-3 ${styles.profileField}`}>
-                                                <label className="form-label">Name</label>
-                                                <input className="form-control" value={form.name ?? ""} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-                                            </div>
-                                            <div className={`mb-3 ${styles.profileField}`}>
-                                                <label className="form-label">Surname</label>
-                                                <input className="form-control" value={form.surname ?? ""} onChange={e => setForm(f => ({ ...f, surname: e.target.value }))} />
+                                                <label className="form-label">Full Name</label>
+                                                <input className="form-control" value={form.fullName ?? ""} onChange={e => setForm(f => ({ ...f, fullName: e.target.value }))} />
                                             </div>
                                             <div className={`mb-3 ${styles.profileField}`}>
                                                 <label className="form-label">Phone</label>
