@@ -50,7 +50,7 @@ export default function Register() {
         <div className={styles.registerPage}>
             <div className={styles.registerCard}>
                 <div className={styles.registerHeader}>
-                    <h1 className={styles.registerTitle}>Join BookShop</h1>
+                    <h1 className={styles.registerTitle}>Join Bookworm</h1>
                     <p className={styles.registerSubtitle}>Start your reading journey today</p>
                 </div>
 

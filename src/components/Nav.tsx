@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import styles from "./Nav.module.css";
 
 export default function Nav() {
     const router = useRouter();
@@ -19,37 +20,56 @@ export default function Nav() {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+        <nav className={`navbar navbar-expand-lg ${styles.navbar}`}>
             <div className="container-fluid">
-                <a className="navbar-brand" href="/bicycles">
-                    <img src="/road-bicycle.svg" alt="Book shop" height="45" />
+                <a className={styles.navbarBrand} href="/bicycles">
+                    <span className={styles.brandIcon}>📚</span>
+                    <span className={styles.brandText}>
+                        <span className={styles.brandName}>BookShop</span>
+                        <span className={styles.brandTagline}>Your Literary Haven</span>
+                    </span>
                 </a>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
+                <button 
+                    className={`navbar-toggler ${styles.navbarToggler}`} 
+                    type="button" 
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarColor02" 
+                    aria-controls="navbarColor02" 
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span className={`navbar-toggler-icon ${styles.navbarTogglerIcon}`}></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarColor02">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <a className="nav-link active" href="/bicycles">Home</a>
+                            <a className={`nav-link ${styles.navLink} ${styles.navLinkActive}`} href="/bicycles">
+                                📖 Books
+                            </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/locations">Locations</a>
+                            <a className={`nav-link ${styles.navLink}`} href="/locations">
+                                📍 Locations
+                            </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/renting">Renting</a>
+                            <a className={`nav-link ${styles.navLink}`} href="/contact">
+                                ✉️ Contact
+                            </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/profile">Profile</a>
+                            <a className={`nav-link ${styles.navLink}`} href="/profile">
+                                👤 Profile
+                            </a>
                         </li>
                     </ul>
                     <form className="d-flex">
                         <button
-                            className="btn btn-danger my-2 my-sm-0"
+                            className={styles.logoutBtn}
                             type="button"
                             onClick={handleLogout}
                         >
+                            <span className={styles.logoutIcon}>🚪</span>
                             Logout
                         </button>
                     </form>

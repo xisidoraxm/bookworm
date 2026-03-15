@@ -44,14 +44,6 @@ export default function Login() {
             return;
         }
 
-        if (username.toLowerCase() !== "admin") {
-            toast.error("Access restricted to admin users only", {
-                position: "top-right",
-                autoClose: 5000,
-            });
-            return;
-        }
-
         const usersStr = localStorage.getItem("users");
         if (!usersStr) {
             toast.error("There are no users", {
