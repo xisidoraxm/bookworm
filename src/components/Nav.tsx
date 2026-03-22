@@ -22,7 +22,7 @@ export default function Nav() {
     return (
         <nav className={`navbar navbar-expand-lg ${styles.navbar}`}>
             <div className="container-fluid">
-                <a className={styles.navbarBrand} href="/bicycles">
+                <a className={styles.navbarBrand} href="/home">
                     <span className={styles.brandText}>
                         <span className={styles.brandName}>Bookwarm</span>
                         <span className={styles.brandTagline}>Your Literary Haven</span>
@@ -44,11 +44,6 @@ export default function Nav() {
                         <li className="nav-item">
                             <a className={`nav-link ${styles.navLink}`} href="/home">
                                 🏠 Home
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className={`nav-link ${styles.navLink}`} href="/bicycles">
-                                📖 Books
                             </a>
                         </li>
                         <li className="nav-item">

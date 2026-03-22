@@ -59,7 +59,7 @@ export default function Login() {
         if (found) {
             localStorage.setItem("loggedUser", JSON.stringify(found));
             toast.success("Login successful — redirecting...", { position: "top-right", autoClose: 800 });
-            setTimeout(() => router.push("/bicycles"), 900);
+            setTimeout(() => router.push("/home"), 900);
         } else {
             toast.error("User does not exist or wrong credentials", {
                 position: "top-right",

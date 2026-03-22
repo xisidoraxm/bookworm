@@ -1,4 +1,92 @@
-.homePage {
-  min-height: 100vh;
-  padding: 2rem;
+.heading {
+    color: var(--secondary-cream);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 2.5rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.subtitle {
+    color: rgba(245, 245, 220, 0.85);
+    font-size: 1.15rem;
+}
+
+.bookCard {
+    background: rgba(245, 245, 220, 0.92);
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.bookCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.bookCover {
+    background: linear-gradient(135deg, var(--primary-warm), #5d4037);
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookEmoji {
+    font-size: 3rem;
+}
+
+.bookTitle {
+    color: #3e2723;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.05rem;
+    margin-bottom: 0.25rem;
+}
+
+.bookAuthor {
+    color: #795548;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.bookDescription {
+    color: #5d4037;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.genre {
+    background: var(--primary-warm);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+}
+
+.rating {
+    color: #f5a623;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.price {
+    color: #3e2723;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.inStock {
+    color: #2e7d32;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.outOfStock {
+    color: #c62828;
+    font-size: 0.8rem;
+    font-weight: 600;
 }

@@ -11,21 +11,28 @@
     "audit:fix": "npm audit fix"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "bootstrap": "^5.3.3",
     "next": "15.0.3",
+    "pg": "^8.20.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "dotenv": "^17.3.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.0.3",
     "prisma": "^7.5.0",
+    "tsx": "^4.21.0",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   }
 }
