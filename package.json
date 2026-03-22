@@ -11,6 +11,7 @@
     "audit:fix": "npm audit fix"
   },
   "dependencies": {
+    "@prisma/client": "^7.5.0",
     "bootstrap": "^5.3.3",
     "next": "15.0.3",
     "react": "18.2.0",
@@ -21,8 +22,10 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "dotenv": "^17.3.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.0.3",
+    "prisma": "^7.5.0",
     "typescript": "^5"
   }
 }
