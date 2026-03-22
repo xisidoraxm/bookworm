@@ -42,13 +42,18 @@ export default function Nav() {
                 <div className="collapse navbar-collapse" id="navbarColor02">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <a className={`nav-link ${styles.navLink} ${styles.navLinkActive}`} href="/bicycles">
+                            <a className={`nav-link ${styles.navLink}`} href="/home">
+                                🏠 Home
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a className={`nav-link ${styles.navLink}`} href="/bicycles">
                                 📖 Books
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className={`nav-link ${styles.navLink}`} href="/locations">
-                                📍 Locations
+                            <a className={`nav-link ${styles.navLink}`} href="/newsletter">
+                                📰 Newsletter
                             </a>
                         </li>
                         <li className="nav-item">
@@ -56,13 +61,14 @@ export default function Nav() {
                                 ✉️ Contact
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <a className={`nav-link ${styles.navLink}`} href="/profile">
-                                👤 Profile
-                            </a>
-                        </li>
                     </ul>
-                    <form className="d-flex">
+                    <div className="d-flex align-items-center gap-2">
+                        <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
+                            🛒
+                        </a>
+                        <a className={`${styles.navIconLink}`} href="/profile" title="Profile">
+                            👤
+                        </a>
                         <button
                             className={styles.logoutBtn}
                             type="button"
@@ -71,7 +77,7 @@ export default function Nav() {
                             <span className={styles.logoutIcon}>🚪</span>
                             Logout
                         </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </nav>
