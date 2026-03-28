@@ -1,12 +1,22 @@
 :root {
-  --primary-warm: #8B4513;
-  --secondary-cream: #F5F5DC;
+  --primary: #5C4033;
+  --primary-light: #7A5C4F;
+  --primary-dark: #3D2B1F;
+  --accent: #C67C4E;
+  --accent-hover: #B06B3F;
+  --bg: #FAF6F1;
+  --surface: #FFFDF9;
+  --text: #3D2B1F;
+  --text-secondary: #7A6B5D;
+  --text-muted: #A89888;
+  --border: #E8DFD4;
+  --success: #2E7D32;
+  --error: #C62828;
 }
 
 body {
-  background: 
-    linear-gradient(135deg, rgba(62, 39, 35, 0.7) 0%, rgba(93, 64, 55, 0.5) 50%, rgba(141, 110, 99, 0.6) 100%),
-    url("/bookshops/bookshop1.jpg") no-repeat center center fixed;
-  background-size: cover;
+  background: var(--bg);
   min-height: 100vh;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }

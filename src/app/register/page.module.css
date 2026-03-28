@@ -4,19 +4,17 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  background: var(--bg);
 }
 
 .registerCard {
-  background: linear-gradient(145deg, rgba(255, 253, 250, 0.95), rgba(245, 240, 230, 0.95));
-  border-radius: 20px;
-  box-shadow: 
-    0 25px 50px rgba(62, 39, 35, 0.3),
-    0 10px 20px rgba(139, 69, 19, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(92, 64, 51, 0.08);
   padding: 2.5rem;
   width: 100%;
   max-width: 480px;
-  border: 1px solid rgba(139, 69, 19, 0.2);
+  border: 1px solid var(--border);
   position: relative;
   overflow: hidden;
 }
@@ -27,8 +25,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 6px;
-  background: linear-gradient(90deg, #8B4513, #D2691E, #CD853F, #8B4513);
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
 }
 
 .registerHeader {
@@ -40,23 +38,20 @@
   font-size: 2.5rem;
   display: block;
   margin-bottom: 0.5rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .registerTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #3E2723;
+  color: var(--primary);
   margin: 0 0 0.5rem 0;
-  font-family: Georgia, 'Times New Roman', serif;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.3px;
 }
 
 .registerSubtitle {
-  color: #6D4C41;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0;
-  font-style: italic;
 }
 
 .registerForm {
@@ -80,30 +75,29 @@
 .inputLabel {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #5D4037;
-  letter-spacing: 0.3px;
+  color: var(--text);
+  letter-spacing: 0.2px;
 }
 
 .inputField {
   padding: 0.75rem 1rem;
-  border: 2px solid #D7CCC8;
+  border: 2px solid var(--border);
   border-radius: 10px;
   font-size: 0.95rem;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--surface);
   transition: all 0.2s ease;
-  color: #3E2723;
+  color: var(--text);
 }
 
 .inputField::placeholder {
-  color: #A1887F;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
 .inputField:focus {
   outline: none;
-  border-color: #8B4513;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(92, 64, 51, 0.1);
 }
 
 /* Password field styles */
@@ -128,31 +122,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #8B4513;
+  color: var(--text-secondary);
   transition: color 0.2s ease;
 }
 
 .passwordToggle:hover,
 .passwordToggle:focus {
-  color: #5D4037;
+  color: var(--primary);
   outline: none;
 }
 
 .passwordToggle:focus-visible {
-  box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(92, 64, 51, 0.15);
   border-radius: 4px;
 }
 
 .passwordHint {
   font-size: 0.75rem;
-  color: #8D6E63;
+  color: var(--text-muted);
   font-style: italic;
   margin-top: 0.25rem;
 }
 
 /* Register button */
 .registerButton {
-  background: linear-gradient(135deg, #8B4513 0%, #6D4C41 100%);
+  background: var(--primary);
   color: #fff;
   border: none;
   padding: 0.9rem 1.5rem;
@@ -164,15 +158,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+  transition: all 0.2s ease;
   margin-top: 0.5rem;
 }
 
 .registerButton:hover {
-  background: linear-gradient(135deg, #6D4C41 0%, #5D4037 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(92, 64, 51, 0.2);
 }
 
 .registerButton:active {
@@ -193,7 +186,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #A1887F;
+  color: var(--text-muted);
   font-size: 0.875rem;
 }
 
@@ -202,26 +195,26 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #D7CCC8, transparent);
+  background: var(--border);
 }
 
 /* Login prompt */
 .loginPrompt {
   text-align: center;
-  color: #6D4C41;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0;
 }
 
 .loginLink {
-  color: #8B4513;
+  color: var(--accent);
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .loginLink:hover {
-  color: #5D4037;
+  color: var(--accent-hover);
   text-decoration: underline;
 }
 

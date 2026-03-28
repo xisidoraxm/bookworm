@@ -7,7 +7,8 @@ export default async function Home() {
     });
 
     return (
-        <div className="container">
+        <div className={styles.homePage}>
+            <div className="container">
             <div className="row">
                 <div className="col-12">
                     <h1 className={`text-center mt-5 ${styles.heading}`}>Welcome to Bookworm</h1>
@@ -55,6 +56,7 @@ export default async function Home() {
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }

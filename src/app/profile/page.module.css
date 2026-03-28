@@ -7,16 +7,13 @@
 }
 
 .profileCard {
-  background: linear-gradient(145deg, rgba(255, 253, 250, 0.95), rgba(245, 240, 230, 0.95));
-  border-radius: 20px;
-  box-shadow: 
-    0 25px 50px rgba(62, 39, 35, 0.3),
-    0 10px 20px rgba(139, 69, 19, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(92, 64, 51, 0.08);
   padding: 2.5rem;
   width: 100%;
   max-width: 520px;
-  border: 1px solid rgba(139, 69, 19, 0.2);
+  border: 1px solid var(--border);
   position: relative;
   overflow: hidden;
 }
@@ -27,8 +24,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 6px;
-  background: linear-gradient(90deg, #8B4513, #D2691E, #CD853F, #8B4513);
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
 }
 
 .profileHeader {
@@ -39,17 +36,15 @@
 .profileTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #3E2723;
+  color: var(--primary);
   margin: 0 0 0.25rem 0;
-  font-family: Georgia, 'Times New Roman', serif;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.3px;
 }
 
 .profileSubtitle {
-  color: #6D4C41;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0;
-  font-style: italic;
 }
 
 /* Profile Info Display */
@@ -63,27 +58,25 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--bg);
   border-radius: 10px;
-  border: 1px solid #E8DDD4;
+  border: 1px solid var(--border);
   transition: all 0.2s ease;
 }
 
 .infoRow:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: #D7CCC8;
+  border-color: rgba(92, 64, 51, 0.15);
 }
 
 .infoIcon {
   font-size: 1.25rem;
   margin-right: 0.75rem;
-  filter: grayscale(0.2);
 }
 
 .infoLabel {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #8D6E63;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   min-width: 90px;
@@ -91,14 +84,14 @@
 
 .infoValue {
   flex: 1;
-  color: #3E2723;
+  color: var(--text);
   font-size: 0.95rem;
   font-weight: 500;
 }
 
 .passwordDots {
   letter-spacing: 2px;
-  color: #6D4C41;
+  color: var(--text-secondary);
 }
 
 /* Buttons */
@@ -110,7 +103,7 @@
 }
 
 .btnSecondary {
-  background: linear-gradient(135deg, #A1887F 0%, #8D6E63 100%);
+  background: var(--text-secondary);
   color: #fff;
   border: none;
   padding: 0.65rem 1.25rem;
@@ -121,18 +114,17 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(139, 69, 19, 0.2);
+  transition: all 0.2s ease;
 }
 
 .btnSecondary:hover {
-  background: linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(92, 64, 51, 0.15);
 }
 
 .btnPrimary {
-  background: linear-gradient(135deg, #8B4513 0%, #6D4C41 100%);
+  background: var(--primary);
   color: #fff;
   border: none;
   padding: 0.65rem 1.25rem;
@@ -143,19 +135,18 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(139, 69, 19, 0.25);
+  transition: all 0.2s ease;
 }
 
 .btnPrimary:hover {
-  background: linear-gradient(135deg, #6D4C41 0%, #5D4037 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 69, 19, 0.35);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(92, 64, 51, 0.2);
 }
 
 .btnSuccess {
-  background: linear-gradient(135deg, #558B2F 0%, #33691E 100%);
-  color: #fff;
+  background: var(--accent);
+  color: var(--primary);
   border: none;
   padding: 0.65rem 1.25rem;
   border-radius: 10px;
@@ -165,31 +156,30 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(85, 139, 47, 0.25);
+  transition: all 0.2s ease;
 }
 
 .btnSuccess:hover {
-  background: linear-gradient(135deg, #33691E 0%, #1B5E20 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(85, 139, 47, 0.35);
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(198, 124, 78, 0.3);
 }
 
 .btnCancel {
   background: transparent;
-  color: #6D4C41;
-  border: 2px solid #D7CCC8;
+  color: var(--text-secondary);
+  border: 2px solid var(--border);
   padding: 0.65rem 1.25rem;
   border-radius: 10px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .btnCancel:hover {
-  background: #EFEBE9;
-  border-color: #BCAAA4;
+  background: var(--bg);
+  border-color: var(--text-muted);
 }
 
 /* Edit Form */
@@ -208,8 +198,8 @@
 .formLabel {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #5D4037;
-  letter-spacing: 0.3px;
+  color: var(--text);
+  letter-spacing: 0.2px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -217,23 +207,22 @@
 
 .formInput {
   padding: 0.75rem 1rem;
-  border: 2px solid #D7CCC8;
+  border: 2px solid var(--border);
   border-radius: 10px;
   font-size: 0.95rem;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--surface);
   transition: all 0.2s ease;
-  color: #3E2723;
+  color: var(--text);
 }
 
 .formInput::placeholder {
-  color: #A1887F;
+  color: var(--text-muted);
 }
 
 .formInput:focus {
   outline: none;
-  border-color: #8B4513;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(92, 64, 51, 0.1);
 }
 
 /* Alerts */
@@ -248,14 +237,14 @@
 }
 
 .alertSuccess {
-  background: linear-gradient(135deg, rgba(200, 230, 201, 0.9), rgba(165, 214, 167, 0.9));
-  color: #1B5E20;
+  background: #E8F5E9;
+  color: var(--success);
   border: 1px solid #A5D6A7;
 }
 
 .alertError {
-  background: linear-gradient(135deg, rgba(255, 205, 210, 0.9), rgba(239, 154, 154, 0.9));
-  color: #B71C1C;
+  background: #FFEBEE;
+  color: var(--error);
   border: 1px solid #EF9A9A;
 }
 
@@ -263,8 +252,7 @@
 .emptyState {
   text-align: center;
   padding: 2rem;
-  color: #8D6E63;
-  font-style: italic;
+  color: var(--text-muted);
 }
 
 .emptyIcon {

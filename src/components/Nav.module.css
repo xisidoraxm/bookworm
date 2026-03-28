@@ -1,26 +1,24 @@
 .navbar {
-  background: linear-gradient(135deg, #3E2723 0%, #5D4037 50%, #4E342E 100%) !important;
-  box-shadow: 0 4px 20px rgba(62, 39, 35, 0.4);
+  background: var(--primary) !important;
+  box-shadow: 0 2px 12px rgba(92, 64, 51, 0.15);
   padding: 0.5rem 1rem;
-  border-bottom: 3px solid #8B4513;
+  border-bottom: 3px solid var(--accent);
 }
 
 .navbarBrand {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-family: Georgia, 'Times New Roman', serif;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #F5F5DC !important;
+  color: #fff !important;
   text-decoration: none;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
+  letter-spacing: -0.3px;
+  transition: all 0.2s ease;
 }
 
 .navbarBrand:hover {
-  color: #FFE4B5 !important;
-  transform: scale(1.02);
+  color: var(--accent) !important;
 }
 
 .brandText {
@@ -31,24 +29,24 @@
 
 .brandName {
   font-size: 1.4rem;
-  color: #F5F5DC;
+  color: #fff;
 }
 
 .brandTagline {
   font-size: 0.7rem;
-  color: #D7CCC8;
+  color: rgba(255, 255, 255, 0.6);
   font-style: italic;
   font-weight: 400;
   letter-spacing: 1px;
 }
 
 .navLink {
-  color: #EFEBE9 !important;
+  color: rgba(255, 255, 255, 0.85) !important;
   font-weight: 500;
   padding: 0.6rem 1rem !important;
   margin: 0 0.25rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   position: relative;
   font-size: 0.95rem;
 }
@@ -61,13 +59,13 @@
   transform: translateX(-50%);
   width: 0;
   height: 2px;
-  background: #CD853F;
-  transition: width 0.3s ease;
+  background: var(--accent);
+  transition: width 0.2s ease;
 }
 
 .navLink:hover {
-  color: #FFE4B5 !important;
-  background: rgba(139, 69, 19, 0.3);
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .navLink:hover::after {
@@ -75,8 +73,8 @@
 }
 
 .navLinkActive {
-  color: #FFE4B5 !important;
-  background: rgba(139, 69, 19, 0.4);
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .navLinkActive::after {
@@ -84,23 +82,22 @@
 }
 
 .logoutBtn {
-  background: linear-gradient(135deg, #A1887F 0%, #8D6E63 100%);
-  border: 2px solid #BCAAA4;
-  color: #FFF;
+  background: var(--accent);
+  border: none;
+  color: var(--primary);
   font-weight: 600;
   padding: 0.5rem 1.25rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .logoutBtn:hover {
-  background: linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%);
-  border-color: #8D6E63;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(62, 39, 35, 0.3);
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(198, 124, 78, 0.3);
 }
 
 .logoutBtn:active {
@@ -117,28 +114,28 @@
   text-decoration: none;
   padding: 0.4rem 0.5rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
 }
 
 .navIconLink:hover {
-  background: rgba(139, 69, 19, 0.3);
-  transform: scale(1.15);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
 }
 
 /* Mobile toggler */
 .navbarToggler {
-  border-color: rgba(245, 245, 220, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
   padding: 0.4rem 0.6rem;
 }
 
 .navbarToggler:focus {
-  box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(198, 124, 78, 0.25);
 }
 
 .navbarTogglerIcon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28245, 245, 220, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
 /* Responsive adjustments */

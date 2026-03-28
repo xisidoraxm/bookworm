@@ -52,12 +52,16 @@ export default function Contact() {
 
     return (
         <div className={styles.contactPage}>
-            <div className={styles.hero}>
-                <h1 className={styles.heroTitle}>Visit Bookworm</h1>
-                <p className={styles.heroSubtitle}>
-                    We&apos;d love to hear from you — whether you&apos;re looking for your
-                    next favourite read or just want to say hello.
-                </p>
+            <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                        <h1 className={`text-center mt-5 ${styles.heading}`}>Visit Bookworm</h1>
+                        <p className={`text-center ${styles.subtitle}`}>
+                            We&apos;d love to hear from you — whether you&apos;re looking for your
+                            next favourite read or just want to say hello.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <div className={styles.content}>
