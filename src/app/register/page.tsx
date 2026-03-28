@@ -14,7 +14,7 @@ export default function Register() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
 
-    function register(e: React.FormEvent<HTMLFormElement>) {
+    async function register(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const username = (formData.get("username")?.toString() ?? "").trim();
@@ -34,16 +34,24 @@ export default function Register() {
             return;
         }
 
-        const users = JSON.parse(localStorage.getItem("users") || "[]");
-        if (users.find((u: any) => u.username === username)) {
-            toast.error("Username already exists", { position: "top-right", autoClose: 5000 });
-            return;
-        }
+        try {
+            const res = await fetch("/api/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, fullName, phone, email }),
+            });
 
-        users.push({ username, password, fullName, phone, email });
-        localStorage.setItem("users", JSON.stringify(users));
-        toast.success("Registered successfully", { position: "top-right", autoClose: 2000 });
-        router.push("/");
+            if (!res.ok) {
+                const data = await res.json();
+                toast.error(data.error || "Registration failed", { position: "top-right", autoClose: 5000 });
+                return;
+            }
+
+            toast.success("Registered successfully", { position: "top-right", autoClose: 2000 });
+            router.push("/");
+        } catch {
+            toast.error("Something went wrong. Please try again.", { position: "top-right", autoClose: 5000 });
+        }
     }
 
     return (

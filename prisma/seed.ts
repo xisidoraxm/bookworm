@@ -80,6 +80,15 @@ const books = [
   },
 ];
 
+const users = [
+  { username: "admin", password: "Admin123!", fullName: "Aleksandra Milosevic", phone: "0612345678", email: "admin@gmail.com" },
+  { username: "isidora", password: "Pass123!", fullName: "Isidora Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
+  { username: "jelica", password: "Pass123!", fullName: "Jelica Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
+  { username: "drazen", password: "Pass123!", fullName: "Drazen Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
+  { username: "milica", password: "Pass123!", fullName: "Milica Milosevic", phone: "0612345681", email: "milica@gmail.com" },
+  { username: "vojin", password: "Pass123!", fullName: "Vojin Vojnovic", phone: "0612345682", email: "vojin@gmail.com" },
+];
+
 async function main() {
   console.log("Seeding books...");
 
@@ -88,6 +97,18 @@ async function main() {
   }
 
   console.log(`Seeded ${books.length} books.`);
+
+  console.log("Seeding users...");
+
+  for (const user of users) {
+    await prisma.user.upsert({
+      where: { username: user.username },
+      update: {},
+      create: user,
+    });
+  }
+
+  console.log(`Seeded ${users.length} users.`);
 }
 
 main()

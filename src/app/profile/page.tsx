@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 type User = {
+    id?: number;
     username?: string;
     password?: string;
     fullName?: string;
@@ -114,7 +115,7 @@ export default function Profile() {
                                 </div>
                             </>
                         ) : (
-                            <form className={styles.editForm} onSubmit={(e) => {
+                            <form className={styles.editForm} onSubmit={async (e) => {
                                 e.preventDefault();
                                 setError(null);
                                 setMessage(null);
@@ -149,19 +150,33 @@ export default function Profile() {
                                     return;
                                 }
 
-                                const toSave: User = {
-                                    username: username,
-                                    password: password.length > 0 ? password : user.password,
-                                    fullName: fullName,
-                                    phone: phone,
-                                    email: email,
-                                };
                                 try {
+                                    const res = await fetch("/api/profile", {
+                                        method: "PUT",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                            id: user.id,
+                                            username,
+                                            password: password.length > 0 ? password : undefined,
+                                            fullName,
+                                            phone,
+                                            email,
+                                        }),
+                                    });
+
+                                    if (!res.ok) {
+                                        const data = await res.json();
+                                        setError(data.error || "Failed to save profile.");
+                                        return;
+                                    }
+
+                                    const updated = await res.json();
+                                    const toSave: User = { ...updated, password: password.length > 0 ? password : user.password };
                                     localStorage.setItem("loggedUser", JSON.stringify(toSave));
                                     setUser(toSave);
                                     setEditMode(false);
                                     setMessage("Profile saved.");
-                                } catch (err) {
+                                } catch {
                                     setError("Failed to save profile.");
                                 }
                             }}>

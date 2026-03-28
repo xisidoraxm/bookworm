@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import styles from "./page.module.css";
@@ -15,22 +15,7 @@ export default function Login() {
     const router = useRouter()
     const [showPassword, setShowPassword] = useState(false);
 
-    const initialUsers = [
-        { username: "admin", password: "Admin123!", fullName: "Aleksandra Milosevic", phone: "0612345678", email: "admin@gmail.com" },
-        { username: "isidora", password: "Pass123!", fullName: "Isidora Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
-        { username: "jelica", password: "Pass123!", fullName: "Jelica Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
-        { username: "drazen", password: "Pass123!", fullName: "Drazen Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
-        { username: "milica", password: "Pass123!", fullName: "Milica Milosevic", phone: "0612345681", email: "milica@gmail.com" },
-        { username: "vojin", password: "Pass123!", fullName: "Vojin Vojnovic", phone: "0612345682", email: "vojin@gmail.com" }
-    ]
-
-    useEffect(() => {
-        if (!localStorage.getItem("users")) {
-            localStorage.setItem("users", JSON.stringify(initialUsers));
-        }
-    }, [])
-
-    function login(e: React.FormEvent<HTMLFormElement>) {
+    async function login(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const username = (formData.get("username")?.toString() ?? "").trim();
@@ -44,24 +29,28 @@ export default function Login() {
             return;
         }
 
-        const usersStr = localStorage.getItem("users");
-        if (!usersStr) {
-            toast.error("There are no users", {
-                position: "top-right",
-                autoClose: 5000,
+        try {
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
             });
-            return;
-        }
 
-        const users = JSON.parse(usersStr);
-        const found = users.find((u: any) => u.username?.toLowerCase() === username.toLowerCase() && u.password === password);
+            if (!res.ok) {
+                const data = await res.json();
+                toast.error(data.error || "Invalid credentials", {
+                    position: "top-right",
+                    autoClose: 5000,
+                });
+                return;
+            }
 
-        if (found) {
-            localStorage.setItem("loggedUser", JSON.stringify(found));
+            const user = await res.json();
+            localStorage.setItem("loggedUser", JSON.stringify(user));
             toast.success("Login successful — redirecting...", { position: "top-right", autoClose: 800 });
             setTimeout(() => router.push("/home"), 900);
-        } else {
-            toast.error("User does not exist or wrong credentials", {
+        } catch {
+            toast.error("Something went wrong. Please try again.", {
                 position: "top-right",
                 autoClose: 5000,
             });
