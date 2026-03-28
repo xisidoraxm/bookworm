@@ -19,14 +19,38 @@ type Book = {
 
 export default function BookList({ books, genres }: { books: Book[]; genres: string[] }) {
     const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+    const [search, setSearch] = useState("");
 
-    const filtered = selectedGenre
-        ? books.filter((b) => b.genre === selectedGenre)
-        : books;
+    const filtered = books.filter((b) => {
+        const matchesGenre = !selectedGenre || b.genre === selectedGenre;
+        const matchesSearch = !search ||
+            b.title.toLowerCase().includes(search.toLowerCase()) ||
+            b.author.toLowerCase().includes(search.toLowerCase());
+        return matchesGenre && matchesSearch;
+    });
 
     return (
         <div className={styles.contentLayout}>
             <aside className={styles.sidebar}>
+                <div className={styles.searchBar}>
+                    <span className={styles.searchIcon}>🔍</span>
+                    <input
+                        type="text"
+                        className={styles.searchInput}
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    {search && (
+                        <button
+                            className={styles.searchClear}
+                            onClick={() => setSearch("")}
+                            aria-label="Clear search"
+                        >
+                            &times;
+                        </button>
+                    )}
+                </div>
                 <h3 className={styles.sidebarTitle}>Genres</h3>
                 <ul className={styles.genreList}>
                     <li>

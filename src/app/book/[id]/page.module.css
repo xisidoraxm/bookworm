@@ -156,6 +156,86 @@
     text-decoration: underline;
 }
 
+/* Suggested Books */
+.suggestedSection {
+    margin-top: 3rem;
+}
+
+.suggestedTitle {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 1.25rem;
+}
+
+.suggestedGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.suggestedCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.suggestedCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(92, 64, 51, 0.12);
+}
+
+.suggestedCover {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--bg);
+}
+
+.suggestedImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.suggestedEmoji {
+    font-size: 2.5rem;
+}
+
+.suggestedBookTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.suggestedAuthor {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin: 0 0 0.5rem;
+}
+
+.suggestedPrice {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .detailCard {
@@ -171,5 +251,9 @@
 
     .title {
         font-size: 1.5rem;
+    }
+
+    .suggestedGrid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

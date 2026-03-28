@@ -1,11 +1,24 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./Nav.module.css";
 
 export default function Nav() {
     const router = useRouter();
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [username, setUsername] = useState("");
+
+    useEffect(() => {
+        const stored = localStorage.getItem("loggedUser");
+        if (stored) {
+            setLoggedIn(true);
+            try {
+                const user = JSON.parse(stored);
+                setUsername(user.username || "");
+            } catch { /* ignore */ }
+        }
+    }, []);
 
     function handleLogout(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
@@ -15,7 +28,8 @@ export default function Nav() {
             )
         ) {
             localStorage.removeItem("loggedUser");
-            router.push("/");
+            setLoggedIn(false);
+            setUsername("");
         }
     }
 
@@ -58,20 +72,34 @@ export default function Nav() {
                         </li>
                     </ul>
                     <div className="d-flex align-items-center gap-2">
-                        <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
-                            🛒
-                        </a>
-                        <a className={`${styles.navIconLink}`} href="/profile" title="Profile">
-                            👤
-                        </a>
-                        <button
-                            className={styles.logoutBtn}
-                            type="button"
-                            onClick={handleLogout}
-                        >
-                            <span className={styles.logoutIcon}>🚪</span>
-                            Logout
-                        </button>
+                        {loggedIn && (
+                            <>
+                                <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
+                                    🛒
+                                </a>
+                                <a className={`${styles.navIconLink}`} href="/profile" title="Profile">
+                                    👤 {username && <span className={styles.username}>{username}</span>}
+                                </a>
+                            </>
+                        )}
+                        {loggedIn ? (
+                            <button
+                                className={styles.logoutBtn}
+                                type="button"
+                                onClick={handleLogout}
+                            >
+                                <span className={styles.logoutIcon}>🚪</span>
+                                Logout
+                            </button>
+                        ) : (
+                            <button
+                                className={styles.logoutBtn}
+                                type="button"
+                                onClick={() => router.push("/")}
+                            >
+                                Sign In
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

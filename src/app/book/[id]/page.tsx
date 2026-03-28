@@ -14,6 +14,14 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
 
     if (!book) notFound();
 
+    const suggested = await prisma.book.findMany({
+        where: {
+            genre: book.genre,
+            id: { not: book.id },
+        },
+        take: 4,
+    });
+
     return (
         <div className={styles.detailPage}>
             <div className="container">
@@ -75,6 +83,34 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                         )}
                     </div>
                 </div>
+
+                {suggested.length > 0 && (
+                    <div className={styles.suggestedSection}>
+                        <h2 className={styles.suggestedTitle}>You might also like</h2>
+                        <div className={styles.suggestedGrid}>
+                            {suggested.map((s) => (
+                                <Link key={s.id} href={`/book/${s.id}`} className={styles.suggestedCard}>
+                                    <div className={styles.suggestedCover}>
+                                        {s.coverImage ? (
+                                            <Image
+                                                src={s.coverImage}
+                                                alt={s.title}
+                                                width={140}
+                                                height={200}
+                                                className={styles.suggestedImage}
+                                            />
+                                        ) : (
+                                            <span className={styles.suggestedEmoji}>📖</span>
+                                        )}
+                                    </div>
+                                    <h3 className={styles.suggestedBookTitle}>{s.title}</h3>
+                                    <p className={styles.suggestedAuthor}>{s.author}</p>
+                                    <span className={styles.suggestedPrice}>${s.price.toFixed(2)}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
