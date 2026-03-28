@@ -15,7 +15,6 @@ type User = {
 
 export default function Profile() {
     const [user, setUser] = useState<User>({});
-    const [showPassword, setShowPassword] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [form, setForm] = useState<User & { confirmPassword?: string }>({});
     const [message, setMessage] = useState<string | null>(null);
@@ -28,7 +27,7 @@ export default function Profile() {
             if (stored) {
                 const parsed = JSON.parse(stored);
                 setUser(parsed);
-                setForm({ ...parsed, confirmPassword: parsed.password });
+                setForm({ ...parsed, password: "", confirmPassword: "" });
             } else {
                 router.push("/");
             }
@@ -86,28 +85,15 @@ export default function Profile() {
                                         <span className={styles.infoLabel}>Phone</span>
                                         <span className={styles.infoValue}>{user.phone ?? "-"}</span>
                                     </div>
-                                    <div className={styles.infoRow}>
-                                        <span className={styles.infoIcon}>🔐</span>
-                                        <span className={styles.infoLabel}>Password</span>
-                                        <span className={`${styles.infoValue} ${styles.passwordDots}`}>
-                                            {showPassword ? (user.password ?? "-") : '••••••••'}
-                                        </span>
-                                    </div>
                                 </div>
                                 <div className={styles.buttonGroup}>
-                                    <button 
-                                        className={styles.btnSecondary} 
-                                        onClick={() => setShowPassword(s => !s)}
-                                    >
-                                        {showPassword ? '🙈 Hide' : '👁️ Show'} Password
-                                    </button>
                                     <button 
                                         className={styles.btnPrimary} 
                                         onClick={() => { 
                                             setEditMode(true); 
                                             setMessage(null); 
                                             setError(null); 
-                                            setForm({ ...user, confirmPassword: user.password }); 
+                                            setForm({ ...user, password: "", confirmPassword: "" }); 
                                         }}
                                     >
                                         ✏️ Edit Profile
@@ -171,9 +157,8 @@ export default function Profile() {
                                     }
 
                                     const updated = await res.json();
-                                    const toSave: User = { ...updated, password: password.length > 0 ? password : user.password };
-                                    localStorage.setItem("loggedUser", JSON.stringify(toSave));
-                                    setUser(toSave);
+                                    localStorage.setItem("loggedUser", JSON.stringify(updated));
+                                    setUser(updated);
                                     setEditMode(false);
                                     setMessage("Profile saved.");
                                 } catch {
@@ -218,23 +203,23 @@ export default function Profile() {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label className={styles.formLabel}>🔐 Password</label>
+                                    <label className={styles.formLabel}>🔐 New Password (optional)</label>
                                     <input 
                                         type="password" 
                                         className={styles.formInput} 
                                         value={form.password ?? ""} 
                                         onChange={e => setForm(f => ({ ...f, password: e.target.value }))} 
-                                        placeholder="Enter new password"
+                                        placeholder="Leave blank to keep current password"
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label className={styles.formLabel}>🔐 Confirm Password</label>
+                                    <label className={styles.formLabel}>🔐 Confirm New Password</label>
                                     <input 
                                         type="password" 
                                         className={styles.formInput} 
                                         value={form.confirmPassword ?? ""} 
                                         onChange={e => setForm(f => ({ ...f, confirmPassword: e.target.value }))} 
-                                        placeholder="Confirm password"
+                                        placeholder="Confirm new password"
                                     />
                                 </div>
                                 <div className={styles.buttonGroup}>

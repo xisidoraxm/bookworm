@@ -24,7 +24,7 @@ export default function Nav() {
             <div className="container-fluid">
                 <a className={styles.navbarBrand} href="/home">
                     <span className={styles.brandText}>
-                        <span className={styles.brandName}>Bookwarm</span>
+                        <span className={styles.brandName}>Bookworm</span>
                         <span className={styles.brandTagline}>Your Literary Haven</span>
                     </span>
                 </a>

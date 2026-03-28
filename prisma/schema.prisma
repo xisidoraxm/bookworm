@@ -24,15 +24,17 @@ model User {
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
-  title       String
-  author      String
-  description String?
-  price       Float
-  genre       String
-  coverImage  String?
-  rating      Float    @default(0)
-  inStock     Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  title           String   @unique
+  author          String
+  description     String?
+  fullDescription String?
+  wikipediaUrl    String?
+  price           Float
+  genre           String
+  coverImage      String?
+  rating          Float    @default(0)
+  inStock         Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
