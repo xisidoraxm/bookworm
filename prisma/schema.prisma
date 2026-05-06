@@ -13,20 +13,23 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  fullName  String
-  phone     String
-  email     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
+  id             Int             @id @default(autoincrement())
+  username       String          @unique
+  password       String
+  fullName       String
+  phone          String
+  email          String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  orders         Order[]
+  reviews        Review[]
+  wishlist       Wishlist[]
+  readingStatus  ReadingStatus[]
 }
 
 model Book {
-  id              Int         @id @default(autoincrement())
-  title           String      @unique
+  id              Int             @id @default(autoincrement())
+  title           String          @unique
   author          String
   description     String?
   fullDescription String?
@@ -34,12 +37,15 @@ model Book {
   price           Float
   genre           String
   coverImage      String?
-  rating          Float       @default(0)
-  inStock         Boolean     @default(true)
-  quantity        Int         @default(0)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  rating          Float           @default(0)
+  inStock         Boolean         @default(true)
+  quantity        Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   orderItems      OrderItem[]
+  reviews         Review[]
+  wishlist        Wishlist[]
+  readingStatus   ReadingStatus[]
 }
 
 model Order {
@@ -59,4 +65,44 @@ model OrderItem {
   bookId   Int
   quantity Int
   price    Float
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  bookId    Int
+  rating    Int
+  text      String?
+  helpful   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, bookId])
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  bookId    Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, bookId])
+}
+
+model ReadingStatus {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  bookId    Int
+  status    String   @default("want-to-read")
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, bookId])
 }

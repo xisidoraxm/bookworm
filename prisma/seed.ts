@@ -213,6 +213,155 @@ async function main() {
   } else {
     console.log(`Orders already exist (${existingOrders}), skipping.`);
   }
+
+  // Seed reviews
+  console.log("Seeding reviews...");
+  const existingReviews = await prisma.review.count();
+  if (existingReviews === 0) {
+    const allBooks = await prisma.book.findMany();
+    const allUsers = await prisma.user.findMany();
+    const booksByTitle = (title: string) => allBooks.find((b) => b.title === title)!;
+    const userByName = (username: string) => allUsers.find((u) => u.username === username)!;
+
+    const sampleReviews = [
+      // isidora's reviews
+      { user: "isidora", title: "The Great Gatsby", rating: 5, text: "A masterpiece of American literature. The prose is beautiful and the story is timeless." },
+      { user: "isidora", title: "1984", rating: 5, text: "Terrifyingly relevant. Orwell's vision feels more prescient every year." },
+      { user: "isidora", title: "Harry Potter and the Sorcerer's Stone", rating: 5, text: "Pure magic! This book made me fall in love with reading as a kid." },
+      { user: "isidora", title: "The Hobbit", rating: 4, text: "A wonderful adventure. Tolkien's world-building is unmatched." },
+      { user: "isidora", title: "Pride and Prejudice", rating: 5, text: "Austen's wit is razor-sharp. Elizabeth Bennet is one of literature's greatest heroines." },
+      { user: "isidora", title: "Sapiens", rating: 4, text: "Fascinating and thought-provoking. Changed how I think about human history." },
+      { user: "isidora", title: "The Shining", rating: 4, text: "Genuinely terrifying. King at his best." },
+      { user: "isidora", title: "Gone Girl", rating: 4, text: "Couldn't put it down. The twists are incredible." },
+      { user: "isidora", title: "The Martian", rating: 5, text: "Funny, smart, and gripping. Science fiction at its most accessible." },
+      // jelica's reviews
+      { user: "jelica", title: "Outlander", rating: 5, text: "Epic romance with incredible historical detail. I'm completely obsessed." },
+      { user: "jelica", title: "Me Before You", rating: 4, text: "I cried for hours. Beautiful and heartbreaking." },
+      { user: "jelica", title: "The Notebook", rating: 4, text: "A classic love story. Simple but deeply moving." },
+      { user: "jelica", title: "Pride and Prejudice", rating: 5, text: "The best romance ever written. I've read it five times." },
+      { user: "jelica", title: "Brave New World", rating: 4, text: "Disturbing and brilliant. Makes you question everything about modern society." },
+      { user: "jelica", title: "The Great Gatsby", rating: 4, text: "Beautifully written but heartbreakingly sad." },
+      // drazen's reviews
+      { user: "drazen", title: "A Game of Thrones", rating: 5, text: "The best fantasy series ever written. Complex characters and unpredictable plot." },
+      { user: "drazen", title: "Mistborn: The Final Empire", rating: 5, text: "Sanderson's magic system is genius. The heist plot is perfectly executed." },
+      { user: "drazen", title: "The Name of the Wind", rating: 5, text: "Kvothe's story is mesmerizing. The prose is poetry." },
+      { user: "drazen", title: "Ender's Game", rating: 4, text: "A brilliant sci-fi classic. The ending still gives me chills." },
+      { user: "drazen", title: "Foundation", rating: 4, text: "Asimov's vision of the future is remarkable. A must-read for sci-fi fans." },
+      { user: "drazen", title: "1984", rating: 5, text: "Essential reading. The world Orwell created haunts you long after you finish." },
+      { user: "drazen", title: "The Hobbit", rating: 5, text: "A perfect adventure story. Tolkien is the master of fantasy." },
+      // milica's reviews
+      { user: "milica", title: "To Kill a Mockingbird", rating: 5, text: "One of the most important books ever written. Atticus Finch is a hero for all time." },
+      { user: "milica", title: "Jane Eyre", rating: 5, text: "A powerful story of independence and love. Jane is an unforgettable character." },
+      { user: "milica", title: "The Great Gatsby", rating: 4, text: "Gorgeous writing. The green light symbolism is perfect." },
+      { user: "milica", title: "Educated", rating: 5, text: "An incredible memoir. Tara Westover's resilience is inspiring." },
+      { user: "milica", title: "Becoming", rating: 4, text: "Michelle Obama's story is both relatable and extraordinary." },
+      // vojin's reviews
+      { user: "vojin", title: "Dune", rating: 5, text: "The greatest science fiction novel ever written. Herbert created an entire universe." },
+      { user: "vojin", title: "Neuromancer", rating: 4, text: "The book that invented cyberpunk. Dense but rewarding." },
+      { user: "vojin", title: "The Hitchhiker's Guide to the Galaxy", rating: 5, text: "Hilarious and brilliant. Don't forget your towel!" },
+      { user: "vojin", title: "The Shining", rating: 5, text: "Stephen King's masterwork of horror. The Overlook Hotel feels real." },
+      { user: "vojin", title: "Frankenstein", rating: 4, text: "The original science fiction novel. Shelley was ahead of her time." },
+    ];
+
+    for (const rev of sampleReviews) {
+      const user = userByName(rev.user);
+      const book = booksByTitle(rev.title);
+      await prisma.review.create({
+        data: { userId: user.id, bookId: book.id, rating: rev.rating, text: rev.text },
+      });
+    }
+
+    // Update book average ratings based on reviews
+    const booksWithReviews = [...new Set(sampleReviews.map((r) => r.title))];
+    for (const title of booksWithReviews) {
+      const book = booksByTitle(title);
+      const agg = await prisma.review.aggregate({
+        where: { bookId: book.id },
+        _avg: { rating: true },
+      });
+      await prisma.book.update({
+        where: { id: book.id },
+        data: { rating: agg._avg.rating || 0 },
+      });
+    }
+
+    console.log(`Seeded ${sampleReviews.length} reviews.`);
+  } else {
+    console.log(`Reviews already exist (${existingReviews}), skipping.`);
+  }
+
+  // Seed wishlists
+  console.log("Seeding wishlists...");
+  const existingWishlists = await prisma.wishlist.count();
+  if (existingWishlists === 0) {
+    const allBooks = await prisma.book.findMany();
+    const allUsers = await prisma.user.findMany();
+    const booksByTitle = (title: string) => allBooks.find((b) => b.title === title)!;
+    const userByName = (username: string) => allUsers.find((u) => u.username === username)!;
+
+    const sampleWishlists = [
+      { user: "isidora", titles: ["Dune", "The Handmaid's Tale", "Wuthering Heights", "The Count of Monte Cristo"] },
+      { user: "jelica", titles: ["The Time Traveler's Wife", "Jane Eyre", "Sapiens", "The Shining"] },
+      { user: "drazen", titles: ["Neuromancer", "The Martian", "Dune", "Treasure Island"] },
+      { user: "milica", titles: ["Outlander", "The Hobbit", "Fahrenheit 451"] },
+      { user: "vojin", titles: ["A Game of Thrones", "Mistborn: The Final Empire", "Into the Wild"] },
+    ];
+
+    for (const wl of sampleWishlists) {
+      const user = userByName(wl.user);
+      for (const title of wl.titles) {
+        const book = booksByTitle(title);
+        await prisma.wishlist.create({ data: { userId: user.id, bookId: book.id } });
+      }
+    }
+
+    console.log("Seeded wishlists.");
+  } else {
+    console.log(`Wishlists already exist (${existingWishlists}), skipping.`);
+  }
+
+  // Seed reading statuses
+  console.log("Seeding reading statuses...");
+  const existingStatuses = await prisma.readingStatus.count();
+  if (existingStatuses === 0) {
+    const allBooks = await prisma.book.findMany();
+    const allUsers = await prisma.user.findMany();
+    const booksByTitle = (title: string) => allBooks.find((b) => b.title === title)!;
+    const userByName = (username: string) => allUsers.find((u) => u.username === username)!;
+
+    const sampleStatuses = [
+      // isidora
+      { user: "isidora", title: "The Great Gatsby", status: "finished", progress: 100 },
+      { user: "isidora", title: "1984", status: "finished", progress: 100 },
+      { user: "isidora", title: "Harry Potter and the Sorcerer's Stone", status: "finished", progress: 100 },
+      { user: "isidora", title: "The Hobbit", status: "finished", progress: 100 },
+      { user: "isidora", title: "Sapiens", status: "currently-reading", progress: 62 },
+      { user: "isidora", title: "The Shining", status: "currently-reading", progress: 35 },
+      { user: "isidora", title: "Gone Girl", status: "want-to-read", progress: 0 },
+      // jelica
+      { user: "jelica", title: "Outlander", status: "finished", progress: 100 },
+      { user: "jelica", title: "Me Before You", status: "finished", progress: 100 },
+      { user: "jelica", title: "Brave New World", status: "currently-reading", progress: 45 },
+      { user: "jelica", title: "Pride and Prejudice", status: "want-to-read", progress: 0 },
+      // drazen
+      { user: "drazen", title: "A Game of Thrones", status: "finished", progress: 100 },
+      { user: "drazen", title: "Mistborn: The Final Empire", status: "finished", progress: 100 },
+      { user: "drazen", title: "The Name of the Wind", status: "currently-reading", progress: 78 },
+      { user: "drazen", title: "Ender's Game", status: "finished", progress: 100 },
+    ];
+
+    for (const st of sampleStatuses) {
+      const user = userByName(st.user);
+      const book = booksByTitle(st.title);
+      await prisma.readingStatus.create({
+        data: { userId: user.id, bookId: book.id, status: st.status, progress: st.progress },
+      });
+    }
+
+    console.log("Seeded reading statuses.");
+  } else {
+    console.log(`Reading statuses already exist (${existingStatuses}), skipping.`);
+  }
 }
 
 main()

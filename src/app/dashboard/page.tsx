@@ -1,12 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useUserOrders } from "@/lib/useUserOrders";
 import styles from "./page.module.css";
 
+type WishlistItem = {
+    id: number;
+    book: { id: number; title: string; author: string; coverImage: string | null; price: number; genre: string };
+};
+
+type ReadingStatusItem = {
+    id: number;
+    status: string;
+    progress: number;
+    book: { id: number; title: string; author: string; coverImage: string | null; genre: string };
+};
+
 export default function Dashboard() {
     const { orders, loading, username } = useUserOrders();
+    const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+    const [readingStatuses, setReadingStatuses] = useState<ReadingStatusItem[]>([]);
+
+    useEffect(() => {
+        if (username) {
+            fetch(`/api/user-activity?username=${encodeURIComponent(username)}`)
+                .then((r) => r.json())
+                .then((data) => {
+                    setWishlist(data.wishlist || []);
+                    setReadingStatuses(data.readingStatuses || []);
+                });
+        }
+    }, [username]);
 
     if (loading) {
         return (
@@ -151,6 +177,92 @@ export default function Dashboard() {
                                             </div>
                                         </Link>
                                     ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Currently Reading */}
+                        {readingStatuses.filter((s) => s.status === "currently-reading").length > 0 && (
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <h2 className={styles.sectionTitle}>📖 Currently Reading</h2>
+                                </div>
+                                <div className={styles.readingList}>
+                                    {readingStatuses
+                                        .filter((s) => s.status === "currently-reading")
+                                        .map((item) => (
+                                            <Link key={item.id} href={`/book/${item.book.id}`} className={styles.readingCard}>
+                                                <div className={styles.readingCover}>
+                                                    {item.book.coverImage ? (
+                                                        <Image src={item.book.coverImage} alt={item.book.title} width={60} height={85} className={styles.readingImg} />
+                                                    ) : (
+                                                        <div className={styles.readingPlaceholder}>📖</div>
+                                                    )}
+                                                </div>
+                                                <div className={styles.readingInfo}>
+                                                    <span className={styles.readingBookTitle}>{item.book.title}</span>
+                                                    <span className={styles.readingAuthor}>{item.book.author}</span>
+                                                    <div className={styles.readingProgressBar}>
+                                                        <div className={styles.readingProgressFill} style={{ width: `${item.progress}%` }} />
+                                                    </div>
+                                                    <span className={styles.readingPct}>{item.progress}% complete</span>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Saved for Later / Wishlist */}
+                        {wishlist.length > 0 && (
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <h2 className={styles.sectionTitle}>❤️ Saved for Later</h2>
+                                    <span className={styles.sectionBadge}>{wishlist.length} book{wishlist.length !== 1 ? "s" : ""}</span>
+                                </div>
+                                <div className={styles.wishlistGrid}>
+                                    {wishlist.slice(0, 4).map((item) => (
+                                        <Link key={item.id} href={`/book/${item.book.id}`} className={styles.wishlistCard}>
+                                            <div className={styles.wishlistCover}>
+                                                {item.book.coverImage ? (
+                                                    <Image src={item.book.coverImage} alt={item.book.title} width={80} height={115} className={styles.wishlistImg} />
+                                                ) : (
+                                                    <div className={styles.wishlistPlaceholder}>📖</div>
+                                                )}
+                                            </div>
+                                            <span className={styles.wishlistTitle}>{item.book.title}</span>
+                                            <span className={styles.wishlistPrice}>${item.book.price.toFixed(2)}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Want to Read */}
+                        {readingStatuses.filter((s) => s.status === "want-to-read").length > 0 && (
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <h2 className={styles.sectionTitle}>⭐ Want to Read</h2>
+                                </div>
+                                <div className={styles.recentGrid}>
+                                    {readingStatuses
+                                        .filter((s) => s.status === "want-to-read")
+                                        .map((item) => (
+                                            <Link key={item.id} href={`/book/${item.book.id}`} className={styles.recentCard}>
+                                                <div className={styles.recentCover}>
+                                                    {item.book.coverImage ? (
+                                                        <Image src={item.book.coverImage} alt={item.book.title} width={100} height={145} className={styles.recentImg} />
+                                                    ) : (
+                                                        <div className={styles.recentPlaceholder}>📖</div>
+                                                    )}
+                                                </div>
+                                                <div className={styles.recentInfo}>
+                                                    <span className={styles.recentTitle}>{item.book.title}</span>
+                                                    <span className={styles.recentAuthor}>{item.book.author}</span>
+                                                    <span className={styles.recentGenre}>{item.book.genre}</span>
+                                                </div>
+                                            </Link>
+                                        ))}
                                 </div>
                             </div>
                         )}

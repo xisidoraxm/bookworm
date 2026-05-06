@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import AddToCartButton from "@/components/AddToCartButton";
+import BookInteractions from "@/components/BookInteractions";
 import styles from "./page.module.css";
 
 export default async function BookDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -20,24 +21,35 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
             genre: book.genre,
             id: { not: book.id },
         },
-        take: 4,
+        take: 6,
     });
+
+    const fullStars = Math.floor(book.rating);
+    const hasHalf = book.rating - fullStars >= 0.3;
+    const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
     return (
         <div className={styles.detailPage}>
             <div className="container">
-                <Link href="/browse" className={styles.backLink}>
-                    ← Back to Books
-                </Link>
+                {/* Breadcrumb */}
+                <div className={styles.breadcrumb}>
+                    <Link href="/browse" className={styles.breadcrumbLink}>Browse Books</Link>
+                    <span className={styles.breadcrumbSep}>›</span>
+                    <Link href={`/browse?genre=${encodeURIComponent(book.genre)}`} className={styles.breadcrumbLink}>{book.genre}</Link>
+                    <span className={styles.breadcrumbSep}>›</span>
+                    <span className={styles.breadcrumbCurrent}>{book.title}</span>
+                </div>
 
-                <div className={styles.detailCard}>
+                {/* Main layout: Cover | Info | Buy Box */}
+                <div className={styles.mainGrid}>
+                    {/* Cover */}
                     <div className={styles.coverSection}>
                         {book.coverImage ? (
                             <Image
                                 src={book.coverImage}
                                 alt={book.title}
-                                width={300}
-                                height={450}
+                                width={340}
+                                height={500}
                                 className={styles.coverImage}
                                 priority
                             />
@@ -48,32 +60,54 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                         )}
                     </div>
 
+                    {/* Info */}
                     <div className={styles.infoSection}>
-                        <span className={styles.genre}>{book.genre}</span>
+                        <div className={styles.tags}>
+                            <span className={styles.genreTag}>{book.genre}</span>
+                            {book.rating >= 4.5 && <span className={styles.badgeTag}>★ Top Rated</span>}
+                        </div>
+
                         <h1 className={styles.title}>{book.title}</h1>
-                        <p className={styles.author}>by {book.author}</p>
+                        <p className={styles.author}>by <strong>{book.author}</strong></p>
 
                         <div className={styles.ratingRow}>
                             <span className={styles.stars}>
-                                {"★".repeat(Math.round(book.rating))}
-                                {"☆".repeat(5 - Math.round(book.rating))}
+                                {"★".repeat(fullStars)}
+                                {hasHalf && "★"}
+                                {"☆".repeat(emptyStars)}
                             </span>
-                            <span className={styles.ratingValue}>{book.rating.toFixed(1)} / 5</span>
+                            <span className={styles.ratingNumber}>{book.rating.toFixed(1)}</span>
+                            <span className={styles.ratingLabel}>out of 5</span>
                         </div>
 
-                        <p className={styles.description}>
-                            {book.fullDescription || book.description}
-                        </p>
+                        <div className={styles.divider} />
 
-                        <div className={styles.priceRow}>
-                            <span className={styles.price}>${book.price.toFixed(2)}</span>
-                            <span className={book.inStock ? styles.inStock : styles.outOfStock}>
-                                {book.inStock ? "✓ In Stock" : "✗ Out of Stock"}
-                            </span>
+                        {/* Description */}
+                        <div className={styles.descriptionSection}>
+                            <h2 className={styles.sectionHeading}>About this book</h2>
+                            <p className={styles.description}>
+                                {book.fullDescription || book.description || "No description available."}
+                            </p>
                         </div>
 
-                        <div style={{ marginTop: "1.25rem" }}>
-                            <AddToCartButton book={book} />
+                        {/* Metadata */}
+                        <div className={styles.metaGrid}>
+                            <div className={styles.metaItem}>
+                                <span className={styles.metaLabel}>Genre</span>
+                                <span className={styles.metaValue}>{book.genre}</span>
+                            </div>
+                            <div className={styles.metaItem}>
+                                <span className={styles.metaLabel}>Format</span>
+                                <span className={styles.metaValue}>Paperback</span>
+                            </div>
+                            <div className={styles.metaItem}>
+                                <span className={styles.metaLabel}>Language</span>
+                                <span className={styles.metaValue}>English</span>
+                            </div>
+                            <div className={styles.metaItem}>
+                                <span className={styles.metaLabel}>Rating</span>
+                                <span className={styles.metaValue}>★ {book.rating.toFixed(1)} / 5</span>
+                            </div>
                         </div>
 
                         {book.wikipediaUrl && (
@@ -87,12 +121,46 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                             </a>
                         )}
                     </div>
+
+                    {/* Buy Box */}
+                    <div className={styles.buyBox}>
+                        <span className={styles.buyPrice}>${book.price.toFixed(2)}</span>
+
+                        <div className={styles.buyStock}>
+                            <span className={book.inStock ? styles.stockIn : styles.stockOut}>
+                                {book.inStock ? "✓ In Stock" : "✗ Out of Stock"}
+                            </span>
+                        </div>
+
+                        <AddToCartButton book={book} />
+
+                        <div className={styles.buyInfo}>
+                            <div className={styles.buyInfoRow}>
+                                <span className={styles.buyInfoIcon}>🚚</span>
+                                <span>Free shipping on orders over $35</span>
+                            </div>
+                            <div className={styles.buyInfoRow}>
+                                <span className={styles.buyInfoIcon}>↩️</span>
+                                <span>30-day free returns</span>
+                            </div>
+                            <div className={styles.buyInfoRow}>
+                                <span className={styles.buyInfoIcon}>🔒</span>
+                                <span>Secure checkout</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                {/* Suggested Books */}
                 {suggested.length > 0 && (
                     <div className={styles.suggestedSection}>
-                        <h2 className={styles.suggestedTitle}>You might also like</h2>
-                        <div className={styles.suggestedGrid}>
+                        <div className={styles.suggestedHeader}>
+                            <h2 className={styles.suggestedTitle}>You might also like</h2>
+                            <Link href={`/browse?genre=${encodeURIComponent(book.genre)}`} className={styles.suggestedViewAll}>
+                                View all {book.genre} →
+                            </Link>
+                        </div>
+                        <div className={styles.suggestedScroll}>
                             {suggested.map((s) => (
                                 <Link key={s.id} href={`/book/${s.id}`} className={styles.suggestedCard}>
                                     <div className={styles.suggestedCover}>
@@ -100,8 +168,8 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                                             <Image
                                                 src={s.coverImage}
                                                 alt={s.title}
-                                                width={140}
-                                                height={200}
+                                                width={130}
+                                                height={185}
                                                 className={styles.suggestedImage}
                                             />
                                         ) : (
@@ -110,12 +178,18 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                                     </div>
                                     <h3 className={styles.suggestedBookTitle}>{s.title}</h3>
                                     <p className={styles.suggestedAuthor}>{s.author}</p>
-                                    <span className={styles.suggestedPrice}>${s.price.toFixed(2)}</span>
+                                    <div className={styles.suggestedBottom}>
+                                        <span className={styles.suggestedRating}>★ {s.rating.toFixed(1)}</span>
+                                        <span className={styles.suggestedPrice}>${s.price.toFixed(2)}</span>
+                                    </div>
                                 </Link>
                             ))}
                         </div>
                     </div>
                 )}
+
+                {/* User interactions: ratings, reviews, wishlist, reading status */}
+                <BookInteractions bookId={book.id} />
             </div>
         </div>
     );

@@ -109,14 +109,14 @@ export default function Nav() {
                         )}
                     </ul>
                     <div className="d-flex align-items-center gap-2">
+                        <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
+                            🛒
+                            {totalItems > 0 && (
+                                <span className={styles.cartBadge}>{totalItems}</span>
+                            )}
+                        </a>
                         {loggedIn ? (
                             <>
-                                <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
-                                    🛒
-                                    {totalItems > 0 && (
-                                        <span className={styles.cartBadge}>{totalItems}</span>
-                                    )}
-                                </a>
                                 <div className={styles.profileDropdown} ref={dropdownRef}>
                                     <button
                                         className={styles.profileBtn}
