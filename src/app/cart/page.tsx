@@ -28,7 +28,7 @@ export default function Cart() {
                             <div className={styles.emptyState}>
                                 <span className={styles.emptyIcon}>🛒</span>
                                 <p>Your cart is empty. Start browsing and add some books!</p>
-                                <Link href="/home" className={styles.browseBtn}>
+                                <Link href="/browse" className={styles.browseBtn}>
                                     Browse Books
                                 </Link>
                             </div>
@@ -103,7 +103,7 @@ export default function Cart() {
                             </div>
 
                             <div className={styles.cartActions}>
-                                <Link href="/home" className={styles.continueShopping}>
+                                <Link href="/browse" className={styles.continueShopping}>
                                     ← Continue Shopping
                                 </Link>
                                 <button className={styles.clearCartBtn} onClick={clearCart}>

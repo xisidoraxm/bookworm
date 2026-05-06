@@ -2,7 +2,8 @@ import styles from "./page.module.css";
 import { prisma } from "@/lib/prisma";
 import BookList from "./BookList";
 
-export default async function Home() {
+export default async function Browse({ searchParams }: { searchParams: Promise<{ genre?: string }> }) {
+    const { genre } = await searchParams;
     const books = await prisma.book.findMany({
         orderBy: { createdAt: "desc" },
     });
@@ -11,17 +12,17 @@ export default async function Home() {
 
     return (
         <div className={styles.homePage}>
-            <div className={styles.heroBanner}>
-                <div className="container">
-                    <h1 className={styles.heroTitle}>Find your next great read</h1>
-                    <p className={styles.heroSubtitle}>
-                        Over {books.length} titles across {genres.length} genres — curated for every reader
-                    </p>
-                    <a href="#books" className={styles.heroCta}>Explore Books ↓</a>
+            <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                        <h1 className={`text-center mt-5 ${styles.heading}`}>Browse Books</h1>
+                        <p className={`text-center ${styles.subtitle}`}>
+                            Search, filter, and find your next favorite read
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div className="container" id="books">
-                <BookList books={books} genres={genres} />
+
+                <BookList books={books} genres={genres} initialGenre={genre || null} />
 
                 {books.length === 0 && (
                     <div className="row">

@@ -94,7 +94,7 @@ export default function Dashboard() {
                     <div className={styles.emptyState}>
                         <span className={styles.emptyIcon}>📖</span>
                         <p>You haven&apos;t made any purchases yet.</p>
-                        <Link href="/" className={styles.primaryBtn}>Browse Books</Link>
+                        <Link href="/browse" className={styles.primaryBtn}>Browse Books</Link>
                     </div>
                 ) : (
                     <>
@@ -167,7 +167,7 @@ export default function Dashboard() {
                                 <span className={styles.quickLabel}>Purchases</span>
                                 <span className={styles.quickDesc}>{totalOrders} orders</span>
                             </Link>
-                            <Link href="/" className={styles.quickLink}>
+                            <Link href="/browse" className={styles.quickLink}>
                                 <span className={styles.quickIcon}>🔍</span>
                                 <span className={styles.quickLabel}>Browse</span>
                                 <span className={styles.quickDesc}>Find new books</span>

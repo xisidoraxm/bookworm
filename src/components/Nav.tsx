@@ -67,7 +67,12 @@ export default function Nav() {
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
                             <a className={`nav-link ${styles.navLink}`} href="/">
-                                Home
+                                Discover
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a className={`nav-link ${styles.navLink}`} href="/browse">
+                                Browse Books
                             </a>
                         </li>
                         {loggedIn ? (

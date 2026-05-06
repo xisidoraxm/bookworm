@@ -26,7 +26,7 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
     return (
         <div className={styles.detailPage}>
             <div className="container">
-                <Link href="/home" className={styles.backLink}>
+                <Link href="/browse" className={styles.backLink}>
                     ← Back to Books
                 </Link>
 

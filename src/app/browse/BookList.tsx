@@ -10,8 +10,8 @@ import styles from "./page.module.css";
 type SortKey = "newest" | "price-asc" | "price-desc" | "rating" | "title";
 const ITEMS_PER_PAGE_OPTIONS = [12, 24, 48];
 
-export default function BookList({ books, genres }: { books: Book[]; genres: string[] }) {
-    const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+export default function BookList({ books, genres, initialGenre = null }: { books: Book[]; genres: string[]; initialGenre?: string | null }) {
+    const [selectedGenre, setSelectedGenre] = useState<string | null>(initialGenre);
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState<SortKey>("newest");
     const [minRating, setMinRating] = useState(0);
@@ -111,82 +111,8 @@ export default function BookList({ books, genres }: { books: Book[]; genres: str
         });
     }
 
-    // Featured: top 4 rated books
-    const featured = useMemo(() =>
-        [...books].sort((a, b) => b.rating - a.rating).slice(0, 4),
-    [books]);
-
-    // Collections
-    const collections = useMemo(() => {
-        const classics = books.filter((b) => b.genre === "Classic").slice(0, 4);
-        const budget = [...books].filter((b) => b.price < 12 && b.inStock).sort((a, b) => a.price - b.price).slice(0, 4);
-        const staffPicks = [...books].filter((b) => b.rating >= 4.4 && b.inStock).slice(0, 4);
-        return [
-            { title: "📚 Classics You Must Read", books: classics, action: () => handleGenre("Classic") },
-            { title: "💰 Great Reads Under $12", books: budget, action: null },
-            { title: "✨ Staff Picks", books: staffPicks, action: null },
-        ].filter((c) => c.books.length > 0);
-    }, [books]);
-
     return (
         <>
-            {/* Featured section */}
-            {!hasActiveFilters && page === 1 && (
-                <>
-                    <div className={styles.featuredSection}>
-                        <h2 className={styles.featuredTitle}>⭐ Bestsellers</h2>
-                        <div className={styles.featuredGrid}>
-                            {featured.map((book) => (
-                                <Link key={book.id} href={`/book/${book.id}`} className={styles.featuredCard}>
-                                    <div className={styles.featuredCover}>
-                                        {book.coverImage ? (
-                                            <Image src={book.coverImage} alt={book.title} width={100} height={145} className={styles.featuredImg} />
-                                        ) : (
-                                            <span className={styles.featuredEmoji}>📖</span>
-                                        )}
-                                    </div>
-                                    <div className={styles.featuredInfo}>
-                                        <span className={styles.featuredBookTitle}>{book.title}</span>
-                                        <span className={styles.featuredAuthor}>{book.author}</span>
-                                        <span className={styles.featuredRating}>★ {book.rating.toFixed(1)}</span>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Featured collections */}
-                    {collections.map((col) => (
-                        <div key={col.title} className={styles.collectionSection}>
-                            <div className={styles.collectionHeader}>
-                                <h2 className={styles.collectionTitle}>{col.title}</h2>
-                                {col.action && (
-                                    <button className={styles.collectionLink} onClick={col.action}>
-                                        View all →
-                                    </button>
-                                )}
-                            </div>
-                            <div className={styles.collectionGrid}>
-                                {col.books.map((book) => (
-                                    <Link key={book.id} href={`/book/${book.id}`} className={styles.collectionCard}>
-                                        <div className={styles.collectionCover}>
-                                            {book.coverImage ? (
-                                                <Image src={book.coverImage} alt={book.title} width={120} height={170} className={styles.collectionImg} />
-                                            ) : (
-                                                <div className={styles.collectionPlaceholder}>📖</div>
-                                            )}
-                                        </div>
-                                        <span className={styles.collectionBookTitle}>{book.title}</span>
-                                        <span className={styles.collectionBookAuthor}>{book.author}</span>
-                                        <span className={styles.collectionBookPrice}>${book.price.toFixed(2)}</span>
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </>
-            )}
-
             {/* Breadcrumb */}
             <div className={styles.breadcrumb}>
                 <span
