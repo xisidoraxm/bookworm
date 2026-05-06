@@ -2,16 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { User } from "@/lib/types";
 import styles from "./page.module.css";
-
-type User = {
-    id?: number;
-    username?: string;
-    password?: string;
-    fullName?: string;
-    phone?: string;
-    email?: string;
-};
 
 export default function Profile() {
     const [user, setUser] = useState<User>({});

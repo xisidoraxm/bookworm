@@ -3,20 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import type { Book } from "@/lib/types";
 import styles from "./page.module.css";
-
-type Book = {
-    id: number;
-    title: string;
-    author: string;
-    description: string | null;
-    price: number;
-    genre: string;
-    coverImage: string | null;
-    rating: number;
-    inStock: boolean;
-    quantity: number;
-};
 
 export default function BookList({ books, genres }: { books: Book[]; genres: string[] }) {
     const [selectedGenre, setSelectedGenre] = useState<string | null>(null);

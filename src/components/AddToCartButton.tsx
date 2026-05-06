@@ -1,17 +1,10 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import type { Book } from "@/lib/types";
 
 type Props = {
-    book: {
-        id: number;
-        title: string;
-        author: string;
-        price: number;
-        coverImage: string | null;
-        inStock: boolean;
-        quantity: number;
-    };
+    book: Pick<Book, "id" | "title" | "author" | "price" | "coverImage" | "inStock" | "quantity">;
 };
 
 const btnBase: React.CSSProperties = {
