@@ -5,6 +5,6 @@ import Nav from "./Nav";
 
 export default function NavWrapper() {
     const pathname = usePathname() || "/";
-    if (pathname === "/" || pathname.startsWith("/register")) return null;
+    if (pathname === "/login" || pathname.startsWith("/register")) return null;
     return <Nav />;
 }

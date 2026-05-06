@@ -29,10 +29,10 @@ export default function Profile() {
                 setUser(parsed);
                 setForm({ ...parsed, password: "", confirmPassword: "" });
             } else {
-                router.push("/");
+                router.push("/login");
             }
         } catch (e) {
-            router.push("/");
+            router.push("/login");
         }
     }, [router]);
 

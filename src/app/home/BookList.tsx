@@ -15,6 +15,7 @@ type Book = {
     coverImage: string | null;
     rating: number;
     inStock: boolean;
+    quantity: number;
 };
 
 export default function BookList({ books, genres }: { books: Book[]; genres: string[] }) {

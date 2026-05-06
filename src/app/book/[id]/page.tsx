@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import AddToCartButton from "@/components/AddToCartButton";
 import styles from "./page.module.css";
 
 export default async function BookDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -69,6 +70,10 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                             <span className={book.inStock ? styles.inStock : styles.outOfStock}>
                                 {book.inStock ? "✓ In Stock" : "✗ Out of Stock"}
                             </span>
+                        </div>
+
+                        <div style={{ marginTop: "1.25rem" }}>
+                            <AddToCartButton book={book} />
                         </div>
 
                         {book.wikipediaUrl && (

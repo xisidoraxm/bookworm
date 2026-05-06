@@ -48,7 +48,7 @@ export default function Register() {
             }
 
             toast.success("Registered successfully", { position: "top-right", autoClose: 2000 });
-            router.push("/");
+            router.push("/login");
         } catch {
             toast.error("Something went wrong. Please try again.", { position: "top-right", autoClose: 5000 });
         }
@@ -142,7 +142,7 @@ export default function Register() {
                     </div>
 
                     <p className={styles.loginPrompt}>
-                        Already a member? <Link href="/" className={styles.loginLink}>Sign in</Link>
+                        Already a member? <Link href="/login" className={styles.loginLink}>Sign in</Link>
                     </p>
                 </form>
             </div>

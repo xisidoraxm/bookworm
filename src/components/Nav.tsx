@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 import styles from "./Nav.module.css";
 
 export default function Nav() {
     const router = useRouter();
+    const { totalItems } = useCart();
     const [loggedIn, setLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
 
@@ -76,6 +78,9 @@ export default function Nav() {
                             <>
                                 <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
                                     🛒
+                                    {totalItems > 0 && (
+                                        <span className={styles.cartBadge}>{totalItems}</span>
+                                    )}
                                 </a>
                                 <a className={`${styles.navIconLink}`} href="/profile" title="Profile">
                                     👤 {username && <span className={styles.username}>{username}</span>}
@@ -95,7 +100,7 @@ export default function Nav() {
                             <button
                                 className={styles.logoutBtn}
                                 type="button"
-                                onClick={() => router.push("/")}
+                                onClick={() => router.push("/login")}
                             >
                                 Sign In
                             </button>

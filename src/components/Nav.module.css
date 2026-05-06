@@ -124,6 +124,23 @@
   transform: scale(1.1);
 }
 
+.cartBadge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -0.3rem;
+  margin-top: -0.5rem;
+  padding: 0 4px;
+  line-height: 1;
+}
+
 .username {
   font-size: 0.9rem;
   font-weight: 500;
