@@ -58,10 +58,29 @@ export default function Nav() {
                 <div className="collapse navbar-collapse" id="navbarColor02">
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
-                            <a className={`nav-link ${styles.navLink}`} href="/home">
+                            <a className={`nav-link ${styles.navLink}`} href="/">
                                 🏠 Home
                             </a>
                         </li>
+                        {loggedIn && (
+                            <>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${styles.navLink}`} href="/dashboard">
+                                        📊 Dashboard
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${styles.navLink}`} href="/library">
+                                        📖 Library
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${styles.navLink}`} href="/purchases">
+                                        🧾 Purchases
+                                    </a>
+                                </li>
+                            </>
+                        )}
                         <li className="nav-item">
                             <a className={`nav-link ${styles.navLink}`} href="/newsletter">
                                 📰 Newsletter
@@ -81,9 +100,6 @@ export default function Nav() {
                                     {totalItems > 0 && (
                                         <span className={styles.cartBadge}>{totalItems}</span>
                                     )}
-                                </a>
-                                <a className={`${styles.navIconLink}`} href="/dashboard" title="Dashboard">
-                                    📊
                                 </a>
                                 <a className={`${styles.navIconLink}`} href="/profile" title="Profile">
                                     👤 {username && <span className={styles.username}>{username}</span>}
