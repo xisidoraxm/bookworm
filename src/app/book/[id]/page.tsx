@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import AddToCartButton from "@/components/AddToCartButton";
 import BookInteractions from "@/components/BookInteractions";
+import AskAIButton from "@/components/AskAI";
 import styles from "./page.module.css";
 
 export default async function BookDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -120,6 +121,8 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                                 📖 Read more on Wikipedia →
                             </a>
                         )}
+
+                        <AskAIButton bookId={book.id} bookTitle={book.title} />
                     </div>
 
                     {/* Buy Box */}

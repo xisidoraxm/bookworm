@@ -36,17 +36,34 @@
     background: var(--primary-dark);
 }
 
-.badge {
+/* Tooltip */
+.tooltip {
+    position: fixed;
+    bottom: 96px;
+    right: 28px;
+    z-index: 1100;
+    background: var(--surface);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(61, 43, 31, 0.15);
+    white-space: nowrap;
+    animation: fadeIn 0.3s ease;
+    pointer-events: none;
+}
+
+.tooltip::after {
+    content: "";
     position: absolute;
-    top: -2px;
-    right: -2px;
-    background: var(--error);
-    color: #fff;
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: 600;
-    line-height: 1;
+    bottom: -6px;
+    right: 24px;
+    width: 12px;
+    height: 12px;
+    background: var(--surface);
+    transform: rotate(45deg);
+    box-shadow: 2px 2px 4px rgba(61, 43, 31, 0.08);
 }
 
 /* Chat panel */
@@ -55,9 +72,9 @@
     bottom: 100px;
     right: 28px;
     z-index: 1100;
-    width: 400px;
+    width: 420px;
     max-width: calc(100vw - 32px);
-    height: 520px;
+    height: 560px;
     max-height: calc(100vh - 140px);
     background: var(--surface);
     border-radius: 16px;
@@ -157,11 +174,11 @@
 
 /* Message bubbles */
 .message {
-    max-width: 85%;
+    max-width: 88%;
     padding: 10px 14px;
     border-radius: 14px;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.88rem;
+    line-height: 1.55;
     word-wrap: break-word;
 }
 
@@ -179,7 +196,7 @@
     border-bottom-right-radius: 4px;
 }
 
-.message a {
+.message a:not(.bookCard) {
     color: var(--accent);
     font-weight: 600;
     text-decoration: underline;
@@ -193,10 +210,103 @@
     font-weight: 700;
 }
 
+/* Mini Book Cards in messages */
+.bookCard {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin: 6px 0;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+}
+
+.bookCard:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px rgba(198, 124, 78, 0.15);
+}
+
+.bookCardCover {
+    width: 48px;
+    height: 68px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f5efe8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookCardImg {
+    width: 48px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.bookCardEmoji {
+    font-size: 1.4rem;
+}
+
+.bookCardInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.bookCardTitle {
+    font-weight: 700;
+    font-size: 0.82rem;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.bookCardAuthor {
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+.bookCardMeta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.bookCardRating {
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.bookCardPrice {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.bookCardArrow {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
 /* Typing indicator */
 .typing {
     align-self: flex-start;
-    padding: 10px 18px;
+    padding: 10px 16px;
     background: #f0e9e1;
     border-radius: 14px;
     border-bottom-left-radius: 4px;
@@ -205,19 +315,26 @@
     gap: 4px;
 }
 
+.typingLabel {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-right: 6px;
+    font-style: italic;
+}
+
 .dot {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--text-muted);
     animation: bounce 1.4s infinite ease-in-out;
 }
 
-.dot:nth-child(2) {
+.dot:nth-child(3) {
     animation-delay: 0.2s;
 }
 
-.dot:nth-child(3) {
+.dot:nth-child(4) {
     animation-delay: 0.4s;
 }
 
@@ -226,29 +343,119 @@
     40% { transform: scale(1); opacity: 1; }
 }
 
-/* Starter prompts */
-.starters {
+/* Starter area (mood + chips) */
+.starterArea {
+    padding: 0 16px 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 0 16px 12px;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
-.starterBtn {
+/* Mood selector */
+.moodSection {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.moodLabel {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.moodChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.moodChip {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.76rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.moodChip:hover {
+    border-color: var(--accent);
+    background: #fdf8f4;
+}
+
+.moodChipActive {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.moodChipActive:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+/* Quick prompt chips */
+.quickChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.quickChip {
     background: #fff;
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.85rem;
+    padding: 8px 12px;
+    font-size: 0.8rem;
     color: var(--text);
     cursor: pointer;
     text-align: left;
     transition: border-color 0.15s, background 0.15s;
+    white-space: nowrap;
 }
 
-.starterBtn:hover {
+.quickChip:hover {
     border-color: var(--accent);
     background: #fdf8f4;
+}
+
+/* Persistent chips (after conversation starts) */
+.persistentChips {
+    display: flex;
+    gap: 6px;
+    padding: 6px 16px;
+    overflow-x: auto;
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.persistentChips::-webkit-scrollbar {
+    height: 0;
+}
+
+.persistentChip {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s, background 0.15s;
+    flex-shrink: 0;
+}
+
+.persistentChip:hover {
+    border-color: var(--accent);
+    background: #fdf8f4;
+    color: var(--text);
 }
 
 /* Input area */
@@ -267,7 +474,7 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 10px 14px;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     background: #fff;
     color: var(--text);
     resize: none;
@@ -334,6 +541,11 @@
 
     .floatingBtn {
         bottom: 16px;
+        right: 16px;
+    }
+
+    .tooltip {
+        bottom: 84px;
         right: 16px;
     }
 }

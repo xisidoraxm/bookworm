@@ -1,0 +1,75 @@
+.askBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #fdf8f4, #f5efe8);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+}
+
+.askBtn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #fdf5ed;
+    box-shadow: 0 2px 12px rgba(198, 124, 78, 0.15);
+}
+
+.askBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.responseCard {
+    background: linear-gradient(135deg, #fdf8f4, #f5efe8);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 12px;
+    animation: fadeIn 0.3s ease;
+}
+
+.responseHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--primary);
+}
+
+.dismissBtn {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.dismissBtn:hover {
+    color: var(--text);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.responseText {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0;
+    white-space: pre-line;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
