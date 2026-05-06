@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Book } from "@/lib/types";
@@ -20,8 +20,31 @@ export default function BookList({ books, genres, initialGenre = null }: { books
     const [page, setPage] = useState(1);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [searchFocused, setSearchFocused] = useState(false);
+    const [hideOwned, setHideOwned] = useState(false);
+    const [ownedBookIds, setOwnedBookIds] = useState<Set<number>>(new Set());
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
     const { addToCart, items: cartItems } = useCart();
+
+    useEffect(() => {
+        const stored = localStorage.getItem("loggedUser");
+        if (!stored) return;
+        try {
+            const user = JSON.parse(stored);
+            setIsLoggedIn(true);
+            fetch(`/api/orders?username=${encodeURIComponent(user.username)}`)
+                .then((r) => r.json())
+                .then((orders) => {
+                    const ids = new Set<number>();
+                    for (const order of orders) {
+                        for (const item of order.items) {
+                            ids.add(item.book.id);
+                        }
+                    }
+                    setOwnedBookIds(ids);
+                });
+        } catch { /* ignore */ }
+    }, []);
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
@@ -41,7 +64,8 @@ export default function BookList({ books, genres, initialGenre = null }: { books
                 b.author.toLowerCase().includes(search.toLowerCase());
             const matchesRating = b.rating >= minRating;
             const matchesStock = !inStockOnly || b.inStock;
-            return matchesGenre && matchesSearch && matchesRating && matchesStock;
+            const matchesOwned = !hideOwned || !ownedBookIds.has(b.id);
+            return matchesGenre && matchesSearch && matchesRating && matchesStock && matchesOwned;
         });
 
         switch (sort) {
@@ -62,12 +86,12 @@ export default function BookList({ books, genres, initialGenre = null }: { books
                 break;
         }
         return result;
-    }, [books, selectedGenre, search, sort, minRating, inStockOnly]);
+    }, [books, selectedGenre, search, sort, minRating, inStockOnly, hideOwned, ownedBookIds]);
 
     const totalPages = Math.ceil(filtered.length / perPage);
     const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
-    const hasActiveFilters = selectedGenre || search || minRating > 0 || inStockOnly;
+    const hasActiveFilters = selectedGenre || search || minRating > 0 || inStockOnly || hideOwned;
 
     // Search suggestions
     const suggestions = useMemo(() => {
@@ -90,6 +114,7 @@ export default function BookList({ books, genres, initialGenre = null }: { books
         setSearch("");
         setMinRating(0);
         setInStockOnly(false);
+        setHideOwned(false);
         setPage(1);
     }
 
@@ -298,6 +323,20 @@ export default function BookList({ books, genres, initialGenre = null }: { books
                                 In stock only
                             </label>
                         </div>
+
+                        {isLoggedIn && (
+                            <div className={styles.filterGroup}>
+                                <label className={styles.checkboxLabel}>
+                                    <input
+                                        type="checkbox"
+                                        checked={hideOwned}
+                                        onChange={(e) => { setHideOwned(e.target.checked); setPage(1); }}
+                                        className={styles.checkbox}
+                                    />
+                                    Hide books I own
+                                </label>
+                            </div>
+                        )}
 
                         {hasActiveFilters && (
                             <button className={styles.clearFiltersBtn} onClick={clearFilters}>
