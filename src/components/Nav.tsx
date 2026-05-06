@@ -82,6 +82,9 @@ export default function Nav() {
                                         <span className={styles.cartBadge}>{totalItems}</span>
                                     )}
                                 </a>
+                                <a className={`${styles.navIconLink}`} href="/dashboard" title="Dashboard">
+                                    📊
+                                </a>
                                 <a className={`${styles.navIconLink}`} href="/profile" title="Profile">
                                     👤 {username && <span className={styles.username}>{username}</span>}
                                 </a>

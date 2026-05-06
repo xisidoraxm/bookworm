@@ -100,6 +100,119 @@ async function main() {
   }
 
   console.log(`Seeded ${users.length} users.`);
+
+  // Seed sample orders
+  console.log("Seeding orders...");
+
+  const existingOrders = await prisma.order.count();
+  if (existingOrders === 0) {
+    const allBooks = await prisma.book.findMany();
+    const allUsers = await prisma.user.findMany();
+
+    const booksByTitle = (title: string) => allBooks.find((b) => b.title === title)!;
+    const userByName = (username: string) => allUsers.find((u) => u.username === username)!;
+
+    const sampleOrders = [
+      {
+        user: "isidora",
+        date: new Date("2026-01-15"),
+        items: [
+          { title: "The Great Gatsby", qty: 1 },
+          { title: "1984", qty: 1 },
+        ],
+      },
+      {
+        user: "isidora",
+        date: new Date("2026-02-20"),
+        items: [
+          { title: "Harry Potter and the Sorcerer's Stone", qty: 2 },
+          { title: "The Hobbit", qty: 1 },
+          { title: "Pride and Prejudice", qty: 1 },
+        ],
+      },
+      {
+        user: "isidora",
+        date: new Date("2026-03-10"),
+        items: [
+          { title: "Sapiens", qty: 1 },
+          { title: "Educated", qty: 1 },
+        ],
+      },
+      {
+        user: "isidora",
+        date: new Date("2026-04-05"),
+        items: [
+          { title: "The Shining", qty: 1 },
+          { title: "Frankenstein", qty: 1 },
+          { title: "Dracula", qty: 1 },
+        ],
+      },
+      {
+        user: "isidora",
+        date: new Date("2026-05-01"),
+        items: [
+          { title: "Gone Girl", qty: 1 },
+          { title: "The Martian", qty: 1 },
+        ],
+      },
+      {
+        user: "jelica",
+        date: new Date("2026-02-14"),
+        items: [
+          { title: "Outlander", qty: 1 },
+          { title: "Me Before You", qty: 1 },
+          { title: "The Notebook", qty: 1 },
+        ],
+      },
+      {
+        user: "jelica",
+        date: new Date("2026-04-22"),
+        items: [
+          { title: "Brave New World", qty: 1 },
+          { title: "Fahrenheit 451", qty: 1 },
+        ],
+      },
+      {
+        user: "drazen",
+        date: new Date("2026-01-28"),
+        items: [
+          { title: "A Game of Thrones", qty: 1 },
+          { title: "Mistborn: The Final Empire", qty: 1 },
+          { title: "The Name of the Wind", qty: 1 },
+        ],
+      },
+      {
+        user: "drazen",
+        date: new Date("2026-03-15"),
+        items: [
+          { title: "Ender's Game", qty: 1 },
+          { title: "Foundation", qty: 1 },
+        ],
+      },
+    ];
+
+    for (const order of sampleOrders) {
+      const user = userByName(order.user);
+      const items = order.items.map((i) => {
+        const book = booksByTitle(i.title);
+        return { bookId: book.id, quantity: i.qty, price: book.price };
+      });
+      const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+      await prisma.order.create({
+        data: {
+          userId: user.id,
+          total,
+          createdAt: order.date,
+          items: { create: items },
+        },
+      });
+    }
+
+    console.log(`Seeded ${sampleOrders.length} orders.`);
+  } else {
+    console.log(`Orders already exist (${existingOrders}), skipping.`);
+  }
 }
 
 main()
