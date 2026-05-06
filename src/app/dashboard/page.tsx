@@ -45,23 +45,21 @@ export default function Dashboard() {
     }
 
     const totalBooks = orders.reduce((s, o) => s + o.items.reduce((si, i) => si + i.quantity, 0), 0);
-    const totalOrders = orders.length;
 
-    const uniqueBooks = new Map<number, { title: string; author: string; coverImage: string | null; genre: string }>();
     const genreSet = new Set<string>();
     const authorSet = new Set<string>();
     orders.forEach((o) =>
         o.items.forEach((i) => {
-            if (!uniqueBooks.has(i.book.id)) uniqueBooks.set(i.book.id, i.book);
             genreSet.add(i.book.genre);
             authorSet.add(i.book.author);
         })
     );
 
-    const lastOrder = orders[0];
-    const lastBook = lastOrder?.items[0]?.book;
+    const currentlyReading = readingStatuses.filter((s) => s.status === "currently-reading");
+    const finished = readingStatuses.filter((s) => s.status === "finished");
+    const wantToRead = readingStatuses.filter((s) => s.status === "want-to-read");
 
-    // Recent books (last 3 unique)
+    // Recent books (last 3 unique from orders)
     const recentBooks: { id: number; title: string; author: string; coverImage: string | null; genre: string }[] = [];
     for (const order of orders) {
         for (const item of order.items) {
@@ -72,6 +70,14 @@ export default function Dashboard() {
         }
         if (recentBooks.length >= 3) break;
     }
+
+    // Reading insights
+    const topGenre = (() => {
+        const gm: Record<string, number> = {};
+        readingStatuses.forEach((s) => { gm[s.book.genre] = (gm[s.book.genre] || 0) + 1; });
+        const sorted = Object.entries(gm).sort((a, b) => b[1] - a[1]);
+        return sorted[0]?.[0] || null;
+    })();
 
     return (
         <div className={styles.page}>
@@ -87,17 +93,17 @@ export default function Dashboard() {
                 {/* Stats */}
                 <div className={styles.statsRow}>
                     <div className={styles.stat}>
-                        <span className={styles.statIcon}>📦</span>
+                        <span className={styles.statIcon}>✅</span>
                         <div className={styles.statContent}>
-                            <span className={styles.statValue}>{totalOrders}</span>
-                            <span className={styles.statLabel}>Orders</span>
+                            <span className={styles.statValue}>{finished.length}</span>
+                            <span className={styles.statLabel}>Books Read</span>
                         </div>
                     </div>
                     <div className={styles.stat}>
-                        <span className={styles.statIcon}>📚</span>
+                        <span className={styles.statIcon}>📖</span>
                         <div className={styles.statContent}>
-                            <span className={styles.statValue}>{totalBooks}</span>
-                            <span className={styles.statLabel}>Books</span>
+                            <span className={styles.statValue}>{currentlyReading.length}</span>
+                            <span className={styles.statLabel}>In Progress</span>
                         </div>
                     </div>
                     <div className={styles.stat}>
@@ -116,81 +122,22 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {orders.length === 0 ? (
+                {orders.length === 0 && readingStatuses.length === 0 ? (
                     <div className={styles.emptyState}>
                         <span className={styles.emptyIcon}>📖</span>
-                        <p>You haven&apos;t made any purchases yet.</p>
+                        <p>Start your reading journey!</p>
                         <Link href="/browse" className={styles.primaryBtn}>Browse Books</Link>
                     </div>
                 ) : (
-                    <>
-                        {/* Last read CTA */}
-                        {lastBook && (
-                            <div className={styles.lastRead}>
-                                <div className={styles.lastReadContent}>
-                                    <span className={styles.lastReadLabel}>Your last read</span>
-                                    <h2 className={styles.lastReadTitle}>{lastBook.title}</h2>
-                                    <p className={styles.lastReadAuthor}>by {lastBook.author}</p>
-                                    <Link href={`/book/${lastBook.id}`} className={styles.lastReadLink}>
-                                        View book →
-                                    </Link>
-                                </div>
-                                {lastBook.coverImage && (
-                                    <Image
-                                        src={lastBook.coverImage}
-                                        alt={lastBook.title}
-                                        width={90}
-                                        height={130}
-                                        className={styles.lastReadCover}
-                                    />
-                                )}
-                            </div>
-                        )}
-
-                        {/* Recently added */}
-                        {recentBooks.length > 0 && (
-                            <div className={styles.section}>
-                                <div className={styles.sectionHeader}>
-                                    <h2 className={styles.sectionTitle}>Recently Added</h2>
-                                    <Link href="/my-books" className={styles.seeAll}>See all →</Link>
-                                </div>
-                                <div className={styles.recentGrid}>
-                                    {recentBooks.map((book) => (
-                                        <Link key={book.id} href={`/book/${book.id}`} className={styles.recentCard}>
-                                            <div className={styles.recentCover}>
-                                                {book.coverImage ? (
-                                                    <Image
-                                                        src={book.coverImage}
-                                                        alt={book.title}
-                                                        width={100}
-                                                        height={145}
-                                                        className={styles.recentImg}
-                                                    />
-                                                ) : (
-                                                    <div className={styles.recentPlaceholder}>📖</div>
-                                                )}
-                                            </div>
-                                            <div className={styles.recentInfo}>
-                                                <span className={styles.recentTitle}>{book.title}</span>
-                                                <span className={styles.recentAuthor}>{book.author}</span>
-                                                <span className={styles.recentGenre}>{book.genre}</span>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Currently Reading */}
-                        {readingStatuses.filter((s) => s.status === "currently-reading").length > 0 && (
-                            <div className={styles.section}>
-                                <div className={styles.sectionHeader}>
+                    <div className={styles.twoCol}>
+                        {/* Left column — primary content */}
+                        <div className={styles.mainCol}>
+                            {/* Currently Reading — the heart of the dashboard */}
+                            {currentlyReading.length > 0 && (
+                                <div className={styles.section}>
                                     <h2 className={styles.sectionTitle}>📖 Currently Reading</h2>
-                                </div>
-                                <div className={styles.readingList}>
-                                    {readingStatuses
-                                        .filter((s) => s.status === "currently-reading")
-                                        .map((item) => (
+                                    <div className={styles.readingList}>
+                                        {currentlyReading.map((item) => (
                                             <Link key={item.id} href={`/book/${item.book.id}`} className={styles.readingCard}>
                                                 <div className={styles.readingCover}>
                                                     {item.book.coverImage ? (
@@ -209,83 +156,123 @@ export default function Dashboard() {
                                                 </div>
                                             </Link>
                                         ))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        {/* Saved for Later / Wishlist */}
-                        {wishlist.length > 0 && (
-                            <div className={styles.section}>
-                                <div className={styles.sectionHeader}>
-                                    <h2 className={styles.sectionTitle}>❤️ Saved for Later</h2>
-                                    <span className={styles.sectionBadge}>{wishlist.length} book{wishlist.length !== 1 ? "s" : ""}</span>
-                                </div>
-                                <div className={styles.wishlistGrid}>
-                                    {wishlist.slice(0, 4).map((item) => (
-                                        <Link key={item.id} href={`/book/${item.book.id}`} className={styles.wishlistCard}>
-                                            <div className={styles.wishlistCover}>
-                                                {item.book.coverImage ? (
-                                                    <Image src={item.book.coverImage} alt={item.book.title} width={80} height={115} className={styles.wishlistImg} />
-                                                ) : (
-                                                    <div className={styles.wishlistPlaceholder}>📖</div>
-                                                )}
-                                            </div>
-                                            <span className={styles.wishlistTitle}>{item.book.title}</span>
-                                            <span className={styles.wishlistPrice}>${item.book.price.toFixed(2)}</span>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Want to Read */}
-                        {readingStatuses.filter((s) => s.status === "want-to-read").length > 0 && (
-                            <div className={styles.section}>
-                                <div className={styles.sectionHeader}>
-                                    <h2 className={styles.sectionTitle}>⭐ Want to Read</h2>
-                                </div>
-                                <div className={styles.recentGrid}>
-                                    {readingStatuses
-                                        .filter((s) => s.status === "want-to-read")
-                                        .map((item) => (
-                                            <Link key={item.id} href={`/book/${item.book.id}`} className={styles.recentCard}>
+                            {/* Recently Added to My Books */}
+                            {recentBooks.length > 0 && (
+                                <div className={styles.section}>
+                                    <div className={styles.sectionHeader}>
+                                        <h2 className={styles.sectionTitle}>Recently Added</h2>
+                                        <Link href="/my-books" className={styles.seeAll}>See all →</Link>
+                                    </div>
+                                    <div className={styles.recentList}>
+                                        {recentBooks.map((book) => (
+                                            <Link key={book.id} href={`/book/${book.id}`} className={styles.recentCard}>
                                                 <div className={styles.recentCover}>
-                                                    {item.book.coverImage ? (
-                                                        <Image src={item.book.coverImage} alt={item.book.title} width={100} height={145} className={styles.recentImg} />
+                                                    {book.coverImage ? (
+                                                        <Image src={book.coverImage} alt={book.title} width={50} height={72} className={styles.recentImg} />
                                                     ) : (
                                                         <div className={styles.recentPlaceholder}>📖</div>
                                                     )}
                                                 </div>
                                                 <div className={styles.recentInfo}>
-                                                    <span className={styles.recentTitle}>{item.book.title}</span>
-                                                    <span className={styles.recentAuthor}>{item.book.author}</span>
-                                                    <span className={styles.recentGenre}>{item.book.genre}</span>
+                                                    <span className={styles.recentTitle}>{book.title}</span>
+                                                    <span className={styles.recentAuthor}>{book.author}</span>
+                                                </div>
+                                                <span className={styles.recentGenre}>{book.genre}</span>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Want to Read */}
+                            {wantToRead.length > 0 && (
+                                <div className={styles.section}>
+                                    <h2 className={styles.sectionTitle}>⭐ Want to Read</h2>
+                                    <div className={styles.wantGrid}>
+                                        {wantToRead.slice(0, 4).map((item) => (
+                                            <Link key={item.id} href={`/book/${item.book.id}`} className={styles.wantCard}>
+                                                {item.book.coverImage ? (
+                                                    <Image src={item.book.coverImage} alt={item.book.title} width={70} height={100} className={styles.wantImg} />
+                                                ) : (
+                                                    <div className={styles.wantPlaceholder}>📖</div>
+                                                )}
+                                                <span className={styles.wantTitle}>{item.book.title}</span>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Right column — sidebar */}
+                        <div className={styles.sideCol}>
+                            {/* Saved for Later */}
+                            {wishlist.length > 0 && (
+                                <div className={styles.section}>
+                                    <div className={styles.sectionHeader}>
+                                        <h2 className={styles.sectionTitle}>❤️ Saved</h2>
+                                        <span className={styles.sectionBadge}>{wishlist.length}</span>
+                                    </div>
+                                    <div className={styles.savedList}>
+                                        {wishlist.slice(0, 4).map((item) => (
+                                            <Link key={item.id} href={`/book/${item.book.id}`} className={styles.savedCard}>
+                                                {item.book.coverImage ? (
+                                                    <Image src={item.book.coverImage} alt={item.book.title} width={40} height={58} className={styles.savedImg} />
+                                                ) : (
+                                                    <div className={styles.savedPlaceholder}>📖</div>
+                                                )}
+                                                <div className={styles.savedInfo}>
+                                                    <span className={styles.savedTitle}>{item.book.title}</span>
+                                                    <span className={styles.savedPrice}>${item.book.price.toFixed(2)}</span>
                                                 </div>
                                             </Link>
                                         ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Reading Insights */}
+                            <div className={styles.section}>
+                                <h2 className={styles.sectionTitle}>💡 Insights</h2>
+                                <div className={styles.insightsList}>
+                                    {totalBooks > 0 && (
+                                        <div className={styles.insightItem}>
+                                            <span className={styles.insightIcon}>📚</span>
+                                            <span>You&apos;ve collected <strong>{totalBooks}</strong> books</span>
+                                        </div>
+                                    )}
+                                    {finished.length > 0 && (
+                                        <div className={styles.insightItem}>
+                                            <span className={styles.insightIcon}>✅</span>
+                                            <span>Finished <strong>{finished.length}</strong> book{finished.length !== 1 ? "s" : ""}</span>
+                                        </div>
+                                    )}
+                                    {topGenre && (
+                                        <div className={styles.insightItem}>
+                                            <span className={styles.insightIcon}>🎭</span>
+                                            <span>Your top genre is <strong>{topGenre}</strong></span>
+                                        </div>
+                                    )}
+                                    {currentlyReading.length > 0 && (
+                                        <div className={styles.insightItem}>
+                                            <span className={styles.insightIcon}>📖</span>
+                                            <span><strong>{currentlyReading.length}</strong> book{currentlyReading.length !== 1 ? "s" : ""} in progress</span>
+                                        </div>
+                                    )}
+                                    {wishlist.length > 0 && (
+                                        <div className={styles.insightItem}>
+                                            <span className={styles.insightIcon}>❤️</span>
+                                            <span><strong>{wishlist.length}</strong> book{wishlist.length !== 1 ? "s" : ""} saved for later</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                        )}
-
-                        {/* Quick links */}
-                        <div className={styles.quickLinks}>
-                            <Link href="/my-books" className={styles.quickLink}>
-                                <span className={styles.quickIcon}>📖</span>
-                                <span className={styles.quickLabel}>My Books</span>
-                                <span className={styles.quickDesc}>{uniqueBooks.size} titles</span>
-                            </Link>
-                            <Link href="/purchases" className={styles.quickLink}>
-                                <span className={styles.quickIcon}>🧾</span>
-                                <span className={styles.quickLabel}>Purchases</span>
-                                <span className={styles.quickDesc}>{totalOrders} orders</span>
-                            </Link>
-                            <Link href="/browse" className={styles.quickLink}>
-                                <span className={styles.quickIcon}>🔍</span>
-                                <span className={styles.quickLabel}>Browse</span>
-                                <span className={styles.quickDesc}>Find new books</span>
-                            </Link>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </div>
