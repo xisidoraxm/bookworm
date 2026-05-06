@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import styles from "./Nav.module.css";
@@ -10,6 +10,8 @@ export default function Nav() {
     const { totalItems } = useCart();
     const [loggedIn, setLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
+    const [profileOpen, setProfileOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const stored = localStorage.getItem("loggedUser");
@@ -22,23 +24,29 @@ export default function Nav() {
         }
     }, []);
 
-    function handleLogout(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault();
-        if (
-            window.confirm(
-                "Are you sure you want to log out? Your session will end."
-            )
-        ) {
+    useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setProfileOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    function handleLogout() {
+        if (window.confirm("Are you sure you want to log out? Your session will end.")) {
             localStorage.removeItem("loggedUser");
             setLoggedIn(false);
             setUsername("");
+            setProfileOpen(false);
         }
     }
 
     return (
         <nav className={`navbar navbar-expand-lg ${styles.navbar}`}>
             <div className="container-fluid">
-                <a className={styles.navbarBrand} href="/home">
+                <a className={styles.navbarBrand} href="/">
                     <span className={styles.brandText}>
                         <span className={styles.brandName}>Bookworm</span>
                         <span className={styles.brandTagline}>Your Literary Haven</span>
@@ -59,41 +67,44 @@ export default function Nav() {
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
                             <a className={`nav-link ${styles.navLink}`} href="/">
-                                🏠 Home
+                                Home
                             </a>
                         </li>
-                        {loggedIn && (
+                        {loggedIn ? (
                             <>
                                 <li className="nav-item">
-                                    <a className={`nav-link ${styles.navLink}`} href="/dashboard">
-                                        📊 Dashboard
-                                    </a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className={`nav-link ${styles.navLink}`} href="/library">
-                                        📖 Library
+                                    <a className={`nav-link ${styles.navLink}`} href="/my-books">
+                                        My Books
                                     </a>
                                 </li>
                                 <li className="nav-item">
                                     <a className={`nav-link ${styles.navLink}`} href="/purchases">
-                                        🧾 Purchases
+                                        Purchases
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${styles.navLink}`} href="/dashboard">
+                                        Dashboard
+                                    </a>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${styles.navLink}`} href="/newsletter">
+                                        Newsletter
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className={`nav-link ${styles.navLink}`} href="/contact">
+                                        Contact
                                     </a>
                                 </li>
                             </>
                         )}
-                        <li className="nav-item">
-                            <a className={`nav-link ${styles.navLink}`} href="/newsletter">
-                                📰 Newsletter
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className={`nav-link ${styles.navLink}`} href="/contact">
-                                ✉️ Contact
-                            </a>
-                        </li>
                     </ul>
                     <div className="d-flex align-items-center gap-2">
-                        {loggedIn && (
+                        {loggedIn ? (
                             <>
                                 <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
                                     🛒
@@ -101,20 +112,34 @@ export default function Nav() {
                                         <span className={styles.cartBadge}>{totalItems}</span>
                                     )}
                                 </a>
-                                <a className={`${styles.navIconLink}`} href="/profile" title="Profile">
-                                    👤 {username && <span className={styles.username}>{username}</span>}
-                                </a>
+                                <div className={styles.profileDropdown} ref={dropdownRef}>
+                                    <button
+                                        className={styles.profileBtn}
+                                        onClick={() => setProfileOpen(!profileOpen)}
+                                        aria-expanded={profileOpen}
+                                    >
+                                        👤 {username && <span className={styles.username}>{username}</span>}
+                                        <span className={`${styles.dropdownChevron} ${profileOpen ? styles.chevronOpen : ""}`}>▾</span>
+                                    </button>
+                                    {profileOpen && (
+                                        <div className={styles.dropdownMenu}>
+                                            <a href="/profile" className={styles.dropdownItem}>
+                                                👤 Profile
+                                            </a>
+                                            <a href="/newsletter" className={styles.dropdownItem}>
+                                                📰 Newsletter
+                                            </a>
+                                            <a href="/contact" className={styles.dropdownItem}>
+                                                ✉️ Contact
+                                            </a>
+                                            <div className={styles.dropdownDivider} />
+                                            <button className={styles.dropdownItem} onClick={handleLogout}>
+                                                🚪 Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </>
-                        )}
-                        {loggedIn ? (
-                            <button
-                                className={styles.logoutBtn}
-                                type="button"
-                                onClick={handleLogout}
-                            >
-                                <span className={styles.logoutIcon}>🚪</span>
-                                Logout
-                            </button>
                         ) : (
                             <button
                                 className={styles.logoutBtn}

@@ -88,7 +88,7 @@ export default function Library() {
         <div className={styles.page}>
             <div className="container">
                 <div className={styles.header}>
-                    <h1 className={styles.heading}>📖 My Library</h1>
+                    <h1 className={styles.heading}>📖 My Books</h1>
                     <p className={styles.subtitle}>{books.length} titles in your collection</p>
                 </div>
 

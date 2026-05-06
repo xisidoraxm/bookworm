@@ -126,7 +126,7 @@ export default function Dashboard() {
                             <div className={styles.section}>
                                 <div className={styles.sectionHeader}>
                                     <h2 className={styles.sectionTitle}>Recently Added</h2>
-                                    <Link href="/library" className={styles.seeAll}>See all →</Link>
+                                    <Link href="/my-books" className={styles.seeAll}>See all →</Link>
                                 </div>
                                 <div className={styles.recentGrid}>
                                     {recentBooks.map((book) => (
@@ -157,9 +157,9 @@ export default function Dashboard() {
 
                         {/* Quick links */}
                         <div className={styles.quickLinks}>
-                            <Link href="/library" className={styles.quickLink}>
+                            <Link href="/my-books" className={styles.quickLink}>
                                 <span className={styles.quickIcon}>📖</span>
-                                <span className={styles.quickLabel}>My Library</span>
+                                <span className={styles.quickLabel}>My Books</span>
                                 <span className={styles.quickDesc}>{uniqueBooks.size} titles</span>
                             </Link>
                             <Link href="/purchases" className={styles.quickLink}>
