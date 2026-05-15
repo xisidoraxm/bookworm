@@ -80,16 +80,20 @@ export default function Nav() {
                         </li>
                         {loggedIn ? (
                             <>
-                                <li className="nav-item">
-                                    <a className={`nav-link ${styles.navLink}`} href="/my-books">
-                                        My Books
-                                    </a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className={`nav-link ${styles.navLink}`} href="/purchases">
-                                        Purchases
-                                    </a>
-                                </li>
+                                {!isAdmin && (
+                                    <>
+                                        <li className="nav-item">
+                                            <a className={`nav-link ${styles.navLink}`} href="/my-books">
+                                                My Books
+                                            </a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a className={`nav-link ${styles.navLink}`} href="/purchases">
+                                                Purchases
+                                            </a>
+                                        </li>
+                                    </>
+                                )}
                                 <li className="nav-item">
                                     <a className={`nav-link ${styles.navLink}`} href="/dashboard">
                                         Dashboard
@@ -98,7 +102,7 @@ export default function Nav() {
                                 {isAdmin && (
                                     <li className="nav-item">
                                         <a className={`nav-link ${styles.navLink}`} href="/admin/add-book">
-                                            ➕ Add Book
+                                            Add Book
                                         </a>
                                     </li>
                                 )}
@@ -119,12 +123,14 @@ export default function Nav() {
                         )}
                     </ul>
                     <div className="d-flex align-items-center gap-2">
-                        <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
-                            🛒
-                            {totalItems > 0 && (
-                                <span className={styles.cartBadge}>{totalItems}</span>
-                            )}
-                        </a>
+                        {!isAdmin && (
+                            <a className={`${styles.navIconLink}`} href="/cart" title="Shopping Cart">
+                                🛒
+                                {totalItems > 0 && (
+                                    <span className={styles.cartBadge}>{totalItems}</span>
+                                )}
+                            </a>
+                        )}
                         {loggedIn ? (
                             <>
                                 <div className={styles.profileDropdown} ref={dropdownRef}>

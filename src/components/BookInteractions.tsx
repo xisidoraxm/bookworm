@@ -20,6 +20,7 @@ type SortKey = "newest" | "highest" | "lowest";
 
 export default function BookInteractions({ bookId }: Props) {
     const [username, setUsername] = useState<string | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [wishlisted, setWishlisted] = useState(false);
     const [readingStatus, setReadingStatus] = useState<string | null>(null);
     const [progress, setProgress] = useState(0);
@@ -37,6 +38,7 @@ export default function BookInteractions({ bookId }: Props) {
             try {
                 const user = JSON.parse(stored);
                 setUsername(user.username);
+                setIsAdmin(user.role === "ADMIN");
             } catch { /* ignore */ }
         }
         setLoading(false);
@@ -46,11 +48,19 @@ export default function BookInteractions({ bookId }: Props) {
     const fetchData = useCallback(async () => {
         if (!username) return;
 
-        const [reviewsRes, wishlistRes, statusRes] = await Promise.all([
+        const fetches: Promise<Response>[] = [
             fetch(`/api/reviews?bookId=${bookId}`),
-            fetch(`/api/wishlist?username=${encodeURIComponent(username)}&bookId=${bookId}`),
-            fetch(`/api/reading-status?username=${encodeURIComponent(username)}&bookId=${bookId}`),
-        ]);
+        ];
+        if (!isAdmin) {
+            fetches.push(
+                fetch(`/api/wishlist?username=${encodeURIComponent(username)}&bookId=${bookId}`),
+                fetch(`/api/reading-status?username=${encodeURIComponent(username)}&bookId=${bookId}`),
+            );
+        }
+        const responses = await Promise.all(fetches);
+        const reviewsRes = responses[0];
+        const wishlistRes = !isAdmin ? responses[1] : null;
+        const statusRes = !isAdmin ? responses[2] : null;
 
         const reviewsData = await reviewsRes.json();
         setReviews(reviewsData);
@@ -61,13 +71,17 @@ export default function BookInteractions({ bookId }: Props) {
             setReviewText(userReview.text || "");
         }
 
-        const w = await wishlistRes.json();
-        setWishlisted(w.wishlisted);
+        if (wishlistRes) {
+            const w = await wishlistRes.json();
+            setWishlisted(w.wishlisted);
+        }
 
-        const s = await statusRes.json();
-        setReadingStatus(s.status);
-        setProgress(s.progress);
-    }, [bookId, username]);
+        if (statusRes) {
+            const s = await statusRes.json();
+            setReadingStatus(s.status);
+            setProgress(s.progress);
+        }
+    }, [bookId, username, isAdmin]);
 
     useEffect(() => {
         if (!loading) fetchData();
@@ -158,8 +172,8 @@ export default function BookInteractions({ bookId }: Props) {
 
     return (
         <div className={styles.interactions}>
-            {/* Action buttons for logged-in users */}
-            {username && (
+            {/* Action buttons for logged-in users (hide wishlist/reading for admin) */}
+            {username && !isAdmin && (
                 <div className={styles.actionBar}>
                     {/* Wishlist */}
                     <button
@@ -192,7 +206,7 @@ export default function BookInteractions({ bookId }: Props) {
             )}
 
             {/* Reading progress bar */}
-            {username && readingStatus === "currently-reading" && (
+            {username && !isAdmin && readingStatus === "currently-reading" && (
                 <div className={styles.progressSection}>
                     <div className={styles.progressHeader}>
                         <span className={styles.progressLabel}>📖 Reading Progress</span>
@@ -218,7 +232,7 @@ export default function BookInteractions({ bookId }: Props) {
             )}
 
             {/* Reading status display */}
-            {username && readingStatus && readingStatus !== "currently-reading" && (
+            {username && !isAdmin && readingStatus && readingStatus !== "currently-reading" && (
                 <div className={styles.statusBadge}>
                     {statusLabels[readingStatus]}
                 </div>

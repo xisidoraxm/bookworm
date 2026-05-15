@@ -18,7 +18,199 @@ type ReadingStatusItem = {
     book: { id: number; title: string; author: string; coverImage: string | null; genre: string };
 };
 
-export default function Dashboard() {
+type AdminStats = {
+    totalUsers: number;
+    totalBooks: number;
+    totalOrders: number;
+    totalRevenue: number;
+    monthlyRevenue: { month: string; revenue: number; orders: number }[];
+    recentOrders: {
+        id: number;
+        total: number;
+        createdAt: string;
+        user: { username: string; fullName: string };
+        itemCount: number;
+    }[];
+    topSellingBooks: {
+        bookId: number;
+        title: string;
+        author: string;
+        coverImage: string | null;
+        totalSold: number;
+    }[];
+};
+
+/* ─── Admin Dashboard ─── */
+function AdminDashboard({ username }: { username: string }) {
+    const [stats, setStats] = useState<AdminStats | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("/api/admin/stats")
+            .then((r) => r.json())
+            .then((data) => { setStats(data); setLoading(false); })
+            .catch(() => setLoading(false));
+    }, []);
+
+    if (loading || !stats) {
+        return (
+            <div className={styles.page}>
+                <div className="container text-center" style={{ paddingTop: "8rem" }}>
+                    <p className={styles.loadingText}>Loading admin dashboard...</p>
+                </div>
+            </div>
+        );
+    }
+
+    const maxRevenue = Math.max(...stats.monthlyRevenue.map((m) => m.revenue), 1);
+
+    return (
+        <div className={styles.page}>
+            <div className="container">
+                <div className={styles.welcome}>
+                    <h1 className={styles.welcomeTitle}>
+                        Admin Dashboard
+                    </h1>
+                    <p className={styles.welcomeSub}>Welcome back, <strong>{username}</strong> — here&apos;s your store overview</p>
+                </div>
+
+                {/* Stats */}
+                <div className={styles.statsRow}>
+                    <div className={styles.stat}>
+                        <span className={styles.statIcon}>👥</span>
+                        <div className={styles.statContent}>
+                            <span className={styles.statValue}>{stats.totalUsers}</span>
+                            <span className={styles.statLabel}>Users</span>
+                        </div>
+                    </div>
+                    <div className={styles.stat}>
+                        <span className={styles.statIcon}>📚</span>
+                        <div className={styles.statContent}>
+                            <span className={styles.statValue}>{stats.totalBooks}</span>
+                            <span className={styles.statLabel}>Books</span>
+                        </div>
+                    </div>
+                    <div className={styles.stat}>
+                        <span className={styles.statIcon}>🧾</span>
+                        <div className={styles.statContent}>
+                            <span className={styles.statValue}>{stats.totalOrders}</span>
+                            <span className={styles.statLabel}>Orders</span>
+                        </div>
+                    </div>
+                    <div className={styles.stat}>
+                        <span className={styles.statIcon}>💰</span>
+                        <div className={styles.statContent}>
+                            <span className={styles.statValue}>${stats.totalRevenue.toFixed(2)}</span>
+                            <span className={styles.statLabel}>Revenue</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.twoCol}>
+                    <div className={styles.mainCol}>
+                        {/* Monthly Revenue Chart */}
+                        <div className={styles.section}>
+                            <h2 className={styles.sectionTitle}>📊 Monthly Revenue</h2>
+                            <div className={styles.barChart}>
+                                {stats.monthlyRevenue.map((m) => (
+                                    <div key={m.month} className={styles.barCol}>
+                                        <span className={styles.barValue}>${m.revenue.toFixed(0)}</span>
+                                        <div className={styles.barTrack}>
+                                            <div
+                                                className={styles.barFill}
+                                                style={{ height: `${(m.revenue / maxRevenue) * 100}%` }}
+                                            />
+                                        </div>
+                                        <span className={styles.barLabel}>{m.month}</span>
+                                        <span className={styles.barSub}>{m.orders} orders</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Recent Orders */}
+                        <div className={styles.section}>
+                            <div className={styles.sectionHeader}>
+                                <h2 className={styles.sectionTitle}>🕐 Recent Orders</h2>
+                                <Link href="/purchases" className={styles.seeAll}>All orders →</Link>
+                            </div>
+                            {stats.recentOrders.length === 0 ? (
+                                <p style={{ opacity: 0.6 }}>No orders yet.</p>
+                            ) : (
+                                <div className={styles.recentList}>
+                                    {stats.recentOrders.map((order) => (
+                                        <div key={order.id} className={styles.recentCard}>
+                                            <div className={styles.recentInfo}>
+                                                <span className={styles.recentTitle}>Order #{order.id}</span>
+                                                <span className={styles.recentAuthor}>
+                                                    {order.user.fullName} (@{order.user.username})
+                                                </span>
+                                            </div>
+                                            <div style={{ textAlign: "right" }}>
+                                                <span className={styles.recentGenre}>${order.total.toFixed(2)}</span>
+                                                <br />
+                                                <span className={styles.recentAuthor}>
+                                                    {order.itemCount} item{order.itemCount !== 1 ? "s" : ""} · {new Date(order.createdAt).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className={styles.sideCol}>
+                        {/* Top Selling Books */}
+                        <div className={styles.section}>
+                            <h2 className={styles.sectionTitle}>🏆 Top Sellers</h2>
+                            <div className={styles.savedList}>
+                                {stats.topSellingBooks.map((book, i) => (
+                                    <Link key={book.bookId} href={`/book/${book.bookId}`} className={styles.savedCard}>
+                                        {book.coverImage ? (
+                                            <Image src={book.coverImage} alt={book.title} width={40} height={58} className={styles.savedImg} />
+                                        ) : (
+                                            <div className={styles.savedPlaceholder}>📖</div>
+                                        )}
+                                        <div className={styles.savedInfo}>
+                                            <span className={styles.savedTitle}>
+                                                {i + 1}. {book.title}
+                                            </span>
+                                            <span className={styles.savedPrice}>{book.totalSold} sold</span>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Quick Links */}
+                        <div className={styles.section}>
+                            <h2 className={styles.sectionTitle}>⚡ Quick Actions</h2>
+                            <div className={styles.insightsList}>
+                                <Link href="/admin/add-book" className={styles.insightItem} style={{ textDecoration: "none", color: "inherit" }}>
+                                    <span className={styles.insightIcon}>➕</span>
+                                    <span>Add a new book</span>
+                                </Link>
+                                <Link href="/browse" className={styles.insightItem} style={{ textDecoration: "none", color: "inherit" }}>
+                                    <span className={styles.insightIcon}>📖</span>
+                                    <span>Browse all listings</span>
+                                </Link>
+                                <Link href="/purchases" className={styles.insightItem} style={{ textDecoration: "none", color: "inherit" }}>
+                                    <span className={styles.insightIcon}>🧾</span>
+                                    <span>View all transactions</span>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ─── User Dashboard (existing) ─── */
+
+function UserDashboard() {
     const { orders, loading, username } = useUserOrders();
     const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [readingStatuses, setReadingStatuses] = useState<ReadingStatusItem[]>([]);
@@ -277,4 +469,28 @@ export default function Dashboard() {
             </div>
         </div>
     );
+}
+
+/* ─── Route wrapper — dispatches based on role ─── */
+export default function Dashboard() {
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [username, setUsername] = useState("");
+    const [checked, setChecked] = useState(false);
+
+    useEffect(() => {
+        const stored = localStorage.getItem("loggedUser");
+        if (stored) {
+            try {
+                const user = JSON.parse(stored);
+                setIsAdmin(user.role === "ADMIN");
+                setUsername(user.username || "");
+            } catch { /* ignore */ }
+        }
+        setChecked(true);
+    }, []);
+
+    if (!checked) return null;
+
+    if (isAdmin) return <AdminDashboard username={username} />;
+    return <UserDashboard />;
 }

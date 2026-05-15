@@ -23,6 +23,7 @@ export default function BookList({ books, genres, initialGenre = null }: { books
     const [hideOwned, setHideOwned] = useState(false);
     const [ownedBookIds, setOwnedBookIds] = useState<Set<number>>(new Set());
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
     const { addToCart, items: cartItems } = useCart();
 
@@ -32,6 +33,7 @@ export default function BookList({ books, genres, initialGenre = null }: { books
         try {
             const user = JSON.parse(stored);
             setIsLoggedIn(true);
+            setIsAdmin(user.role === "ADMIN");
             fetch(`/api/orders?username=${encodeURIComponent(user.username)}`)
                 .then((r) => r.json())
                 .then((orders) => {
@@ -324,7 +326,7 @@ export default function BookList({ books, genres, initialGenre = null }: { books
                             </label>
                         </div>
 
-                        {isLoggedIn && (
+                        {isLoggedIn && !isAdmin && (
                             <div className={styles.filterGroup}>
                                 <label className={styles.checkboxLabel}>
                                     <input
@@ -369,6 +371,7 @@ export default function BookList({ books, genres, initialGenre = null }: { books
                                                     <span className={styles.bookEmoji}>📖</span>
                                                 )}
                                                 {/* Hover overlay */}
+                                                {!isAdmin && (
                                                 <div className={styles.bookOverlay}>
                                                     <button
                                                         className={`${styles.quickAddBtn} ${!book.inStock ? styles.quickAddDisabled : ""}`}
@@ -382,6 +385,7 @@ export default function BookList({ books, genres, initialGenre = null }: { books
                                                                 : "🛒 Add to Cart"}
                                                     </button>
                                                 </div>
+                                                )}
                                                 {book.rating >= 4.5 && (
                                                     <span className={styles.bookBadge}>★ Top Rated</span>
                                                 )}

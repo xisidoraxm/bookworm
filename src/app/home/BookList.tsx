@@ -20,8 +20,16 @@ export default function BookList({ books, genres }: { books: Book[]; genres: str
     const [page, setPage] = useState(1);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [searchFocused, setSearchFocused] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
     const { addToCart, items: cartItems } = useCart();
+
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem("loggedUser");
+            if (stored) setIsAdmin(JSON.parse(stored).role === "ADMIN");
+        } catch { /* ignore */ }
+    }, []);
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
@@ -404,6 +412,7 @@ export default function BookList({ books, genres }: { books: Book[]; genres: str
                                                     <span className={styles.bookEmoji}>📖</span>
                                                 )}
                                                 {/* Hover overlay */}
+                                                {!isAdmin && (
                                                 <div className={styles.bookOverlay}>
                                                     <button
                                                         className={`${styles.quickAddBtn} ${!book.inStock ? styles.quickAddDisabled : ""}`}
@@ -417,6 +426,7 @@ export default function BookList({ books, genres }: { books: Book[]; genres: str
                                                                 : "🛒 Add to Cart"}
                                                     </button>
                                                 </div>
+                                                )}
                                                 {book.rating >= 4.5 && (
                                                     <span className={styles.bookBadge}>★ Top Rated</span>
                                                 )}

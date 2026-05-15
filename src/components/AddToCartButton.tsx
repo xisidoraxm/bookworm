@@ -20,6 +20,15 @@ export default function AddToCartButton({ book }: Props) {
     const { addToCart, updateQuantity, removeFromCart, items } = useCart();
     const inCart = items.find((i) => i.id === book.id);
 
+    // Admin users don't have cart functionality
+    const isAdmin = (() => {
+        try {
+            const stored = typeof window !== "undefined" ? localStorage.getItem("loggedUser") : null;
+            return stored ? JSON.parse(stored).role === "ADMIN" : false;
+        } catch { return false; }
+    })();
+    if (isAdmin) return null;
+
     function handleAdd() {
         if (!book.inStock) return;
         addToCart({
