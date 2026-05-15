@@ -10,6 +10,7 @@ export default function Nav() {
     const { totalItems } = useCart();
     const [loggedIn, setLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -20,6 +21,7 @@ export default function Nav() {
             try {
                 const user = JSON.parse(stored);
                 setUsername(user.username || "");
+                setIsAdmin(user.role === "ADMIN");
             } catch { /* ignore */ }
         }
     }, []);
@@ -39,6 +41,7 @@ export default function Nav() {
             localStorage.removeItem("loggedUser");
             setLoggedIn(false);
             setUsername("");
+            setIsAdmin(false);
             setProfileOpen(false);
         }
     }
@@ -92,6 +95,13 @@ export default function Nav() {
                                         Dashboard
                                     </a>
                                 </li>
+                                {isAdmin && (
+                                    <li className="nav-item">
+                                        <a className={`nav-link ${styles.navLink}`} href="/admin/add-book">
+                                            ➕ Add Book
+                                        </a>
+                                    </li>
+                                )}
                             </>
                         ) : (
                             <>

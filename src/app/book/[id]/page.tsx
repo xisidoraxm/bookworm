@@ -99,7 +99,7 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                             </div>
                             <div className={styles.metaItem}>
                                 <span className={styles.metaLabel}>Format</span>
-                                <span className={styles.metaValue}>Paperback</span>
+                                <span className={styles.metaValue}>{{"PAPERBACK":"Paperback","HARDCOVER":"Hardcover"}[book.format] || book.format}</span>
                             </div>
                             <div className={styles.metaItem}>
                                 <span className={styles.metaLabel}>Language</span>

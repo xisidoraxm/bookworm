@@ -12,6 +12,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id             Int             @id @default(autoincrement())
   username       String          @unique
@@ -19,12 +24,18 @@ model User {
   fullName       String
   phone          String
   email          String
+  role           Role            @default(USER)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   orders         Order[]
   reviews        Review[]
   wishlist       Wishlist[]
   readingStatus  ReadingStatus[]
+}
+
+enum BookFormat {
+  PAPERBACK
+  HARDCOVER
 }
 
 model Book {
@@ -36,6 +47,7 @@ model Book {
   wikipediaUrl    String?
   price           Float
   genre           String
+  format          BookFormat      @default(PAPERBACK)
   coverImage      String?
   rating          Float           @default(0)
   inStock         Boolean         @default(true)

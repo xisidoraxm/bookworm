@@ -1,6 +1,6 @@
 # Bookworm — Online Book Shop
 
-A full-featured online bookshop built with **Next.js** (App Router), **Prisma** (PostgreSQL), **Bootstrap 5**, and **Google Maps**. Users can browse, search, and purchase books, manage a personal library, track reading progress, write reviews, and maintain a wishlist.
+A full-featured online bookshop built with **Next.js** (App Router), **Prisma** (PostgreSQL), **Bootstrap 5**, **Google Maps**, and **OpenAI**. Users can browse, search, and purchase books, manage a personal library, track reading progress, write reviews, maintain a wishlist, and get AI-powered book recommendations.
 
 ---
 
@@ -9,6 +9,7 @@ A full-featured online bookshop built with **Next.js** (App Router), **Prisma** 
 - **Frontend:** Next.js 15, React 18, Bootstrap 5, CSS Modules
 - **Backend:** Next.js API Routes (App Router)
 - **Database:** PostgreSQL with Prisma ORM
+- **AI:** OpenAI GPT-4o-mini for book recommendations
 - **Auth:** localStorage-based session (username/password)
 - **Cart:** Client-side persistence via localStorage
 - **Maps:** Google Maps JavaScript API
@@ -29,6 +30,7 @@ A full-featured online bookshop built with **Next.js** (App Router), **Prisma** 
 
 ### Browse Books (`/browse`)
 - Full catalog with text search (title/author), genre filter, sort options (newest, price, rating, title), minimum rating filter, and in-stock toggle
+- "Hide books I own" filter for logged-in users (excludes previously purchased books)
 - Pagination with configurable items per page (12/24/48)
 - Quick "Add to Cart" from book cards
 - Collapsible sidebar for filters
@@ -37,6 +39,7 @@ A full-featured online bookshop built with **Next.js** (App Router), **Prisma** 
 - Cover image, genre/top-rated tags, star rating, price, and stock status
 - Buy box with quantity stepper and stock awareness
 - Full description and Wikipedia link (if available)
+- "Ask AI: Is this book right for me?" button — shows who the book is for, what mood it fits, and similar alternatives
 - Book interactions panel (wishlist, reading status, reviews)
 - Suggested books in the same genre
 
@@ -82,6 +85,18 @@ A full-featured online bookshop built with **Next.js** (App Router), **Prisma** 
 - Bookshop info: address, phone, email, working hours
 - Embedded Google Maps with a pin marker on the shop location (Belgrade)
 
+### Bookworm AI (floating widget, all pages)
+- Floating 🦉 button in the bottom-right corner with tooltip ("Need a book buddy?")
+- Chat panel with warm, personalized greeting (uses first name for logged-in users)
+- Mood selector chips: Cozy, Dark, Adventurous, Emotional, Fast-paced, Thought-provoking
+- Quick prompt chips: "Surprise me", "Show trending books", "I want something cozy", etc.
+- Mini book cards in AI responses with cover, title, author, rating, price, and link
+- Persistent quick chips during conversation for easy follow-ups
+- "Bookworm is thinking..." typing indicator with animated dots
+- Soft personalization for logged-in users (purchase history, wishlist, reading status, favorite genres)
+- Gentle follow-up questions after each recommendation
+- Chat history persists across page navigations via sessionStorage
+
 ---
 
 ## Components
@@ -89,6 +104,8 @@ A full-featured online bookshop built with **Next.js** (App Router), **Prisma** 
 | Component | Description |
 |---|---|
 | **Nav** | Responsive Bootstrap navbar with conditional links for logged-in/logged-out users, cart badge, and profile dropdown |
+| **BookwormAI** | Floating AI chat widget with mood selector, quick chips, mini book cards, personalization, and sessionStorage persistence |
+| **AskAIButton** | Per-book AI analysis button — tells the user who the book is for, its mood, and similar titles |
 | **BookInteractions** | Wishlist toggle, reading status dropdown with progress slider, and review system (star rating + text) |
 | **AddToCartButton** | Stock-aware add-to-cart with quantity stepper; disables when out of stock |
 | **CartContext** | React Context provider managing cart state in localStorage |
@@ -114,6 +131,7 @@ A full-featured online bookshop built with **Next.js** (App Router), **Prisma** 
 | `POST` | `/api/reading-status` | Set or update reading status (want-to-read, currently-reading, finished) |
 | `DELETE` | `/api/reading-status` | Remove a reading status entry |
 | `GET` | `/api/user-activity?username=` | Get full wishlist and reading statuses for dashboard |
+| `POST` | `/api/ai-recommend` | AI book recommendations — accepts chat messages, username, and mood; returns AI response with mini book card data |
 
 ---
 
@@ -144,5 +162,13 @@ npx ts-node prisma/seed.ts
 # Run the development server
 npm run dev
 ```
+
+### Environment Variables
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `OPENAI_API_KEY` | OpenAI API key for Bookworm AI recommendations |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps API key |
 
 The app will be available at `http://localhost:3000`.

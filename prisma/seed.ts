@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../src/generated/prisma";
+import { PrismaClient, Role, BookFormat } from "../src/generated/prisma";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -68,7 +68,7 @@ const books = [
 ];
 
 const users = [
-  { username: "admin", password: "Admin123!", fullName: "Aleksandra Milosevic", phone: "0612345678", email: "admin@gmail.com" },
+  { username: "admin", password: "Admin123!", fullName: "Aleksandra Milosevic", phone: "0612345678", email: "admin@gmail.com", role: Role.ADMIN },
   { username: "isidora", password: "Pass123!", fullName: "Isidora Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
   { username: "jelica", password: "Pass123!", fullName: "Jelica Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
   { username: "drazen", password: "Pass123!", fullName: "Drazen Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
@@ -82,8 +82,8 @@ async function main() {
   for (const book of books) {
     await prisma.book.upsert({
       where: { title: book.title },
-      update: { coverImage: book.coverImage, fullDescription: book.fullDescription, wikipediaUrl: book.wikipediaUrl, quantity: book.quantity },
-      create: book,
+      update: { coverImage: book.coverImage, fullDescription: book.fullDescription, wikipediaUrl: book.wikipediaUrl, quantity: book.quantity, format: book.format ?? BookFormat.PAPERBACK },
+      create: { ...book, format: book.format ?? BookFormat.PAPERBACK },
     });
   }
 
@@ -94,7 +94,7 @@ async function main() {
   for (const user of users) {
     await prisma.user.upsert({
       where: { username: user.username },
-      update: {},
+      update: { role: "role" in user ? user.role : Role.USER },
       create: user,
     });
   }
