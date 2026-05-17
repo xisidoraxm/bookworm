@@ -45,7 +45,7 @@ export default function Purchases() {
         <div className={styles.page}>
             <div className="container">
                 <div className={styles.header}>
-                    <h1 className={styles.heading}>🧾 Purchase History</h1>
+                    <h1 className={styles.heading}>Purchase History</h1>
                     <p className={styles.subtitle}>{orders.length} orders total</p>
                 </div>
 

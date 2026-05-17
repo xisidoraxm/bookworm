@@ -2,11 +2,22 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import styles from "./page.module.css";
 
 export default function Cart() {
+    const router = useRouter();
     const { items, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice } = useCart();
+
+    const handleCheckout = () => {
+        const loggedUser = localStorage.getItem("loggedUser");
+        if (!loggedUser) {
+            router.push("/login");
+            return;
+        }
+        router.push("/checkout");
+    };
 
     return (
         <div className={styles.cartPage}>
@@ -139,7 +150,7 @@ export default function Cart() {
                                     <span>${(totalPrice + (totalPrice >= 35 ? 0 : 4.99)).toFixed(2)}</span>
                                 </div>
 
-                                <button className={styles.checkoutBtn}>
+                                <button className={styles.checkoutBtn} onClick={handleCheckout}>
                                     Proceed to Checkout
                                 </button>
 

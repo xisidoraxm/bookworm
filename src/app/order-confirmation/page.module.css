@@ -1,0 +1,374 @@
+.confirmationPage {
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  background: var(--bg);
+}
+
+.successBox {
+  background: #fff;
+  border: 2px solid #4caf50;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.successIcon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+  animation: bounce 0.6s ease-in-out;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.successTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 0.5rem;
+}
+
+.orderReference {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+
+.successMessage {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* Section Layout */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section:not(:last-child) {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.3px;
+}
+
+.sectionContent {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.detailsItem {
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.detailsItemLabel {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.detailsItemValue {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Order Items Section */
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.orderItem {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.orderItem:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.itemImage {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--border);
+}
+
+.itemPlaceholder {
+  width: 60px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--border);
+  border-radius: 4px;
+  font-size: 1.5rem;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.itemTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.itemTitle:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.itemAuthor {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.itemQty {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.itemPrice {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1rem;
+  text-align: right;
+}
+
+/* Summary Section */
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  font-size: 1rem;
+}
+
+.summaryRow:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.summaryRowLabel {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.summaryRowValue {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.summaryTotal {
+  font-size: 1.15rem !important;
+  margin-top: 1rem !important;
+  padding-top: 1rem !important;
+  border-top: 2px solid var(--accent) !important;
+}
+
+.summaryTotal .summaryRowLabel {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.summaryTotal .summaryRowValue {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Steps */
+.stepsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.stepNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.stepContent {
+  flex: 1;
+}
+
+.stepTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.stepDescription {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.errorBox {
+  background: rgba(211, 47, 47, 0.1);
+  border: 2px solid #d32f2f;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.errorTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d32f2f;
+  margin-bottom: 0.5rem;
+}
+
+.errorMessage {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+
+.primaryBtn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.primaryBtn:hover {
+  background: var(--accent-hover);
+  color: #fff;
+}
+
+.secondaryBtn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.secondaryBtn:hover {
+  background: rgba(76, 175, 80, 0.05);
+  border-color: var(--accent-hover);
+}
