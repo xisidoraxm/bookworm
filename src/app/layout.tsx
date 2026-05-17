@@ -5,6 +5,7 @@ import GoogleMapsLoader from "../components/GoogleMapsLoader";
 import NavWrapper from "../components/NavWrapper";
 import BookwormAI from "../components/BookwormAI";
 import { CartProvider } from "../context/CartContext";
+import { ActivityTracker } from "../components/ActivityTracker";
 
 export default function RootLayout({
   children,
@@ -15,11 +16,13 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning>
         <CartProvider>
-          <BootstrapClient />
-          <GoogleMapsLoader />
-          <NavWrapper />
-          {children}
-          <BookwormAI />
+          <ActivityTracker>
+            <BootstrapClient />
+            <GoogleMapsLoader />
+            <NavWrapper />
+            {children}
+            <BookwormAI />
+          </ActivityTracker>
         </CartProvider>
       </body>
     </html>

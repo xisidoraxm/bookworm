@@ -16,6 +16,12 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    // Update lastActive to current time
+    await prisma.user.update({
+        where: { id: user.id },
+        data: { lastActive: new Date() },
+    });
+
     const { password: _, ...userWithoutPassword } = user;
     return NextResponse.json(userWithoutPassword);
 }

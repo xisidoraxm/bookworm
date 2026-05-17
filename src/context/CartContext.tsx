@@ -17,6 +17,7 @@ type CartContextType = {
     removeFromCart: (bookId: number) => void;
     updateQuantity: (bookId: number, quantity: number) => void;
     clearCart: () => void;
+    reloadCart: () => void;
     totalItems: number;
     totalPrice: number;
 };
@@ -24,11 +25,24 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | null>(null);
 
 const CART_KEY = "bookworm_cart";
+const GUEST_CART_KEY = "bookworm_cart_guest";
+
+function getCartKey(): string {
+    if (typeof window === "undefined") return GUEST_CART_KEY;
+    try {
+        const stored = localStorage.getItem("loggedUser");
+        if (stored) {
+            const user = JSON.parse(stored);
+            return `${CART_KEY}_user_${user.id}`;
+        }
+    } catch { /* ignore */ }
+    return GUEST_CART_KEY;
+}
 
 function loadCart(): CartItem[] {
     if (typeof window === "undefined") return [];
     try {
-        const raw = localStorage.getItem(CART_KEY);
+        const raw = localStorage.getItem(getCartKey());
         return raw ? JSON.parse(raw) : [];
     } catch {
         return [];
@@ -36,7 +50,7 @@ function loadCart(): CartItem[] {
 }
 
 function saveCart(items: CartItem[]) {
-    localStorage.setItem(CART_KEY, JSON.stringify(items));
+    localStorage.setItem(getCartKey(), JSON.stringify(items));
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -51,6 +65,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (loaded) saveCart(items);
     }, [items, loaded]);
+
+    const reloadCart = useCallback(() => {
+        setItems(loadCart());
+    }, []);
 
     const addToCart = useCallback((book: Omit<CartItem, "quantity">) => {
         setItems((prev) => {
@@ -84,7 +102,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <CartContext.Provider
-            value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice }}
+            value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, reloadCart, totalItems, totalPrice }}
         >
             {children}
         </CartContext.Provider>

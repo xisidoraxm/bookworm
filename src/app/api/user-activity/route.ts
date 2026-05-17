@@ -34,3 +34,20 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ wishlist, readingStatuses });
 }
+
+export async function POST(req: NextRequest) {
+    const { userId } = await req.json();
+
+    if (!userId) {
+        return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+
+    // Update user's lastActive timestamp
+    const user = await prisma.user.update({
+        where: { id: userId },
+        data: { lastActive: new Date() },
+        select: { id: true, lastActive: true },
+    });
+
+    return NextResponse.json(user);
+}

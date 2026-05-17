@@ -7,7 +7,7 @@ import styles from "./Nav.module.css";
 
 export default function Nav() {
     const router = useRouter();
-    const { totalItems } = useCart();
+    const { totalItems, clearCart } = useCart();
     const [loggedIn, setLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
@@ -39,10 +39,12 @@ export default function Nav() {
     function handleLogout() {
         if (window.confirm("Are you sure you want to log out? Your session will end.")) {
             localStorage.removeItem("loggedUser");
+            clearCart();
             setLoggedIn(false);
             setUsername("");
             setIsAdmin(false);
             setProfileOpen(false);
+            router.push("/discover");
         }
     }
 
@@ -100,11 +102,18 @@ export default function Nav() {
                                     </a>
                                 </li>
                                 {isAdmin && (
-                                    <li className="nav-item">
-                                        <a className={`nav-link ${styles.navLink}`} href="/admin/add-book">
-                                            Add Book
-                                        </a>
-                                    </li>
+                                    <>
+                                        <li className="nav-item">
+                                            <a className={`nav-link ${styles.navLink}`} href="/admin/add-book">
+                                                Add Book
+                                            </a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a className={`nav-link ${styles.navLink}`} href="/admin/users">
+                                                Manage Users
+                                            </a>
+                                        </li>
+                                    </>
                                 )}
                             </>
                         ) : (

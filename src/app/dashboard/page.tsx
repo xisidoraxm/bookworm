@@ -191,6 +191,10 @@ function AdminDashboard({ username }: { username: string }) {
                                     <span className={styles.insightIcon}>➕</span>
                                     <span>Add a new book</span>
                                 </Link>
+                                <Link href="/admin/users" className={styles.insightItem} style={{ textDecoration: "none", color: "inherit" }}>
+                                    <span className={styles.insightIcon}>👥</span>
+                                    <span>Manage users</span>
+                                </Link>
                                 <Link href="/browse" className={styles.insightItem} style={{ textDecoration: "none", color: "inherit" }}>
                                     <span className={styles.insightIcon}>📖</span>
                                     <span>Browse all listings</span>

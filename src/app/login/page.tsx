@@ -3,16 +3,18 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useCart } from "@/context/CartContext";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import styles from "./page.module.css";
 import EyeOpen from "../../components/icons/EyeOpen";
 import EyeClosed from "../../components/icons/EyeClosed";
 
-export default function Login() {
 
-    const router = useRouter()
+export default function Login() {
+    const router = useRouter();
+    const { reloadCart } = useCart();
     const [showPassword, setShowPassword] = useState(false);
 
     async function login(e: React.FormEvent<HTMLFormElement>) {
@@ -47,6 +49,7 @@ export default function Login() {
 
             const user = await res.json();
             localStorage.setItem("loggedUser", JSON.stringify(user));
+            reloadCart();
             toast.success("Login successful — redirecting...", { position: "top-right", autoClose: 800 });
             setTimeout(() => router.push("/"), 900);
         } catch {
