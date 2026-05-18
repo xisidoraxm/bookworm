@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useContext } from "react";
 import { useCart } from "@/context/CartContext";
-import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import styles from "./page.module.css";
 import EyeOpen from "../../components/icons/EyeOpen";

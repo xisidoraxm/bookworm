@@ -1,0 +1,369 @@
+.page {
+    min-height: 100vh;
+    background: var(--bg);
+    padding: 2rem 0 3rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.heading {
+    margin: 0;
+    color: var(--primary);
+    font-family: "Georgia", serif;
+    font-size: 2.25rem;
+}
+
+.subheading {
+    margin: 0.35rem 0 0;
+    color: var(--text-muted);
+}
+
+.addBookBtn {
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 0.65rem 1.1rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.addBookBtn:hover {
+    background: var(--accent-hover);
+}
+
+.toolbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 2fr repeat(4, minmax(0, 1fr));
+    margin-bottom: 1rem;
+}
+
+.searchInput,
+.select,
+.priceInput {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 9px;
+    color: var(--text);
+    padding: 0.6rem 0.75rem;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.cardLabel {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.cardValue {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.alertsSection {
+    background: #fff8ee;
+    border: 1px solid #f6d8a8;
+    border-radius: 14px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.alertsHeading {
+    margin: 0 0 0.75rem;
+    color: #805200;
+    font-size: 1rem;
+}
+
+.alertList {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.alertItem {
+    border: 1px solid #f2c881;
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alertTitle {
+    margin: 0;
+    color: #603d00;
+    font-weight: 600;
+}
+
+.alertMeta {
+    margin: 0.2rem 0 0;
+    color: #7f5a1e;
+    font-size: 0.9rem;
+}
+
+.alertAction {
+    border: none;
+    background: #e08a00;
+    color: #fff;
+    border-radius: 8px;
+    padding: 0.45rem 0.8rem;
+    font-weight: 600;
+}
+
+.error {
+    color: var(--error);
+    margin: 0 0 0.75rem;
+    font-weight: 600;
+}
+
+.tableWrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow-x: auto;
+}
+
+.loading {
+    margin: 0;
+    padding: 1.2rem;
+    color: var(--text-muted);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table th {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.bookCell {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.cover {
+    width: 40px;
+    height: 58px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+}
+
+.bookTitle {
+    margin: 0;
+    font-weight: 600;
+}
+
+.bookAuthor {
+    margin: 0.2rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.86rem;
+}
+
+.statusBadge {
+    font-size: 0.78rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+    font-weight: 700;
+}
+
+.statusIn {
+    color: #0f6d3c;
+    background: #def5e9;
+}
+
+.statusLow {
+    color: #8a5300;
+    background: #ffe9c3;
+}
+
+.statusOut {
+    color: #952222;
+    background: #ffdddd;
+}
+
+.actions {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.actionLink,
+.actionBtn,
+.removeBtn {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.removeBtn {
+    color: #a30000;
+    border-color: #e6b4b4;
+}
+
+.modalBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: grid;
+    place-items: center;
+    z-index: 1100;
+    padding: 1rem;
+}
+
+.modal {
+    width: min(100%, 440px);
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 1rem;
+}
+
+.modalTitle {
+    margin: 0;
+    color: var(--primary);
+}
+
+.modalBook {
+    margin: 0.3rem 0 0.8rem;
+    color: var(--text-muted);
+}
+
+.modalLabel {
+    display: block;
+    margin-top: 0.7rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.87rem;
+    font-weight: 600;
+}
+
+.modalInput,
+.modalTextarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 0.55rem 0.65rem;
+    color: var(--text);
+}
+
+.modalTextarea {
+    resize: vertical;
+}
+
+.readOnlyInput {
+    background: #f1f1f1;
+    color: #5e5e5e;
+    cursor: not-allowed;
+}
+
+.preview {
+    margin: 0.7rem 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.previewNormal {
+    color: #0f6d3c;
+    font-weight: 700;
+}
+
+.previewLow {
+    color: #b01818;
+    font-weight: 800;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+}
+
+.secondaryBtn,
+.primaryBtn {
+    border: none;
+    border-radius: 8px;
+    padding: 0.55rem 0.8rem;
+    cursor: pointer;
+}
+
+.secondaryBtn {
+    background: #ececec;
+}
+
+.primaryBtn {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+    .toolbar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .toolbar,
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}

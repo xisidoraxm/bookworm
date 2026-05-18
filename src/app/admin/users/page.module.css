@@ -1,6 +1,7 @@
 .page {
     min-height: 100vh;
-    padding-bottom: 4rem;
+    background: var(--bg);
+    padding: 2rem 0 3rem;
 }
 
 .loadingText {
@@ -10,7 +11,7 @@
 
 /* Header */
 .header {
-    padding: 2.5rem 0 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .headerRow {
@@ -23,44 +24,40 @@
 }
 
 .heading {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text);
     margin: 0;
+    color: var(--primary);
+    font-family: "Georgia", serif;
+    font-size: 2.25rem;
+    font-weight: 700;
 }
 
 .headingSub {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
-    font-weight: 400;
-    margin-left: 0.5rem;
+    font-weight: 500;
+    margin-left: 0.65rem;
 }
 
 /* Stats row */
 .statsRow {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .stat {
-    background: var(--surface);
     border: 1px solid var(--border);
+    background: var(--surface);
     border-radius: 12px;
-    padding: 0.75rem 1rem;
+    padding: 0.9rem 1rem;
     display: flex;
     align-items: center;
-    gap: 0.65rem;
-    transition: transform 0.15s ease;
-}
-
-.stat:hover {
-    transform: translateY(-2px);
+    gap: 0.75rem;
 }
 
 .statIcon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .statContent {
@@ -69,43 +66,43 @@
 }
 
 .statValue {
-    font-size: 1.15rem;
+    font-size: 1.45rem;
     font-weight: 700;
-    color: var(--text);
-    line-height: 1.2;
+    color: var(--primary);
+    line-height: 1.1;
 }
 
 .statLabel {
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     font-weight: 500;
 }
 
 /* Toolbar */
 .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 2fr repeat(4, minmax(0, 1fr));
+    margin-bottom: 1rem;
 }
 
 .searchBox {
-    flex: 1;
-    min-width: 220px;
     position: relative;
 }
 
 .searchInput {
     width: 100%;
-    padding: 0.6rem 0.85rem 0.6rem 2.2rem;
+    padding: 0.6rem 0.75rem 0.6rem 2.1rem;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
+    border-radius: 9px;
+    background: var(--bg);
     color: var(--text);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     outline: none;
-    transition: border-color 0.2s;
 }
 
 .searchInput:focus {
@@ -123,15 +120,15 @@
 }
 
 .filterSelect {
+    width: 100%;
     padding: 0.6rem 0.75rem;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
+    border-radius: 9px;
+    background: var(--bg);
     color: var(--text);
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     cursor: pointer;
     outline: none;
-    min-width: 120px;
 }
 
 .filterSelect:focus {
@@ -139,21 +136,20 @@
 }
 
 .sortBtn {
-    padding: 0.6rem 0.85rem;
+    width: 100%;
+    padding: 0.6rem 0.8rem;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
+    border-radius: 9px;
+    background: var(--bg);
     color: var(--text);
-    font-size: 0.82rem;
+    font-size: 0.86rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
+    transition: border-color 0.2s;
 }
 
 .sortBtn:hover {
     border-color: var(--accent);
-    color: var(--accent);
 }
 
 /* Table */
@@ -161,7 +157,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 14px;
-    overflow: hidden;
+    overflow-x: auto;
     margin-bottom: 1.5rem;
 }
 
@@ -171,34 +167,32 @@
 }
 
 .table th {
-    padding: 0.7rem 1rem;
-    font-size: 0.72rem;
+    padding: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     text-align: left;
     border-bottom: 1px solid var(--border);
-    background: var(--bg);
     white-space: nowrap;
-    user-select: none;
 }
 
 .table td {
-    padding: 0.65rem 1rem;
-    font-size: 0.85rem;
+    padding: 0.8rem;
+    font-size: 0.86rem;
     color: var(--text);
     border-bottom: 1px solid var(--border);
     vertical-align: middle;
 }
 
 .table tbody tr {
-    transition: background 0.12s;
+    transition: background 0.15s;
     cursor: pointer;
 }
 
 .table tbody tr:hover {
-    background: rgba(198, 124, 78, 0.04);
+    background: rgba(198, 124, 78, 0.06);
 }
 
 .table tbody tr:last-child td {
@@ -216,7 +210,7 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--primary-light));
+    background: linear-gradient(135deg, #cf9354, #8b5e3c);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -252,9 +246,9 @@
 /* Badges */
 .badge {
     display: inline-block;
-    padding: 0.15rem 0.55rem;
-    border-radius: 8px;
-    font-size: 0.7rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.02em;
 }
@@ -291,29 +285,19 @@
 }
 
 .actionBtn {
-    padding: 0.3rem 0.55rem;
+    padding: 0.35rem 0.6rem;
     border: 1px solid var(--border);
-    border-radius: 7px;
-    background: var(--surface);
-    color: var(--text-secondary);
-    font-size: 0.72rem;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+    font-size: 0.8rem;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: border-color 0.2s;
     white-space: nowrap;
 }
 
 .actionBtn:hover {
     border-color: var(--accent);
-    color: var(--accent);
-}
-
-.actionBtnDanger {
-    composes: actionBtn;
-}
-
-.actionBtnDanger:hover {
-    border-color: var(--error);
-    color: var(--error);
 }
 
 /* Pagination */
@@ -326,12 +310,12 @@
 }
 
 .pageBtn {
-    padding: 0.45rem 0.85rem;
+    padding: 0.5rem 0.9rem;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: var(--surface);
+    background: #fff;
     color: var(--text);
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
@@ -386,7 +370,7 @@
     right: 0;
     width: min(560px, 100vw);
     height: 100vh;
-    background: var(--bg);
+    background: var(--surface);
     box-shadow: -8px 0 30px rgba(61, 43, 31, 0.12);
     z-index: 1001;
     overflow-y: auto;
@@ -406,7 +390,7 @@
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
-    background: var(--bg);
+    background: var(--surface);
     z-index: 1;
 }
 
@@ -466,7 +450,7 @@
 }
 
 .drawerSection {
-    background: var(--surface);
+    background: #fff;
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1rem 1.15rem;
@@ -685,6 +669,7 @@
 
 .modal {
     background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 2rem;
     max-width: 400px;

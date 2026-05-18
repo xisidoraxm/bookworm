@@ -64,7 +64,6 @@ export default function ManageUsers() {
     const [data, setData] = useState<PageData | null>(null);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
-    const [roleFilter, setRoleFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [registrationDate, setRegistrationDate] = useState("");
     const [activityLevel, setActivityLevel] = useState("");
@@ -90,7 +89,6 @@ export default function ManageUsers() {
         setLoading(true);
         const params = new URLSearchParams();
         if (search) params.set("search", search);
-        if (roleFilter) params.set("role", roleFilter);
         if (statusFilter) params.set("status", statusFilter);
         if (registrationDate) params.set("registrationDate", registrationDate);
         if (activityLevel) params.set("activityLevel", activityLevel);
@@ -101,7 +99,7 @@ export default function ManageUsers() {
         const json = await res.json();
         setData(json);
         setLoading(false);
-    }, [search, roleFilter, statusFilter, registrationDate, activityLevel, sort, page]);
+    }, [search, statusFilter, registrationDate, activityLevel, sort, page]);
 
     useEffect(() => {
         const timer = setTimeout(fetchUsers, 300);
@@ -198,7 +196,7 @@ export default function ManageUsers() {
                 <div className={styles.header}>
                     <div className={styles.headerRow}>
                         <h1 className={styles.heading}>
-                            🧑‍💼 Manage Users
+                            Manage Users
                             {data && <span className={styles.headingSub}>{data.total} total</span>}
                         </h1>
                     </div>
@@ -241,14 +239,6 @@ export default function ManageUsers() {
                             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                         />
                     </div>
-                    <select
-                        className={styles.filterSelect}
-                        value={roleFilter}
-                        onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
-                    >
-                        <option value="">All Roles</option>
-                        <option value="USER">User</option>
-                    </select>
                     <select
                         className={styles.filterSelect}
                         value={statusFilter}
@@ -302,7 +292,6 @@ export default function ManageUsers() {
                                 <thead>
                                     <tr>
                                         <th>User</th>
-                                        <th>Role</th>
                                         <th>Status</th>
                                         <th>Registered</th>
                                         <th>Books Owned</th>
@@ -322,11 +311,6 @@ export default function ManageUsers() {
                                                         <span className={styles.userEmail}>{user.email}</span>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <span className={`${styles.badge} ${user.role === "ADMIN" ? styles.badgeAdmin : styles.badgeUser}`}>
-                                                    {user.role}
-                                                </span>
                                             </td>
                                             <td>
                                                 <span className={`${styles.badge} ${user.status === "ACTIVE" ? styles.badgeActive : styles.badgeSuspended}`}>
