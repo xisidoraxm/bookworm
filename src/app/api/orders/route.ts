@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { userId, cartItems, total, shippingAddress, shippingCity, shippingPostalCode, paymentMethod } = body;
+        const { userId, cartItems, total, shippingAddress, shippingCity, shippingPostalCode, paymentMethod, deliveryMethod } = body;
 
         if (!userId || !shippingAddress || !shippingCity || !shippingPostalCode || !paymentMethod) {
             return NextResponse.json(
@@ -47,6 +47,11 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const validDeliveryMethods = ["STANDARD", "EXPRESS", "PICKUP"];
+        const normalizedDeliveryMethod = validDeliveryMethods.includes(deliveryMethod)
+            ? deliveryMethod
+            : "STANDARD";
 
         const parsedUserId = Number(userId);
         const parsedTotal = Number(total);
@@ -131,6 +136,10 @@ export async function POST(req: NextRequest) {
                     shippingCity,
                     shippingPostalCode,
                     paymentMethod,
+                    paymentStatus: "PAID",
+                    status: "PENDING",
+                    paymentConfirmedAt: new Date(),
+                    deliveryMethod: normalizedDeliveryMethod,
                     items: {
                         create: normalizedItems.map((item) => ({
                             bookId: item.bookId,

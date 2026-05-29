@@ -31,13 +31,6 @@
     font-weight: 700;
 }
 
-.headingSub {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-left: 0.65rem;
-}
-
 /* Stats row */
 .statsRow {
     display: grid;

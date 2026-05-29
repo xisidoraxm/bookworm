@@ -197,7 +197,6 @@ export default function ManageUsers() {
                     <div className={styles.headerRow}>
                         <h1 className={styles.heading}>
                             Manage Users
-                            {data && <span className={styles.headingSub}>{data.total} total</span>}
                         </h1>
                     </div>
                 </div>

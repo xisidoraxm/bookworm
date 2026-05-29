@@ -179,6 +179,11 @@ export default function Nav() {
                                                 </a>
                                             </li>
                                             <li className="nav-item">
+                                                <a className={`nav-link ${styles.navLink}`} href="/admin/orders">
+                                                    Manage Orders
+                                                </a>
+                                            </li>
+                                            <li className="nav-item">
                                                 <a className={`nav-link ${styles.navLink}`} href="/admin/users">
                                                     Manage Users
                                                 </a>

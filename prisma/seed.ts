@@ -68,12 +68,60 @@ const books = [
 ];
 
 const users = [
-  { username: "admin", password: "Admin123!", fullName: "Aleksandra Milosevic", phone: "0612345678", email: "admin@gmail.com", role: Role.ADMIN },
-  { username: "isidora", password: "Pass123!", fullName: "Isidora Obradovic", phone: "0612345678", email: "isidora@gmail.com" },
-  { username: "jelica", password: "Pass123!", fullName: "Jelica Cincovic", phone: "0612345679", email: "jelica@gmail.com" },
-  { username: "drazen", password: "Pass123!", fullName: "Drazen Draskovic", phone: "0612345680", email: "drazen@gmail.com" },
-  { username: "milica", password: "Pass123!", fullName: "Milica Milosevic", phone: "0612345681", email: "milica@gmail.com" },
-  { username: "vojin", password: "Pass123!", fullName: "Vojin Vojnovic", phone: "0612345682", email: "vojin@gmail.com" },
+  {
+    username: "admin",
+    password: "Admin123!",
+    fullName: "Aleksandra Milosevic",
+    phone: "0612345678",
+    email: "admin@gmail.com",
+    role: Role.ADMIN,
+    createdAt: new Date("2025-08-10T09:00:00Z"),
+  },
+  {
+    username: "isidora",
+    password: "Pass123!",
+    fullName: "Isidora Obradovic",
+    phone: "0612345678",
+    email: "isidora@gmail.com",
+    role: Role.USER,
+    createdAt: new Date("2025-11-03T10:15:00Z"),
+  },
+  {
+    username: "jelica",
+    password: "Pass123!",
+    fullName: "Jelica Cincovic",
+    phone: "0612345679",
+    email: "jelica@gmail.com",
+    role: Role.USER,
+    createdAt: new Date("2025-12-18T12:30:00Z"),
+  },
+  {
+    username: "drazen",
+    password: "Pass123!",
+    fullName: "Drazen Draskovic",
+    phone: "0612345680",
+    email: "drazen@gmail.com",
+    role: Role.USER,
+    createdAt: new Date("2026-01-09T08:45:00Z"),
+  },
+  {
+    username: "milica",
+    password: "Pass123!",
+    fullName: "Milica Milosevic",
+    phone: "0612345681",
+    email: "milica@gmail.com",
+    role: Role.USER,
+    createdAt: new Date("2026-02-14T14:20:00Z"),
+  },
+  {
+    username: "vojin",
+    password: "Pass123!",
+    fullName: "Vojin Vojnovic",
+    phone: "0612345682",
+    email: "vojin@gmail.com",
+    role: Role.USER,
+    createdAt: new Date("2026-03-22T16:05:00Z"),
+  },
 ];
 
 async function main() {
@@ -94,7 +142,10 @@ async function main() {
   for (const user of users) {
     await prisma.user.upsert({
       where: { username: user.username },
-      update: { role: "role" in user ? user.role : Role.USER },
+      update: {
+        role: user.role,
+        createdAt: user.createdAt,
+      },
       create: user,
     });
   }
@@ -104,115 +155,408 @@ async function main() {
   // Seed sample orders
   console.log("Seeding orders...");
 
-  const existingOrders = await prisma.order.count();
-  if (existingOrders === 0) {
-    const allBooks = await prisma.book.findMany();
-    const allUsers = await prisma.user.findMany();
+  // Delete existing orders to re-seed with rich data
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
 
-    const booksByTitle = (title: string) => allBooks.find((b) => b.title === title)!;
-    const userByName = (username: string) => allUsers.find((u) => u.username === username)!;
+  const allBooks = await prisma.book.findMany();
+  const allUsers = await prisma.user.findMany();
 
-    const sampleOrders = [
-      {
-        user: "isidora",
-        date: new Date("2026-01-15"),
-        items: [
-          { title: "The Great Gatsby", qty: 1 },
-          { title: "1984", qty: 1 },
-        ],
-      },
-      {
-        user: "isidora",
-        date: new Date("2026-02-20"),
-        items: [
-          { title: "Harry Potter and the Sorcerer's Stone", qty: 2 },
-          { title: "The Hobbit", qty: 1 },
-          { title: "Pride and Prejudice", qty: 1 },
-        ],
-      },
-      {
-        user: "isidora",
-        date: new Date("2026-03-10"),
-        items: [
-          { title: "Sapiens", qty: 1 },
-          { title: "Educated", qty: 1 },
-        ],
-      },
-      {
-        user: "isidora",
-        date: new Date("2026-04-05"),
-        items: [
-          { title: "The Shining", qty: 1 },
-          { title: "Frankenstein", qty: 1 },
-          { title: "Dracula", qty: 1 },
-        ],
-      },
-      {
-        user: "isidora",
-        date: new Date("2026-05-01"),
-        items: [
-          { title: "Gone Girl", qty: 1 },
-          { title: "The Martian", qty: 1 },
-        ],
-      },
-      {
-        user: "jelica",
-        date: new Date("2026-02-14"),
-        items: [
-          { title: "Outlander", qty: 1 },
-          { title: "Me Before You", qty: 1 },
-          { title: "The Notebook", qty: 1 },
-        ],
-      },
-      {
-        user: "jelica",
-        date: new Date("2026-04-22"),
-        items: [
-          { title: "Brave New World", qty: 1 },
-          { title: "Fahrenheit 451", qty: 1 },
-        ],
-      },
-      {
-        user: "drazen",
-        date: new Date("2026-01-28"),
-        items: [
-          { title: "A Game of Thrones", qty: 1 },
-          { title: "Mistborn: The Final Empire", qty: 1 },
-          { title: "The Name of the Wind", qty: 1 },
-        ],
-      },
-      {
-        user: "drazen",
-        date: new Date("2026-03-15"),
-        items: [
-          { title: "Ender's Game", qty: 1 },
-          { title: "Foundation", qty: 1 },
-        ],
-      },
-    ];
+  const booksByTitle = (title: string) => allBooks.find((b) => b.title === title)!;
+  const userByName = (username: string) => allUsers.find((u) => u.username === username)!;
 
-    for (const order of sampleOrders) {
-      const user = userByName(order.user);
-      const items = order.items.map((i) => {
-        const book = booksByTitle(i.title);
-        return { bookId: book.id, quantity: i.qty, price: book.price };
-      });
-      const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const sampleOrders: {
+    user: string;
+    date: Date;
+    status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "REFUNDED";
+    paymentMethod: string;
+    paymentStatus: "PAID" | "PENDING" | "FAILED" | "REFUNDED";
+    deliveryMethod: "STANDARD" | "EXPRESS" | "PICKUP";
+    trackingNumber?: string;
+    estimatedDeliveryDate?: Date;
+    transactionId?: string;
+    statusNote?: string;
+    shippingAddress?: string;
+    shippingCity?: string;
+    shippingPostalCode?: string;
+    paymentConfirmedAt?: Date;
+    processingAt?: Date;
+    shippedAt?: Date;
+    deliveredAt?: Date;
+    cancelledAt?: Date;
+    refundedAt?: Date;
+    cancelReason?: string;
+    refundAmount?: number;
+    refundMethod?: string;
+    items: { title: string; qty: number }[];
+  }[] = [
+    // 1. DELIVERED — Isidora, standard delivery, fully completed
+    {
+      user: "isidora",
+      date: new Date("2026-01-15T10:30:00Z"),
+      status: "DELIVERED",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "PAID",
+      deliveryMethod: "STANDARD",
+      trackingNumber: "RS123456789YU",
+      estimatedDeliveryDate: new Date("2026-01-22"),
+      transactionId: "TXN-20260115-001",
+      statusNote: "Delivered to front door",
+      shippingAddress: "Bulevar Oslobodjenja 54",
+      shippingCity: "Novi Sad",
+      shippingPostalCode: "21000",
+      paymentConfirmedAt: new Date("2026-01-15T10:31:00Z"),
+      processingAt: new Date("2026-01-15T14:00:00Z"),
+      shippedAt: new Date("2026-01-17T09:15:00Z"),
+      deliveredAt: new Date("2026-01-20T11:45:00Z"),
+      items: [
+        { title: "The Great Gatsby", qty: 1 },
+        { title: "1984", qty: 1 },
+      ],
+    },
+    // 2. DELIVERED — Isidora, express delivery
+    {
+      user: "isidora",
+      date: new Date("2026-02-20T14:20:00Z"),
+      status: "DELIVERED",
+      paymentMethod: "PAYPAL",
+      paymentStatus: "PAID",
+      deliveryMethod: "EXPRESS",
+      trackingNumber: "EX987654321YU",
+      estimatedDeliveryDate: new Date("2026-02-23"),
+      transactionId: "TXN-20260220-002",
+      shippingAddress: "Bulevar Oslobodjenja 54",
+      shippingCity: "Novi Sad",
+      shippingPostalCode: "21000",
+      paymentConfirmedAt: new Date("2026-02-20T14:21:00Z"),
+      processingAt: new Date("2026-02-20T15:00:00Z"),
+      shippedAt: new Date("2026-02-21T08:30:00Z"),
+      deliveredAt: new Date("2026-02-22T16:10:00Z"),
+      items: [
+        { title: "Harry Potter and the Sorcerer's Stone", qty: 2 },
+        { title: "The Hobbit", qty: 1 },
+        { title: "Pride and Prejudice", qty: 1 },
+      ],
+    },
+    // 3. SHIPPED — Isidora, in transit
+    {
+      user: "isidora",
+      date: new Date("2026-05-25T09:00:00Z"),
+      status: "SHIPPED",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "PAID",
+      deliveryMethod: "STANDARD",
+      trackingNumber: "RS555888222YU",
+      estimatedDeliveryDate: new Date("2026-06-01"),
+      transactionId: "TXN-20260525-003",
+      statusNote: "Shipped via PostExpress",
+      shippingAddress: "Bulevar Oslobodjenja 54",
+      shippingCity: "Novi Sad",
+      shippingPostalCode: "21000",
+      paymentConfirmedAt: new Date("2026-05-25T09:01:00Z"),
+      processingAt: new Date("2026-05-25T11:30:00Z"),
+      shippedAt: new Date("2026-05-26T08:00:00Z"),
+      items: [
+        { title: "Sapiens", qty: 1 },
+        { title: "Educated", qty: 1 },
+      ],
+    },
+    // 4. PROCESSING — Isidora, being prepared
+    {
+      user: "isidora",
+      date: new Date("2026-05-28T16:45:00Z"),
+      status: "PROCESSING",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "PAID",
+      deliveryMethod: "EXPRESS",
+      transactionId: "TXN-20260528-004",
+      statusNote: "Packing books for shipment",
+      shippingAddress: "Bulevar Oslobodjenja 54",
+      shippingCity: "Novi Sad",
+      shippingPostalCode: "21000",
+      paymentConfirmedAt: new Date("2026-05-28T16:46:00Z"),
+      processingAt: new Date("2026-05-29T08:00:00Z"),
+      items: [
+        { title: "The Shining", qty: 1 },
+        { title: "Frankenstein", qty: 1 },
+        { title: "Dracula", qty: 1 },
+      ],
+    },
+    // 5. PENDING — Isidora, just placed
+    {
+      user: "isidora",
+      date: new Date("2026-05-29T07:30:00Z"),
+      status: "PENDING",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "PAID",
+      deliveryMethod: "STANDARD",
+      transactionId: "TXN-20260529-005",
+      shippingAddress: "Bulevar Oslobodjenja 54",
+      shippingCity: "Novi Sad",
+      shippingPostalCode: "21000",
+      paymentConfirmedAt: new Date("2026-05-29T07:31:00Z"),
+      items: [
+        { title: "Gone Girl", qty: 1 },
+        { title: "The Martian", qty: 1 },
+      ],
+    },
+    // 6. DELIVERED — Jelica, pickup
+    {
+      user: "jelica",
+      date: new Date("2026-02-14T11:00:00Z"),
+      status: "DELIVERED",
+      paymentMethod: "CASH",
+      paymentStatus: "PAID",
+      deliveryMethod: "PICKUP",
+      transactionId: "TXN-20260214-006",
+      statusNote: "Picked up from store",
+      shippingAddress: "Knjeginje Ljubice 12",
+      shippingCity: "Beograd",
+      shippingPostalCode: "11000",
+      paymentConfirmedAt: new Date("2026-02-14T11:01:00Z"),
+      processingAt: new Date("2026-02-14T12:00:00Z"),
+      deliveredAt: new Date("2026-02-15T10:30:00Z"),
+      items: [
+        { title: "Outlander", qty: 1 },
+        { title: "Me Before You", qty: 1 },
+        { title: "The Notebook", qty: 1 },
+      ],
+    },
+    // 7. SHIPPED — Jelica, in transit
+    {
+      user: "jelica",
+      date: new Date("2026-05-22T13:15:00Z"),
+      status: "SHIPPED",
+      paymentMethod: "PAYPAL",
+      paymentStatus: "PAID",
+      deliveryMethod: "STANDARD",
+      trackingNumber: "RS777111333YU",
+      estimatedDeliveryDate: new Date("2026-05-30"),
+      transactionId: "TXN-20260522-007",
+      shippingAddress: "Knjeginje Ljubice 12",
+      shippingCity: "Beograd",
+      shippingPostalCode: "11000",
+      paymentConfirmedAt: new Date("2026-05-22T13:16:00Z"),
+      processingAt: new Date("2026-05-22T15:00:00Z"),
+      shippedAt: new Date("2026-05-23T09:00:00Z"),
+      items: [
+        { title: "Brave New World", qty: 1 },
+        { title: "Fahrenheit 451", qty: 1 },
+      ],
+    },
+    // 8. CANCELLED — Jelica, cancelled by customer
+    {
+      user: "jelica",
+      date: new Date("2026-04-10T18:00:00Z"),
+      status: "CANCELLED",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "REFUNDED",
+      deliveryMethod: "STANDARD",
+      transactionId: "TXN-20260410-008",
+      statusNote: "Customer requested cancellation before shipping",
+      shippingAddress: "Knjeginje Ljubice 12",
+      shippingCity: "Beograd",
+      shippingPostalCode: "11000",
+      paymentConfirmedAt: new Date("2026-04-10T18:01:00Z"),
+      processingAt: new Date("2026-04-11T09:00:00Z"),
+      cancelledAt: new Date("2026-04-11T10:30:00Z"),
+      cancelReason: "Customer changed mind — ordered wrong edition",
+      refundAmount: 25.48,
+      refundMethod: "ORIGINAL_PAYMENT",
+      items: [
+        { title: "The Handmaid's Tale", qty: 1 },
+        { title: "The Catcher in the Rye", qty: 1 },
+      ],
+    },
+    // 9. DELIVERED — Drazen, standard
+    {
+      user: "drazen",
+      date: new Date("2026-01-28T08:15:00Z"),
+      status: "DELIVERED",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "PAID",
+      deliveryMethod: "STANDARD",
+      trackingNumber: "RS444222666YU",
+      estimatedDeliveryDate: new Date("2026-02-04"),
+      transactionId: "TXN-20260128-009",
+      shippingAddress: "Cara Dusana 77",
+      shippingCity: "Nis",
+      shippingPostalCode: "18000",
+      paymentConfirmedAt: new Date("2026-01-28T08:16:00Z"),
+      processingAt: new Date("2026-01-28T10:00:00Z"),
+      shippedAt: new Date("2026-01-29T14:30:00Z"),
+      deliveredAt: new Date("2026-02-02T12:00:00Z"),
+      items: [
+        { title: "A Game of Thrones", qty: 1 },
+        { title: "Mistborn: The Final Empire", qty: 1 },
+        { title: "The Name of the Wind", qty: 1 },
+      ],
+    },
+    // 10. REFUNDED — Drazen, refunded after delivery issue
+    {
+      user: "drazen",
+      date: new Date("2026-03-15T12:00:00Z"),
+      status: "REFUNDED",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "REFUNDED",
+      deliveryMethod: "EXPRESS",
+      trackingNumber: "EX333999111YU",
+      transactionId: "TXN-20260315-010",
+      statusNote: "Books arrived damaged, full refund issued",
+      shippingAddress: "Cara Dusana 77",
+      shippingCity: "Nis",
+      shippingPostalCode: "18000",
+      paymentConfirmedAt: new Date("2026-03-15T12:01:00Z"),
+      processingAt: new Date("2026-03-15T14:00:00Z"),
+      shippedAt: new Date("2026-03-16T08:00:00Z"),
+      deliveredAt: new Date("2026-03-18T11:00:00Z"),
+      refundedAt: new Date("2026-03-19T09:30:00Z"),
+      cancelReason: "Books arrived damaged during shipping",
+      refundAmount: 28.48,
+      refundMethod: "ORIGINAL_PAYMENT",
+      items: [
+        { title: "Ender's Game", qty: 1 },
+        { title: "Foundation", qty: 1 },
+      ],
+    },
+    // 11. PENDING — Milica, just placed today
+    {
+      user: "milica",
+      date: new Date("2026-05-29T08:00:00Z"),
+      status: "PENDING",
+      paymentMethod: "PAYPAL",
+      paymentStatus: "PAID",
+      deliveryMethod: "STANDARD",
+      transactionId: "TXN-20260529-011",
+      shippingAddress: "Trg Republike 5",
+      shippingCity: "Kragujevac",
+      shippingPostalCode: "34000",
+      paymentConfirmedAt: new Date("2026-05-29T08:01:00Z"),
+      items: [
+        { title: "To Kill a Mockingbird", qty: 1 },
+        { title: "Jane Eyre", qty: 1 },
+        { title: "Becoming", qty: 1 },
+      ],
+    },
+    // 12. PROCESSING — Milica, being prepared
+    {
+      user: "milica",
+      date: new Date("2026-05-27T15:30:00Z"),
+      status: "PROCESSING",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "PAID",
+      deliveryMethod: "EXPRESS",
+      transactionId: "TXN-20260527-012",
+      statusNote: "Express order — priority packing",
+      shippingAddress: "Trg Republike 5",
+      shippingCity: "Kragujevac",
+      shippingPostalCode: "34000",
+      paymentConfirmedAt: new Date("2026-05-27T15:31:00Z"),
+      processingAt: new Date("2026-05-28T08:00:00Z"),
+      items: [
+        { title: "Educated", qty: 1 },
+        { title: "Thinking, Fast and Slow", qty: 1 },
+      ],
+    },
+    // 13. PENDING — Vojin, payment pending
+    {
+      user: "vojin",
+      date: new Date("2026-05-29T09:45:00Z"),
+      status: "PENDING",
+      paymentMethod: "BANK_TRANSFER",
+      paymentStatus: "PENDING",
+      deliveryMethod: "STANDARD",
+      shippingAddress: "Svetog Save 22",
+      shippingCity: "Subotica",
+      shippingPostalCode: "24000",
+      items: [
+        { title: "Dune", qty: 1 },
+        { title: "Neuromancer", qty: 1 },
+        { title: "The Hitchhiker's Guide to the Galaxy", qty: 1 },
+      ],
+    },
+    // 14. DELIVERED — Vojin, express
+    {
+      user: "vojin",
+      date: new Date("2026-04-01T10:00:00Z"),
+      status: "DELIVERED",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "PAID",
+      deliveryMethod: "EXPRESS",
+      trackingNumber: "EX111444777YU",
+      estimatedDeliveryDate: new Date("2026-04-04"),
+      transactionId: "TXN-20260401-014",
+      shippingAddress: "Svetog Save 22",
+      shippingCity: "Subotica",
+      shippingPostalCode: "24000",
+      paymentConfirmedAt: new Date("2026-04-01T10:01:00Z"),
+      processingAt: new Date("2026-04-01T11:00:00Z"),
+      shippedAt: new Date("2026-04-02T07:45:00Z"),
+      deliveredAt: new Date("2026-04-03T14:20:00Z"),
+      items: [
+        { title: "The Shining", qty: 1 },
+        { title: "Frankenstein", qty: 1 },
+      ],
+    },
+    // 15. CANCELLED — Vojin, payment failed
+    {
+      user: "vojin",
+      date: new Date("2026-05-10T17:00:00Z"),
+      status: "CANCELLED",
+      paymentMethod: "CREDIT_CARD",
+      paymentStatus: "FAILED",
+      deliveryMethod: "STANDARD",
+      shippingAddress: "Svetog Save 22",
+      shippingCity: "Subotica",
+      shippingPostalCode: "24000",
+      cancelledAt: new Date("2026-05-10T17:05:00Z"),
+      cancelReason: "Payment authorization failed — card declined",
+      items: [
+        { title: "The Count of Monte Cristo", qty: 1 },
+        { title: "Treasure Island", qty: 1 },
+      ],
+    },
+  ];
 
-      await prisma.order.create({
-        data: {
-          userId: user.id,
-          total,
-          createdAt: order.date,
-          items: { create: items },
-        },
-      });
-    }
+  for (const order of sampleOrders) {
+    const user = userByName(order.user);
+    const items = order.items.map((i) => {
+      const book = booksByTitle(i.title);
+      return { bookId: book.id, quantity: i.qty, price: book.price };
+    });
+    const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-    console.log(`Seeded ${sampleOrders.length} orders.`);
-  } else {
-    console.log(`Orders already exist (${existingOrders}), skipping.`);
+    await prisma.order.create({
+      data: {
+        userId: user.id,
+        total,
+        status: order.status,
+        paymentMethod: order.paymentMethod,
+        paymentStatus: order.paymentStatus,
+        deliveryMethod: order.deliveryMethod,
+        trackingNumber: order.trackingNumber ?? null,
+        estimatedDeliveryDate: order.estimatedDeliveryDate ?? null,
+        transactionId: order.transactionId ?? null,
+        statusNote: order.statusNote ?? null,
+        shippingAddress: order.shippingAddress ?? null,
+        shippingCity: order.shippingCity ?? null,
+        shippingPostalCode: order.shippingPostalCode ?? null,
+        paymentConfirmedAt: order.paymentConfirmedAt ?? null,
+        processingAt: order.processingAt ?? null,
+        shippedAt: order.shippedAt ?? null,
+        deliveredAt: order.deliveredAt ?? null,
+        cancelledAt: order.cancelledAt ?? null,
+        refundedAt: order.refundedAt ?? null,
+        cancelReason: order.cancelReason ?? null,
+        refundAmount: order.refundAmount ?? null,
+        refundMethod: order.refundMethod ?? null,
+        createdAt: order.date,
+        items: { create: items },
+      },
+    });
   }
+
+  console.log(`Seeded ${sampleOrders.length} orders.`);
 
   // Seed reviews
   console.log("Seeding reviews...");

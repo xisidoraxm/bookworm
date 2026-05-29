@@ -48,6 +48,28 @@ enum BookFormat {
   HARDCOVER
 }
 
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  FAILED
+  REFUNDED
+}
+
+enum DeliveryMethod {
+  STANDARD
+  EXPRESS
+  PICKUP
+}
+
 model Book {
   id              Int             @id @default(autoincrement())
   title           String          @unique
@@ -79,7 +101,24 @@ model Order {
   shippingCity     String?
   shippingPostalCode String?
   paymentMethod    String @default("CREDIT_CARD")
+  paymentStatus    PaymentStatus @default(PAID)
+  status           OrderStatus @default(PENDING)
+  deliveryMethod   DeliveryMethod @default(STANDARD)
+  trackingNumber   String?
+  estimatedDeliveryDate DateTime?
+  transactionId    String?
+  statusNote       String?
+  paymentConfirmedAt DateTime?
+  processingAt     DateTime?
+  shippedAt        DateTime?
+  deliveredAt      DateTime?
+  cancelledAt      DateTime?
+  refundedAt       DateTime?
+  cancelReason     String?
+  refundAmount     Float?
+  refundMethod     String?
   createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @default(now()) @updatedAt
   items            OrderItem[]
 }
 
