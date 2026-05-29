@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import type { Book } from "@/lib/types";
 
@@ -19,14 +20,20 @@ const btnBase: React.CSSProperties = {
 export default function AddToCartButton({ book }: Props) {
     const { addToCart, updateQuantity, removeFromCart, items } = useCart();
     const inCart = items.find((i) => i.id === book.id);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
-    // Admin users don't have cart functionality
-    const isAdmin = (() => {
+    useEffect(() => {
+        setMounted(true);
         try {
-            const stored = typeof window !== "undefined" ? localStorage.getItem("loggedUser") : null;
-            return stored ? JSON.parse(stored).role === "ADMIN" : false;
-        } catch { return false; }
-    })();
+            const stored = localStorage.getItem("loggedUser");
+            if (stored && JSON.parse(stored).role === "ADMIN") {
+                setIsAdmin(true);
+            }
+        } catch { /* ignore */ }
+    }, []);
+
+    if (!mounted) return null;
     if (isAdmin) return null;
 
     function handleAdd() {

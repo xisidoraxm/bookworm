@@ -31,6 +31,7 @@ export default function BookInteractions({ bookId }: Props) {
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [sortBy, setSortBy] = useState<SortKey>("newest");
     const [loading, setLoading] = useState(true);
+    const [visibleCount, setVisibleCount] = useState(3);
 
     useEffect(() => {
         const stored = localStorage.getItem("loggedUser");
@@ -172,77 +173,18 @@ export default function BookInteractions({ bookId }: Props) {
 
     return (
         <div className={styles.interactions}>
-            {/* Action buttons for logged-in users (hide wishlist/reading for admin) */}
-            {username && !isAdmin && (
-                <div className={styles.actionBar}>
-                    {/* Wishlist */}
-                    <button
-                        className={`${styles.actionBtn} ${wishlisted ? styles.wishlisted : ""}`}
-                        onClick={toggleWishlist}
-                    >
-                        {wishlisted ? "❤️ Saved" : "🤍 Save for Later"}
-                    </button>
-
-                    {/* Reading Status Dropdown */}
-                    <div className={styles.statusDropdown}>
-                        <select
-                            className={styles.statusSelect}
-                            value={readingStatus || ""}
-                            onChange={(e) => {
-                                if (e.target.value === "") {
-                                    removeReadingStatus();
-                                } else {
-                                    updateReadingStatus(e.target.value);
-                                }
-                            }}
-                        >
-                            <option value="">📚 Set reading status...</option>
-                            <option value="want-to-read">⭐ Want to Read</option>
-                            <option value="currently-reading">📖 Currently Reading</option>
-                            <option value="finished">✔ Finished</option>
-                        </select>
-                    </div>
-                </div>
-            )}
-
-            {/* Reading progress bar */}
-            {username && !isAdmin && readingStatus === "currently-reading" && (
-                <div className={styles.progressSection}>
-                    <div className={styles.progressHeader}>
-                        <span className={styles.progressLabel}>📖 Reading Progress</span>
-                        <span className={styles.progressPct}>{progress}%</span>
-                    </div>
-                    <div className={styles.progressBarBg}>
-                        <div className={styles.progressBarFill} style={{ width: `${progress}%` }} />
-                    </div>
-                    <div className={styles.progressControls}>
-                        <input
-                            type="range"
-                            min={0}
-                            max={100}
-                            value={progress}
-                            onChange={(e) => setProgress(Number(e.target.value))}
-                            className={styles.progressSlider}
-                        />
-                        <button className={styles.progressSaveBtn} onClick={() => updateProgress(progress)}>
-                            Update
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Reading status display */}
-            {username && !isAdmin && readingStatus && readingStatus !== "currently-reading" && (
-                <div className={styles.statusBadge}>
-                    {statusLabels[readingStatus]}
-                </div>
-            )}
-
             {/* Reviews section */}
             <div className={styles.reviewsSection}>
                 <div className={styles.reviewsHeader}>
-                    <h2 className={styles.reviewsTitle}>Reviews</h2>
-                    <span className={styles.reviewCount}>{reviews.length} review{reviews.length !== 1 ? "s" : ""}</span>
+                    <div className={styles.reviewsHeaderLeft}>
+                        <h2 className={styles.reviewsTitle}>Reviews</h2>
+                        <span className={styles.reviewCount}>{reviews.length} review{reviews.length !== 1 ? "s" : ""}</span>
+                    </div>
+                    {username && !showReviewForm && (
+                        <button className={styles.writeReviewHeaderBtn} onClick={() => setShowReviewForm(true)}>
+                            {userRating > 0 ? "Edit Review" : "Write a Review"}
+                        </button>
+                    )}
                 </div>
 
                 {/* Rating summary */}
@@ -339,7 +281,7 @@ export default function BookInteractions({ bookId }: Props) {
                 {/* Review list */}
                 {sortedReviews.length > 0 ? (
                     <div className={styles.reviewList}>
-                        {sortedReviews.map((review) => (
+                        {sortedReviews.slice(0, visibleCount).map((review) => (
                             <div key={review.id} className={`${styles.reviewCard} ${review.user.username === username ? styles.reviewOwn : ""}`}>
                                 <div className={styles.reviewTop}>
                                     <div className={styles.reviewUser}>
@@ -374,6 +316,11 @@ export default function BookInteractions({ bookId }: Props) {
                     </div>
                 ) : (
                     <p className={styles.noReviews}>No reviews yet. Be the first to share your thoughts!</p>
+                )}
+                {sortedReviews.length > visibleCount && (
+                    <button className={styles.showMoreBtn} onClick={() => setVisibleCount((c) => c + 5)}>
+                        Show more reviews ({sortedReviews.length - visibleCount} remaining)
+                    </button>
                 )}
             </div>
         </div>

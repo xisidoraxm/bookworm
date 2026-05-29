@@ -74,7 +74,68 @@
     font-weight: 600;
     background: rgba(198, 124, 78, 0.08);
     color: var(--accent);
-    margin-bottom: 1.5rem;
+    margin-top: 8px;
+}
+
+/* Buy box user actions */
+.buyBoxActions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 20px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    background: #f8f4ef;
+    border: 1px solid #e6ded5;
+    border-radius: 12px;
+}
+
+.buyBoxActionsLabel {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #5a4634;
+    margin-bottom: 12px;
+}
+
+.buyBoxActions .progressSection {
+    margin-bottom: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+}
+
+.buyBoxActionsRow {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.buyBoxActionsRow .statusSelect {
+    flex: 1;
+    min-width: 0;
+}
+
+.buyBoxActionsRow .actionBtn {
+    white-space: nowrap;
+}
+
+.progressRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.progressRow .progressBarBg {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.progressRow .progressSlider {
+    flex: 1;
 }
 
 /* Progress section */
@@ -106,16 +167,16 @@
 
 .progressBarBg {
     height: 8px;
-    background: var(--border);
-    border-radius: 4px;
+    background: #e8e2db;
+    border-radius: 8px;
     overflow: hidden;
     margin-bottom: 0.75rem;
 }
 
 .progressBarFill {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--primary-light));
-    border-radius: 4px;
+    background: #d28a3a;
+    border-radius: 8px;
     transition: width 0.3s ease;
     min-width: 4px;
 }
@@ -133,43 +194,60 @@
 }
 
 .progressSaveBtn {
-    padding: 0.35rem 1rem;
-    border: none;
-    border-radius: 8px;
-    background: var(--accent);
-    color: #fff;
+    padding: 6px 10px;
+    border: 1px solid #d6c7b8;
+    border-radius: 6px;
+    background: #fff;
+    color: #5a4634;
     font-weight: 600;
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
     font-family: inherit;
+    line-height: 1;
 }
 
 .progressSaveBtn:hover {
-    background: var(--accent-hover);
+    border-color: #b5a28f;
+    background: #faf7f4;
+}
+
+.progressMicrocopy {
+    font-size: 0.78rem;
+    color: #9a897a;
+    margin-top: 6px;
 }
 
 /* Reviews section */
 .reviewsSection {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
 }
 
 .reviewsHeader {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.reviewsHeaderLeft {
+    display: flex;
+    align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1.25rem;
 }
 
 .reviewsTitle {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--primary);
     margin: 0;
+    letter-spacing: -0.2px;
 }
 
 .reviewCount {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
     background: var(--bg);
     padding: 0.2rem 0.6rem;
@@ -177,14 +255,33 @@
     font-weight: 500;
 }
 
+.writeReviewHeaderBtn {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--accent);
+    border-radius: 9px;
+    background: rgba(198, 124, 78, 0.06);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.writeReviewHeaderBtn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
 /* Rating summary */
 .ratingSummary {
     display: flex;
     gap: 2rem;
-    padding: 1.25rem;
-    background: var(--bg);
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
+    padding: 1.5rem 1.75rem;
+    background: #fdf6ef;
+    border: 1px solid rgba(198, 124, 78, 0.12);
+    border-radius: 14px;
+    margin-bottom: 1.75rem;
     align-items: center;
 }
 
@@ -237,16 +334,16 @@
 
 .ratingBarBg {
     flex: 1;
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
+    height: 7px;
+    background: #e8e0d8;
+    border-radius: 4px;
     overflow: hidden;
 }
 
 .ratingBarFill {
     height: 100%;
-    background: var(--accent);
-    border-radius: 3px;
+    background: linear-gradient(90deg, #e0a800, #f5c842);
+    border-radius: 4px;
     transition: width 0.4s ease;
 }
 
@@ -415,14 +512,14 @@
 
 .reviewCard {
     padding: 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: #faf7f4;
+    border: 1px solid rgba(92, 64, 51, 0.08);
     border-radius: 12px;
 }
 
 .reviewOwn {
-    border-color: var(--accent);
-    background: rgba(198, 124, 78, 0.03);
+    border-color: rgba(198, 124, 78, 0.25);
+    background: rgba(198, 124, 78, 0.04);
 }
 
 .reviewTop {
@@ -501,6 +598,26 @@
     color: var(--text-muted);
     font-size: 0.92rem;
     padding: 2rem;
+}
+
+.showMoreBtn {
+    display: block;
+    margin: 1.25rem auto 0;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.showMoreBtn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 /* Responsive */

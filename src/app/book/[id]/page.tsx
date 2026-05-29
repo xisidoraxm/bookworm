@@ -3,8 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import AddToCartButton from "@/components/AddToCartButton";
+import WishlistButton from "@/components/WishlistButton";
+import BookUserActions from "@/components/BookUserActions";
 import BookInteractions from "@/components/BookInteractions";
 import AskAIButton from "@/components/AskAI";
+import ReadMore from "./ReadMore";
 import styles from "./page.module.css";
 
 export default async function BookDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -63,6 +66,7 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
 
                     {/* Info */}
                     <div className={styles.infoSection}>
+                        {/* Block 1: Title + Author + Rating */}
                         <div className={styles.tags}>
                             <span className={styles.genreTag}>{book.genre}</span>
                             {book.rating >= 4.5 && <span className={styles.badgeTag}>★ Top Rated</span>}
@@ -83,15 +87,7 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
 
                         <div className={styles.divider} />
 
-                        {/* Description */}
-                        <div className={styles.descriptionSection}>
-                            <h2 className={styles.sectionHeading}>About this book</h2>
-                            <p className={styles.description}>
-                                {book.fullDescription || book.description || "No description available."}
-                            </p>
-                        </div>
-
-                        {/* Metadata */}
+                        {/* Block 2: Metadata */}
                         <div className={styles.metaGrid}>
                             <div className={styles.metaItem}>
                                 <span className={styles.metaLabel}>Genre</span>
@@ -109,6 +105,14 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                                 <span className={styles.metaLabel}>Rating</span>
                                 <span className={styles.metaValue}>★ {book.rating.toFixed(1)} / 5</span>
                             </div>
+                        </div>
+
+                        <div className={styles.divider} />
+
+                        {/* Block 3: Description */}
+                        <div className={styles.descriptionSection}>
+                            <h2 className={styles.sectionHeading}>About this book</h2>
+                            <ReadMore text={book.fullDescription || book.description || "No description available."} />
                         </div>
 
                         {book.wikipediaUrl && (
@@ -137,6 +141,8 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
 
                         <AddToCartButton book={book} />
 
+                        <WishlistButton bookId={book.id} />
+
                         <div className={styles.buyInfo}>
                             <div className={styles.buyInfoRow}>
                                 <span className={styles.buyInfoIcon}>🚚</span>
@@ -158,7 +164,7 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                 {suggested.length > 0 && (
                     <div className={styles.suggestedSection}>
                         <div className={styles.suggestedHeader}>
-                            <h2 className={styles.suggestedTitle}>You might also like</h2>
+                            <h2 className={styles.suggestedTitle}>You Might Also Like</h2>
                             <Link href={`/browse?genre=${encodeURIComponent(book.genre)}`} className={styles.suggestedViewAll}>
                                 View all {book.genre} →
                             </Link>
@@ -190,6 +196,9 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                         </div>
                     </div>
                 )}
+
+                {/* User reading activity */}
+                <BookUserActions bookId={book.id} />
 
                 {/* User interactions: ratings, reviews, wishlist, reading status */}
                 <BookInteractions bookId={book.id} />
