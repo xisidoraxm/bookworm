@@ -13,6 +13,7 @@ export default function BookUserActions({ bookId }: Props) {
     const [readingStatus, setReadingStatus] = useState<string | null>(null);
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [toast, setToast] = useState(false);
 
     useEffect(() => {
         const stored = localStorage.getItem("loggedUser");
@@ -72,6 +73,8 @@ export default function BookUserActions({ bookId }: Props) {
         const data = await res.json();
         setReadingStatus(data.status);
         setProgress(data.progress);
+        setToast(true);
+        setTimeout(() => setToast(false), 2000);
     }
 
     const statusLabels: Record<string, string> = {
@@ -123,7 +126,7 @@ export default function BookUserActions({ bookId }: Props) {
                             className={styles.progressSlider}
                         />
                         <button className={styles.progressSaveBtn} onClick={() => updateProgress(progress)}>
-                            ✏️
+                            Save Progress
                         </button>
                     </div>
                     <div className={styles.progressMicrocopy}>
@@ -133,6 +136,9 @@ export default function BookUserActions({ bookId }: Props) {
                                 ? `You've read ${progress}% of this book.`
                                 : "Track your progress as you read."}
                     </div>
+                    {toast && (
+                        <div className={styles.toast}>✓ Progress saved!</div>
+                    )}
                 </>
             )}
 

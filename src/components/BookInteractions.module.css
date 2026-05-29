@@ -218,6 +218,24 @@
     margin-top: 6px;
 }
 
+.toast {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #2e7d32;
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    border-radius: 8px;
+    padding: 0.4rem 0.85rem;
+    margin-top: 6px;
+    text-align: center;
+    animation: toastIn 0.25s ease;
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Reviews section */
 .reviewsSection {
     margin-top: 1.5rem;
