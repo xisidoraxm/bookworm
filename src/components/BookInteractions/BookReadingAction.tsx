@@ -7,7 +7,7 @@ type Props = {
     bookId: number;
 };
 
-export default function BookUserActions({ bookId }: Props) {
+export default function BookReadingAction({ bookId }: Props) {
     const [username, setUsername] = useState<string | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const [readingStatus, setReadingStatus] = useState<string | null>(null);

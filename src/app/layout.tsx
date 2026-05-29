@@ -2,8 +2,8 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BootstrapClient from "../components/BootstrapClient";
 import GoogleMapsLoader from "../components/GoogleMapsLoader";
-import NavWrapper from "../components/NavWrapper";
-import BookwormAI from "../components/BookwormAI";
+import NavWrapper from "../components/Nav/NavWrapper";
+import BookwormAI from "../components/AI/BookwormAI";
 import { CartProvider } from "../context/CartContext";
 import { ActivityTracker } from "../components/ActivityTracker";
 

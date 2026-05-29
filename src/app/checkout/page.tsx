@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import Image from "next/image";
 import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import styles from "./page.module.css";

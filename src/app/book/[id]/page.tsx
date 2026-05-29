@@ -3,10 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import AddToCartButton from "@/components/AddToCartButton";
-import WishlistButton from "@/components/WishlistButton";
-import BookUserActions from "@/components/BookUserActions";
-import BookInteractions from "@/components/BookInteractions";
-import AskAIButton from "@/components/AskAI";
+import WishlistButton from "@/components/BookInteractions/WishlistButton";
+import BookReviewAction from "@/components/BookInteractions/BookReviewAction";
+import BookReadingAction from "@/components/BookInteractions/BookReadingAction";
+import AskAIButton from "@/components/AI/AskAI";
 import ReadMore from "./ReadMore";
 import styles from "./page.module.css";
 
@@ -95,7 +95,7 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                             </div>
                             <div className={styles.metaItem}>
                                 <span className={styles.metaLabel}>Format</span>
-                                <span className={styles.metaValue}>{{"PAPERBACK":"Paperback","HARDCOVER":"Hardcover"}[book.format] || book.format}</span>
+                                <span className={styles.metaValue}>{{ "PAPERBACK": "Paperback", "HARDCOVER": "Hardcover" }[book.format] || book.format}</span>
                             </div>
                             <div className={styles.metaItem}>
                                 <span className={styles.metaLabel}>Language</span>
@@ -198,10 +198,10 @@ export default async function BookDetail({ params }: { params: Promise<{ id: str
                 )}
 
                 {/* User reading activity */}
-                <BookUserActions bookId={book.id} />
+                <BookReadingAction bookId={book.id} />
 
                 {/* User interactions: ratings, reviews, wishlist, reading status */}
-                <BookInteractions bookId={book.id} />
+                <BookReviewAction bookId={book.id} />
             </div>
         </div>
     );

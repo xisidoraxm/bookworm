@@ -18,12 +18,8 @@ type Props = {
 
 type SortKey = "newest" | "highest" | "lowest";
 
-export default function BookInteractions({ bookId }: Props) {
+export default function BookReviewAction({ bookId }: Props) {
     const [username, setUsername] = useState<string | null>(null);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [wishlisted, setWishlisted] = useState(false);
-    const [readingStatus, setReadingStatus] = useState<string | null>(null);
-    const [progress, setProgress] = useState(0);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [userRating, setUserRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
@@ -39,7 +35,6 @@ export default function BookInteractions({ bookId }: Props) {
             try {
                 const user = JSON.parse(stored);
                 setUsername(user.username);
-                setIsAdmin(user.role === "ADMIN");
             } catch { /* ignore */ }
         }
         setLoading(false);
@@ -49,20 +44,7 @@ export default function BookInteractions({ bookId }: Props) {
     const fetchData = useCallback(async () => {
         if (!username) return;
 
-        const fetches: Promise<Response>[] = [
-            fetch(`/api/reviews?bookId=${bookId}`),
-        ];
-        if (!isAdmin) {
-            fetches.push(
-                fetch(`/api/wishlist?username=${encodeURIComponent(username)}&bookId=${bookId}`),
-                fetch(`/api/reading-status?username=${encodeURIComponent(username)}&bookId=${bookId}`),
-            );
-        }
-        const responses = await Promise.all(fetches);
-        const reviewsRes = responses[0];
-        const wishlistRes = !isAdmin ? responses[1] : null;
-        const statusRes = !isAdmin ? responses[2] : null;
-
+        const reviewsRes = await fetch(`/api/reviews?bookId=${bookId}`);
         const reviewsData = await reviewsRes.json();
         setReviews(reviewsData);
 
@@ -71,69 +53,11 @@ export default function BookInteractions({ bookId }: Props) {
             setUserRating(userReview.rating);
             setReviewText(userReview.text || "");
         }
-
-        if (wishlistRes) {
-            const w = await wishlistRes.json();
-            setWishlisted(w.wishlisted);
-        }
-
-        if (statusRes) {
-            const s = await statusRes.json();
-            setReadingStatus(s.status);
-            setProgress(s.progress);
-        }
-    }, [bookId, username, isAdmin]);
+    }, [bookId, username]);
 
     useEffect(() => {
         if (!loading) fetchData();
     }, [loading, fetchData]);
-
-    async function toggleWishlist() {
-        if (!username) return;
-        const res = await fetch("/api/wishlist", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, bookId }),
-        });
-        const data = await res.json();
-        setWishlisted(data.wishlisted);
-    }
-
-    async function updateReadingStatus(status: string) {
-        if (!username) return;
-        const res = await fetch("/api/reading-status", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, bookId, status, progress: status === "finished" ? 100 : progress }),
-        });
-        const data = await res.json();
-        setReadingStatus(data.status);
-        setProgress(data.progress);
-    }
-
-    async function removeReadingStatus() {
-        if (!username) return;
-        await fetch("/api/reading-status", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, bookId }),
-        });
-        setReadingStatus(null);
-        setProgress(0);
-    }
-
-    async function updateProgress(newProgress: number) {
-        if (!username) return;
-        const p = Math.max(0, Math.min(100, newProgress));
-        const res = await fetch("/api/reading-status", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, bookId, status: p >= 100 ? "finished" : "currently-reading", progress: p }),
-        });
-        const data = await res.json();
-        setReadingStatus(data.status);
-        setProgress(data.progress);
-    }
 
     async function submitReview() {
         if (!username || userRating === 0) return;
@@ -163,17 +87,10 @@ export default function BookInteractions({ bookId }: Props) {
         pct: reviews.length > 0 ? (reviews.filter((r) => r.rating === star).length / reviews.length) * 100 : 0,
     }));
 
-    const statusLabels: Record<string, string> = {
-        "want-to-read": "⭐ Want to Read",
-        "currently-reading": "📖 Currently Reading",
-        "finished": "✔ Finished",
-    };
-
     if (loading || !username) return null;
 
     return (
         <div className={styles.interactions}>
-            {/* Reviews section */}
             <div className={styles.reviewsSection}>
                 <div className={styles.reviewsHeader}>
                     <div className={styles.reviewsHeaderLeft}>
