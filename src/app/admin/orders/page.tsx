@@ -1,7 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { printInvoice } from "./printInvoice";
+import OrderDetailsModal from "./OrderDetailsModal";
 import styles from "./page.module.css";
 
 type OrderStatus = "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "REFUNDED";
@@ -348,43 +350,6 @@ export default function AdminOrdersPage() {
         }
     }
 
-    function printInvoice(order: OrderRow) {
-        const itemsHtml = order.items
-            .map((item) => `<tr><td>${item.book.title}</td><td>${item.quantity}</td><td>$${item.price.toFixed(2)}</td><td>$${(item.price * item.quantity).toFixed(2)}</td></tr>`)
-            .join("");
-
-        const html = `
-            <html>
-                <head><title>Invoice #${order.id}</title></head>
-                <body style="font-family: Arial, sans-serif; padding: 24px;">
-                    <h2>Bookworm Invoice #${order.id}</h2>
-                    <p><strong>Customer:</strong> ${order.user.fullName} (${order.user.email})</p>
-                    <p><strong>Date:</strong> ${fmtDateTime(order.createdAt)}</p>
-                    <table border="1" cellspacing="0" cellpadding="6" style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-                        <thead>
-                            <tr><th>Book</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr>
-                        </thead>
-                        <tbody>${itemsHtml}</tbody>
-                    </table>
-                    <h3 style="margin-top: 16px;">Total: $${order.total.toFixed(2)}</h3>
-                </body>
-            </html>
-        `;
-
-        const w = window.open("", "_blank", "width=900,height=700");
-        if (!w) return;
-        w.document.open();
-        w.document.write(html);
-        w.document.close();
-        w.focus();
-        w.print();
-    }
-
-    const stockImpactUnits = useMemo(() => {
-        if (!selectedOrder) return 0;
-        return selectedOrder.items.reduce((sum, item) => sum + item.quantity, 0);
-    }, [selectedOrder]);
-
     if (!authorized) return null;
 
     return (
@@ -423,48 +388,75 @@ export default function AdminOrdersPage() {
                 </div>
 
                 <div className={styles.toolbar}>
-                    <input
-                        className={styles.searchInput}
-                        type="text"
-                        placeholder="Search by Order ID, customer name, or book title"
-                        value={q}
-                        onChange={(e) => setQ(e.target.value)}
-                    />
-                    <select className={styles.select} value={status} onChange={(e) => setStatus(e.target.value)}>
-                        <option value="">All Order Statuses</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="PROCESSING">Processing</option>
-                        <option value="SHIPPED">Shipped</option>
-                        <option value="DELIVERED">Delivered</option>
-                        <option value="CANCELLED">Cancelled</option>
-                        <option value="REFUNDED">Refunded</option>
-                    </select>
-                    <select className={styles.select} value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value)}>
-                        <option value="">All Payment Statuses</option>
-                        <option value="PAID">Paid</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="FAILED">Failed</option>
-                        <option value="REFUNDED">Refunded</option>
-                    </select>
-                    <select className={styles.select} value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)}>
-                        <option value="">All Delivery Methods</option>
-                        <option value="STANDARD">Standard</option>
-                        <option value="EXPRESS">Express</option>
-                        <option value="PICKUP">Pickup</option>
-                    </select>
-                    <input className={styles.dateInput} type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
-                    <input className={styles.dateInput} type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
-                    <button className={styles.clearBtn} onClick={() => {
-                        setCardFilter("");
-                        setQ("");
-                        setStatus("");
-                        setPaymentStatus("");
-                        setDeliveryMethod("");
-                        setDateFrom("");
-                        setDateTo("");
-                    }}>
-                        Clear
-                    </button>
+                    <div className={styles.toolbarRow}>
+                        <span className={styles.toolbarLabel}>Search</span>
+                        <div className={styles.inputWrap}>
+                            <span className={styles.inputIcon}>#</span>
+                            <input
+                                className={styles.searchInput}
+                                type="text"
+                                placeholder="Order ID, customer, or book title"
+                                value={q}
+                                onChange={(e) => setQ(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <hr className={styles.toolbarDivider} />
+
+                    <div className={styles.toolbarRow}>
+                        <span className={styles.toolbarLabel}>Filters</span>
+                        <div className={styles.inputWrap}>
+                            <span className={styles.inputIcon}>⟳</span>
+                            <select className={styles.select} value={status} onChange={(e) => setStatus(e.target.value)}>
+                                <option value="">Order Status</option>
+                                <option value="PENDING">Pending</option>
+                                <option value="PROCESSING">Processing</option>
+                                <option value="SHIPPED">Shipped</option>
+                                <option value="DELIVERED">Delivered</option>
+                                <option value="CANCELLED">Cancelled</option>
+                                <option value="REFUNDED">Refunded</option>
+                            </select>
+                        </div>
+                        <div className={styles.inputWrap}>
+                            <span className={styles.inputIcon}>$</span>
+                            <select className={styles.select} value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value)}>
+                                <option value="">Payment</option>
+                                <option value="PAID">Paid</option>
+                                <option value="PENDING">Pending</option>
+                                <option value="FAILED">Failed</option>
+                                <option value="REFUNDED">Refunded</option>
+                            </select>
+                        </div>
+                        <div className={styles.inputWrap}>
+                            <span className={styles.inputIcon}>⇄</span>
+                            <select className={styles.select} value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)}>
+                                <option value="">Delivery</option>
+                                <option value="STANDARD">Standard</option>
+                                <option value="EXPRESS">Express</option>
+                                <option value="PICKUP">Pickup</option>
+                            </select>
+                        </div>
+                        <div className={styles.dateGroup}>
+                            <input className={styles.dateInput} type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+                            <span className={styles.dateSeparator}>—</span>
+                            <input className={styles.dateInput} type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+                        </div>
+                        <div className={styles.toolbarActions}>
+                            <button className={styles.searchBtn} onClick={fetchOrders}>Search</button>
+                            <button className={styles.clearBtn} onClick={() => {
+                                setCardFilter("");
+                                setQ("");
+                                setStatus("");
+                                setPaymentStatus("");
+                                setDeliveryMethod("");
+                                setDateFrom("");
+                                setDateTo("");
+                            }}>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 {error && <p className={styles.error}>{error}</p>}
@@ -491,7 +483,6 @@ export default function AdminOrdersPage() {
                             <tbody>
                                 {orders.map((order) => {
                                     const itemsCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
-                                    const contactHref = `mailto:${order.user.email}?subject=Order%20%23${order.id}%20Update`;
                                     return (
                                         <tr key={order.id}>
                                             <td>#{order.id}</td>
@@ -522,7 +513,6 @@ export default function AdminOrdersPage() {
                                                     )}
                                                     <button className={styles.actionDanger} onClick={() => openCancelModal(order)}>Cancel Order</button>
                                                     <button className={styles.actionBtn} onClick={() => printInvoice(order)}>Print Invoice</button>
-                                                    <a className={styles.actionBtn} href={contactHref}>Contact Customer</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -535,134 +525,11 @@ export default function AdminOrdersPage() {
             </div>
 
             {selectedOrderId !== null && (
-                <div className={styles.modalBackdrop} onClick={closeDetails}>
-                    <div className={styles.modalLarge} onClick={(e) => e.stopPropagation()}>
-                        {detailsLoading || !selectedOrder ? (
-                            <p className={styles.loading}>Loading order details...</p>
-                        ) : (
-                            <>
-                                <div className={styles.detailHeader}>
-                                    <h3 className={styles.modalTitle}>Order #{selectedOrder.id}</h3>
-                                    <p className={styles.modalMeta}>{fmtDateTime(selectedOrder.createdAt)}</p>
-                                </div>
-
-                                <div className={styles.detailTopGrid}>
-                                    <div className={styles.detailColumn}>
-                                        <section className={styles.detailCard}>
-                                            <h4 className={styles.sectionTitle}>Customer Info</h4>
-                                            <div className={styles.detailLines}>
-                                                <p><span>Name:</span> {selectedOrder.user.fullName}</p>
-                                                <p><span>Email:</span> {selectedOrder.user.email}</p>
-                                                <p><span>Phone:</span> {selectedOrder.user.phone || "-"}</p>
-                                                <p>
-                                                    <span>Address:</span> {selectedOrder.user.address || "-"}
-                                                    {selectedOrder.user.city ? `, ${selectedOrder.user.city}` : ""}
-                                                    {selectedOrder.user.postalCode ? ` ${selectedOrder.user.postalCode}` : ""}
-                                                </p>
-                                            </div>
-                                        </section>
-
-                                        <section className={styles.detailCard}>
-                                            <h4 className={styles.sectionTitle}>Delivery Info</h4>
-                                            <div className={styles.detailLines}>
-                                                <p><span>Method:</span> {deliveryLabel(selectedOrder.deliveryMethod)}</p>
-                                                <p><span>Tracking:</span> {selectedOrder.trackingNumber || "-"}</p>
-                                                <p><span>Estimated:</span> {fmtDateTime(selectedOrder.estimatedDeliveryDate)}</p>
-                                                {selectedOrder.shippingAddress && (
-                                                    <p>
-                                                        <span>Ship to:</span> {selectedOrder.shippingAddress}
-                                                        {selectedOrder.shippingCity ? `, ${selectedOrder.shippingCity}` : ""}
-                                                        {selectedOrder.shippingPostalCode ? ` ${selectedOrder.shippingPostalCode}` : ""}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </section>
-                                    </div>
-
-                                    <div className={styles.detailColumn}>
-                                        <section className={styles.detailCard}>
-                                            <h4 className={styles.sectionTitle}>Payment Info</h4>
-                                            <div className={styles.detailLines}>
-                                                <p><span>Method:</span> {selectedOrder.paymentMethod}</p>
-                                                <p><span>Status:</span> {paymentLabel(selectedOrder.paymentStatus)}</p>
-                                                <p><span>Transaction ID:</span> {selectedOrder.transactionId || "-"}</p>
-                                            </div>
-                                        </section>
-
-                                        <section className={styles.detailCard}>
-                                            <h4 className={styles.sectionTitle}>Order Timeline</h4>
-                                            <div className={styles.timelineWrap}>
-                                                <div className={styles.timelineRail} />
-                                                <ul className={styles.timeline}>
-                                                    {[
-                                                        { label: "Order placed", time: selectedOrder.createdAt },
-                                                        { label: "Payment confirmed", time: selectedOrder.paymentConfirmedAt },
-                                                        { label: "Processing started", time: selectedOrder.processingAt },
-                                                        { label: "Shipped", time: selectedOrder.shippedAt },
-                                                        { label: "Delivered", time: selectedOrder.deliveredAt },
-                                                    ].map((step) => {
-                                                        const active = !!step.time;
-                                                        return (
-                                                            <li key={step.label}>
-                                                                <span className={active ? styles.timelineDot : styles.timelineDotInactive} />
-                                                                <div>
-                                                                    <span className={active ? styles.timelineLabel : styles.timelineLabelInactive}>{step.label}</span>
-                                                                    <span className={styles.timelineTime}>{active ? fmtDateTime(step.time) : "—"}</span>
-                                                                </div>
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </ul>
-                                            </div>
-                                        </section>
-                                    </div>
-                                </div>
-
-                                <hr className={styles.sectionDivider} />
-
-                                <div className={styles.itemsSection}>
-                                    <h4 className={styles.sectionTitle}>Order Items</h4>
-                                    <table className={styles.innerTable}>
-                                        <thead>
-                                            <tr>
-                                                <th>Title</th>
-                                                <th>Quantity</th>
-                                                <th>Price</th>
-                                                <th>Subtotal</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {selectedOrder.items.map((item) => (
-                                                <tr key={item.id}>
-                                                    <td>{item.book.title}</td>
-                                                    <td>{item.quantity}</td>
-                                                    <td>${item.price.toFixed(2)}</td>
-                                                    <td>${(item.price * item.quantity).toFixed(2)}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div className={styles.totalBox}>
-                                    <span className={styles.totalBoxLabel}>Order Total</span>
-                                    <span className={styles.totalBoxValue}>${selectedOrder.total.toFixed(2)}</span>
-                                </div>
-
-                                {(selectedOrder.cancelledAt || selectedOrder.refundedAt || selectedOrder.statusNote) && (
-                                    <div className={styles.noteRow}>
-                                        <span className={styles.noteLabel}>Stock Impact</span>
-                                        <span className={styles.noteText}>If cancelled/refunded: +{stockImpactUnits} units back to inventory</span>
-                                    </div>
-                                )}
-
-                                <div className={styles.modalActions}>
-                                    <button className={styles.secondaryBtn} onClick={closeDetails}>Close</button>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
+                <OrderDetailsModal
+                    order={selectedOrder}
+                    loading={detailsLoading}
+                    onClose={closeDetails}
+                />
             )}
 
             {statusModalOrder && (

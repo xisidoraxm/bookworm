@@ -169,11 +169,6 @@ export default function Nav() {
                                     {isAdmin && (
                                         <>
                                             <li className="nav-item">
-                                                <a className={`nav-link ${styles.navLink}`} href="/admin/add-book">
-                                                    Add Book
-                                                </a>
-                                            </li>
-                                            <li className="nav-item">
                                                 <a className={`nav-link ${styles.navLink}`} href="/admin/inventory">
                                                     Inventory
                                                 </a>
